@@ -170,7 +170,7 @@ export default function ServicesSection() {
   return (
     <section
       id="services"
-      className="py-20 lg:py-28 bg-[#fbf9f5] relative font-poppins text-slate-800 scroll-mt-20 border-t border-stone-200/70 select-none overflow-hidden"
+      className="py-[90px] bg-[#fbf9f5] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
     >
       {/* Soft Background Accent Glows */}
       <div className="absolute top-1/3 left-0 w-[450px] h-[450px] bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />

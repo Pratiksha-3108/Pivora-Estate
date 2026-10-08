@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { Phone, Download } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Phone } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
 
 const HERO_SLIDES = [
@@ -27,11 +28,11 @@ export default function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const { openEnquire } = useEnquire();
 
-  // Auto-advance slider every 3 seconds
+  // Auto-advance slider every 4 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(timer);
   }, []);
 
@@ -41,32 +42,33 @@ export default function Hero() {
 
   return (
     <section className="relative w-full h-screen min-h-[680px] overflow-hidden bg-slate-950 select-none">
-      {/* 3-Image Background Slider */}
-      {HERO_SLIDES.map((slide, idx) => (
-        <div
-          key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            idx === currentSlide ? 'opacity-100 z-0 scale-100' : 'opacity-0 -z-10 scale-105'
-          }`}
-          style={{ transitionProperty: 'opacity, transform' }}
+      {/* 3-Image Background Slider with Slide-From-Right Motion */}
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.div
+          key={HERO_SLIDES[currentSlide].id}
+          initial={{ x: '100%' }}
+          animate={{ x: '0%' }}
+          exit={{ x: '-100%' }}
+          transition={{ duration: 1.1, ease: [0.25, 1, 0.5, 1] }}
+          className="absolute inset-0 z-0 overflow-hidden"
         >
           <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 ease-out"
-            style={{ backgroundImage: `url('${slide.image}')` }}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url('${HERO_SLIDES[currentSlide].image}')` }}
           />
-          {/* Subtle gradient overlays for legibility */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-black/20 to-black/30" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30" />
-        </div>
-      ))}
+          {/* Left-to-Right dark gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/60 via-slate-950/35 to-slate-950/15 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-slate-950/25 pointer-events-none" />
+        </motion.div>
+      </AnimatePresence>
 
       {/* Hero Content Container */}
       <div className="relative z-10 max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex flex-col justify-between pt-28 pb-10">
-        {/* Main Overlay - Single Sentence Headline */}
-        <div className="my-auto pt-10 sm:pt-16 max-w-3xl">
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-semibold text-white tracking-tight leading-[1.05] drop-shadow-2xl">
-            TIMELESS <br />
-            RESIDENCES
+        {/* Main Overlay - 2 Line Tagline */}
+        <div className="my-auto pt-10 sm:pt-16 max-w-4xl">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-semibold text-white tracking-tight leading-[1.1] drop-shadow-2xl">
+            Where Vision Becomes <br />
+            Your Address
           </h1>
         </div>
 
@@ -109,16 +111,7 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Vertical Sticky Right Badge: DOWNLOAD BROCHURE */}
-      <button
-        onClick={() => openEnquire('DOWNLOAD BROCHURE')}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-40 bg-white text-slate-900 border border-slate-200/80 shadow-2xl rounded-l-2xl py-6 px-3 flex flex-col items-center gap-3 cursor-pointer hover:bg-slate-900 hover:text-white transition-all group"
-      >
-        <Download className="w-4 h-4 text-[#c8816e] group-hover:text-white transition-colors" />
-        <span className="[writing-mode:vertical-rl] rotate-180 text-[11px] font-bold tracking-[0.25em] uppercase">
-          DOWNLOAD BROCHURE
-        </span>
-      </button>
+
 
       {/* Floating Bottom-Left Action Buttons */}
       <div className="fixed bottom-6 left-1 sm:left-2 z-40 flex flex-col items-center gap-3">

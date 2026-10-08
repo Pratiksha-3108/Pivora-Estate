@@ -25,7 +25,7 @@ export default function PropertyModal({ property, onClose }: PropertyModalProps)
       />
 
       {/* Modal Dialog */}
-      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto glass-panel rounded-3xl border border-[#c8816e]/30 shadow-2xl z-10 text-[#1e1b18] bg-white animate-in zoom-in-95 duration-300">
+      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden glass-panel rounded-3xl border border-[#c8816e]/30 shadow-2xl z-10 text-[#1e1b18] bg-white animate-in zoom-in-95 duration-300">
         {/* Close Button */}
         <button
           onClick={onClose}

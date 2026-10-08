@@ -79,7 +79,7 @@ const STATS_DATA = [
     unit: 'Cr+',
     label: 'STARTING PRICE',
     badge: 'ONWARDS',
-    highlight: true,
+    highlight: false,
     lineHeight: 'h-16 sm:h-20',
   },
   {
@@ -117,8 +117,14 @@ export default function OverviewStats() {
         }}
       />
 
-      {/* Light Overlay with Reduced Opacity */}
-      <div className="absolute inset-0 bg-slate-950/25 backdrop-brightness-[0.9]" />
+      {/* Base Overlay with Minimal Opacity */}
+      <div className="absolute inset-0 bg-slate-950/10 pointer-events-none" />
+
+      {/* Balanced Side Gradient: Minimal/no dark overlay on the left to compensate for the photo's natural left shadow */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-slate-950/35 pointer-events-none" />
+
+      {/* Top and Bottom Light Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-transparent to-slate-950/30 pointer-events-none" />
 
       {/* Content Container with FadeInUp Effect */}
       <motion.div
@@ -141,16 +147,8 @@ export default function OverviewStats() {
 
               {/* Pin Indicator: Double Ring Node Dot + Ascending Vertical Pin Line */}
               <div className="flex flex-col items-center mb-6 sm:mb-8">
-                <div
-                  className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 ${item.highlight
-                    ? 'border-[#BD7E6C] bg-[#BD7E6C]/40 shadow-[0_0_18px_#BD7E6C]'
-                    : 'border-white/50 bg-white/10 group-hover:border-[#BD7E6C] group-hover:bg-[#BD7E6C]/25'
-                    }`}
-                >
-                  <div
-                    className={`w-1.5 h-1.5 rounded-full ${item.highlight ? 'bg-[#BD7E6C]' : 'bg-white/80 group-hover:bg-[#BD7E6C]'
-                      }`}
-                  />
+                <div className="w-5 h-5 rounded-full border border-white/50 bg-white/10 flex items-center justify-center transition-all duration-300 group-hover:border-[#BD7E6C] group-hover:bg-[#BD7E6C]/25 group-hover:shadow-[0_0_18px_#BD7E6C]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/80 group-hover:bg-[#BD7E6C] transition-colors duration-300" />
                 </div>
 
                 {/* Ascending Line Length */}

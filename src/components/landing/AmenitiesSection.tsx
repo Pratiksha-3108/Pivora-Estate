@@ -67,7 +67,7 @@ export default function AmenitiesSection() {
   return (
     <section
       id="amenities"
-      className="pt-[100px] pb-20 lg:pb-28 bg-[#faf9f5] relative font-poppins text-slate-800 scroll-mt-20 border-t border-stone-200/70 select-none overflow-hidden"
+      className="pt-[100px] pb-0 bg-[#faf9f5] relative font-poppins text-slate-800 scroll-mt-20 border-t border-stone-200/70 select-none overflow-hidden"
     >
       {/* DIAGONAL BACKGROUND WATERMARK (Rotated diagonally matching reference video) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none z-0 opacity-[0.045] font-serif text-[28vw] sm:text-[24vw] lg:text-[22vw] font-extrabold text-slate-900 leading-none tracking-tighter whitespace-nowrap italic -rotate-[22deg]">

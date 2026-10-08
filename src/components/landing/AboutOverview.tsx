@@ -25,7 +25,7 @@ export default function AboutOverview() {
   const [hoveredImage, setHoveredImage] = useState<number | null>(null);
 
   return (
-    <section id="about" className="py-14 lg:py-20 bg-[#f5f4ef] relative overflow-hidden scroll-mt-20 select-none">
+    <section id="about" className="py-[90px] bg-[#f5f4ef] relative overflow-hidden scroll-mt-20 select-none">
       {/* Target anchor for overview link */}
       <div id="overview" className="scroll-mt-24" />
 

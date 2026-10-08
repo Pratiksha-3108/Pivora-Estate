@@ -28,46 +28,68 @@ export default function ProjectsShowcase() {
     return true;
   });
 
-  // Auto-scroll cards slider every 3.5 seconds (pauses when user hovers over cards)
+  const displayProjects = [
+    ...filteredProjects,
+    ...filteredProjects,
+    ...filteredProjects,
+  ];
+
+  // Helper to get 1 card's width + gap for 1-by-1 card sliding
+  const getSingleCardStep = () => {
+    if (scrollContainerRef.current && scrollContainerRef.current.firstElementChild) {
+      const firstCard = scrollContainerRef.current.firstElementChild as HTMLElement;
+      return firstCard.offsetWidth + 24; // 1 Card width + 24px gap
+    }
+    return 340;
+  };
+
+  // 1-Way Infinite Auto-Scroll: Moves 1 card by 1 card continuously forward
   useEffect(() => {
     if (isPaused) return;
 
     const interval = setInterval(() => {
       if (scrollContainerRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
-        const maxScroll = scrollWidth - clientWidth;
+        const { scrollLeft, scrollWidth } = scrollContainerRef.current;
+        const singleSetWidth = scrollWidth / 3;
 
-        // Loop back to beginning smoothly if reached end
-        if (scrollLeft >= maxScroll - 20) {
-          scrollContainerRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          const scrollAmount = clientWidth * 0.85;
-          scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        // If reached near the end of second set, silently reset position to first set
+        if (scrollLeft >= singleSetWidth * 2) {
+          scrollContainerRef.current.scrollLeft -= singleSetWidth;
         }
+
+        const step = getSingleCardStep();
+        scrollContainerRef.current.scrollBy({ left: step, behavior: 'smooth' });
       }
-    }, 3500);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, [isPaused, activeCategory]);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth * 0.85;
-      scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      const step = getSingleCardStep();
+      scrollContainerRef.current.scrollBy({ left: -step, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth * 0.85;
-      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      const { scrollLeft, scrollWidth } = scrollContainerRef.current;
+      const singleSetWidth = scrollWidth / 3;
+
+      if (scrollLeft >= singleSetWidth * 2) {
+        scrollContainerRef.current.scrollLeft -= singleSetWidth;
+      }
+
+      const step = getSingleCardStep();
+      scrollContainerRef.current.scrollBy({ left: step, behavior: 'smooth' });
     }
   };
 
   return (
     <section
       id="projects"
-      className="py-16 lg:py-24 bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 border-t border-stone-200/70 select-none overflow-x-clip"
+      className="pt-[90px] pb-0 bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 border-t border-stone-200/70 select-none overflow-x-clip"
     >
       {/* Soft ambient background glows */}
       <div className="absolute top-1/3 left-0 w-96 h-96 bg-[#BD7E6C]/5 rounded-full blur-3xl pointer-events-none" />
@@ -164,15 +186,15 @@ export default function ProjectsShowcase() {
               onMouseLeave={() => setIsPaused(false)}
               className="flex gap-6 lg:gap-8 overflow-x-auto py-3 px-2.5 snap-x snap-mandatory scroll-smooth scrollbar-none"
             >
-              {filteredProjects.map((project: ShowcaseProject, idx: number) => (
+              {displayProjects.map((project: ShowcaseProject, idx: number) => (
                 <div
-                  key={project.id}
+                  key={`${project.id}-${idx}`}
                   className="snap-start shrink-0 w-[85vw] sm:w-[calc(50%-12px)] lg:w-[calc((100%-64px)/3)] min-w-[280px]"
                 >
                   <HorizontalStoryCard
                     project={project}
                     index={idx}
-                    total={filteredProjects.length}
+                    total={displayProjects.length}
                     onEnquire={openEnquire}
                   />
                 </div>
