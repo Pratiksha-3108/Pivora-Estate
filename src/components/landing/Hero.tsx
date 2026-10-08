@@ -78,7 +78,7 @@ export default function Hero() {
           <div className="hidden sm:block" />
 
           {/* Bottom-Right Overlay Card (Dark translucent info box) */}
-          <div className="w-full sm:max-w-xl bg-[#23211f]/85 backdrop-blur-xl border border-white/10 text-white rounded-3xl p-6 sm:p-7 shadow-2xl transition-all hover:bg-[#23211f]/95">
+          <div className="w-full sm:max-w-xl bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-3xl p-6 sm:p-7 shadow-[0_8px_32px_rgba(0,0,0,0.37)] transition-all hover:bg-white/20 hover:border-white/30">
             <div className="space-y-1">
               <h2 className="text-xl sm:text-2xl font-serif font-bold tracking-wide uppercase text-white">
                 PIVORA ESTATES
