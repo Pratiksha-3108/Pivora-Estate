@@ -119,7 +119,7 @@ export default function Hero() {
       </div>
 
       {/* Floating bottom-left action buttons with Pop-Up Effect */}
-      <div className="fixed bottom-20 sm:bottom-6 left-3 sm:left-5 z-40 flex flex-col items-start gap-3">
+      <div className="fixed bottom-32 sm:bottom-6 left-3 sm:left-5 z-40 flex flex-col items-start gap-3">
         {/* Call button */}
         <a
           href="tel:+919876543210"
