@@ -313,7 +313,7 @@ export default function ProjectsShowcase() {
                       },
                       exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
                     }}
-                    className="text-sm text-slate-600 leading-relaxed font-sans line-clamp-4"
+                    className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal font-sans line-clamp-4"
                   >
                     {project.description}
                   </motion.p>
