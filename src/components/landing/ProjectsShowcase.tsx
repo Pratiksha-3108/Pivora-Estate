@@ -21,6 +21,93 @@ const SCROLL_PER_PROJECT_VH = 70; // how much scrolling each project takes
 
 const CATEGORIES = ['All', 'Residential', 'Commercial'];
 
+const STRIPES = 8; // number of horizontal blinds
+const STRIPE_DURATION = 0.65;
+const STRIPE_STAGGER = 0.055;
+
+/* ------------------------------------------------------------------ */
+/*  BLINDS IMAGE COMPONENT (DIRECTIONAL: FROM TOP OR FROM BOTTOM)     */
+/* ------------------------------------------------------------------ */
+function BlindsImage({
+  src,
+  alt,
+  direction = 'from-bottom',
+  className = '',
+  imageClassName = '',
+}: {
+  src: string;
+  alt: string;
+  direction?: 'from-top' | 'from-bottom';
+  className?: string;
+  imageClassName?: string;
+}) {
+  const [base, setBase] = useState<string>(src);
+
+  useEffect(() => {
+    if (src === base) return;
+    const total = (STRIPE_DURATION + STRIPE_STAGGER * STRIPES) * 1000 + 80;
+    const t = setTimeout(() => setBase(src), total);
+    return () => clearTimeout(t);
+  }, [src, base]);
+
+  const h = 100 / STRIPES;
+
+  return (
+    <div className={`absolute inset-0 overflow-hidden bg-stone-900 ${className}`}>
+      {/* Base (previous) image */}
+      <Image
+        src={base}
+        alt={alt}
+        fill
+        sizes="(max-width: 1024px) 80vw, 40vw"
+        className={`object-cover ${imageClassName}`}
+        priority
+      />
+
+      {/* Incoming image, revealed stripe by stripe in the requested direction */}
+      {src !== base &&
+        Array.from({ length: STRIPES }).map((_, i) => {
+          const top = i * h;
+          const delay =
+            direction === 'from-bottom'
+              ? (STRIPES - 1 - i) * STRIPE_STAGGER
+              : i * STRIPE_STAGGER;
+
+          // If from-bottom: each stripe wipes upward
+          // If from-top: each stripe wipes downward
+          const initialClip =
+            direction === 'from-bottom'
+              ? `inset(${top + h}% 0% ${100 - top - h}% 0%)`
+              : `inset(${top}% 0% ${100 - top}% 0%)`;
+
+          return (
+            <motion.div
+              key={`${src}-${i}`}
+              className="absolute inset-0"
+              initial={{ clipPath: initialClip }}
+              animate={{
+                clipPath: `inset(${top - 0.15}% 0% ${100 - top - h - 0.15}% 0%)`,
+              }}
+              transition={{
+                duration: STRIPE_DURATION,
+                delay,
+                ease: [0.76, 0, 0.24, 1],
+              }}
+            >
+              <Image
+                src={src}
+                alt={alt}
+                fill
+                sizes="(max-width: 1024px) 80vw, 40vw"
+                className={`object-cover ${imageClassName}`}
+              />
+            </motion.div>
+          );
+        })}
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /*  MAIN SECTION                                                       */
 /* ------------------------------------------------------------------ */
@@ -278,63 +365,27 @@ export default function ProjectsShowcase() {
             <div className="relative w-full lg:w-[54%] order-1 lg:order-2 flex justify-center lg:justify-start">
               <div className="relative w-[78%] sm:w-[62%] lg:w-[58%] aspect-[4/5] max-h-[52vh] lg:max-h-[70vh] lg:ml-[30%]">
                 
-                {/* BIG IMAGE (Animates in from BOTTOM) */}
+                {/* BIG IMAGE (Blinds animation cascading from BOTTOM) */}
                 <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl bg-stone-900">
-                  <AnimatePresence mode="popLayout">
-                    <motion.div
-                      key={`big-${project.id}`}
-                      initial={{ opacity: 0, y: 40 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -25 }}
-                      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden"
-                    >
-                      <motion.div
-                        initial={{ scale: 1.18, clipPath: 'inset(100% 0% 0% 0%)' }}
-                        animate={{ scale: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
-                        transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
-                        className="relative w-full h-full"
-                      >
-                        <Image
-                          src={project.image}
-                          alt={project.name}
-                          fill
-                          sizes="(max-width: 1024px) 80vw, 40vw"
-                          className="object-cover"
-                          priority
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-stone-950/25 to-transparent pointer-events-none" />
-                      </motion.div>
-                    </motion.div>
-                  </AnimatePresence>
+                  <BlindsImage
+                    src={project.image}
+                    alt={project.name}
+                    direction="from-bottom"
+                    className="rounded-2xl sm:rounded-3xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/25 to-transparent pointer-events-none rounded-2xl sm:rounded-3xl" />
                 </div>
 
-                {/* SMALL OVERLAPPING IMAGE (Animates in from ABOVE / TOP) */}
-                <AnimatePresence mode="popLayout">
-                  <motion.div
-                    key={`small-${project.id}`}
-                    initial={{ opacity: 0, y: -40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 25 }}
-                    transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute -left-[30%] top-[16%] w-[62%] aspect-[1/1.2] rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_20px_45px_-10px_rgba(0,0,0,0.28)] border-4 border-[#f5f4ef] z-20 bg-stone-900"
-                  >
-                    <motion.div
-                      initial={{ scale: 1.18, clipPath: 'inset(0% 0% 100% 0%)' }}
-                      animate={{ scale: 1, clipPath: 'inset(0% 0% 0% 0%)' }}
-                      transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
-                      className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden"
-                    >
-                      <Image
-                        src={project.image}
-                        alt={`${project.name} detail`}
-                        fill
-                        sizes="(max-width: 1024px) 50vw, 25vw"
-                        className="object-cover object-left"
-                      />
-                    </motion.div>
-                  </motion.div>
-                </AnimatePresence>
+                {/* SMALL OVERLAPPING IMAGE (Same Blinds animation cascading from ABOVE / TOP) */}
+                <div className="absolute -left-[30%] top-[16%] w-[62%] aspect-[1/1.2] rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_20px_45px_-10px_rgba(0,0,0,0.28)] border-4 border-[#f5f4ef] z-20 bg-stone-900">
+                  <BlindsImage
+                    src={project.image}
+                    alt={`${project.name} detail`}
+                    direction="from-top"
+                    className="rounded-xl sm:rounded-2xl"
+                    imageClassName="object-left"
+                  />
+                </div>
 
               </div>
             </div>
