@@ -31,6 +31,30 @@ const fadeInUpVariant: Variants = {
   }),
 };
 
+const titleWordsContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const titleWordItem: Variants = {
+  hidden: { opacity: 0, y: 12, filter: 'blur(6px)' },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
 export default function AboutOverview() {
   const { openEnquire } = useEnquire();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -59,39 +83,48 @@ export default function AboutOverview() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 lg:items-stretch">
           
           {/* ================= LEFT COLUMN ================= */}
-          {/* Exact vertical span matching center image: (ABOUT) at top, Title above Subtitle at bottom */}
-          <div className="lg:col-span-3 xl:col-span-3 flex flex-col justify-between h-full min-h-[420px] lg:h-[510px]">
-            {/* Top Tag: (ABOUT) - Horizontally aligned with top of center image and right paragraph */}
+          <div className="lg:col-span-3 xl:col-span-3 flex flex-col justify-start h-full">
+            {/* Top Tag: ABOUT */}
             <motion.div
               variants={fadeInUpVariant}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
               custom={0}
-              className="pt-0"
+              className="pt-0 mb-3 sm:mb-4"
             >
-              <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#BD7E6C] block">
-                (ABOUT)
+              <span className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block">
+                ABOUT
               </span>
             </motion.div>
 
-            {/* Bottom Block: Title ABOVE Subtitle - Horizontally aligned with bottom of center image */}
+            {/* Title and Subtitle Block: Positioned directly below ABOUT */}
             <motion.div
               variants={fadeInUpVariant}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
               custom={1}
-              className="mt-auto space-y-2.5 sm:space-y-3 pb-0"
+              className="space-y-2.5 sm:space-y-3"
             >
-              {/* Title: 5 stacked lines matching reference, website font & bold weight */}
-              <h2 className="text-2xl sm:text-3xl lg:text-[32px] xl:text-[38px] font-extrabold text-slate-950 tracking-tight font-sans leading-[1.04] uppercase">
-                <span className="block">TIMELESS</span>
-                <span className="block">DESIGN</span>
-                <span className="block">WELLNESS-</span>
-                <span className="block">FOCUSED</span>
-                <span className="block">LIVING</span>
-              </h2>
+              {/* Title: 5 stacked lines with smooth word-by-word fade-in */}
+              <motion.h2
+                variants={titleWordsContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-40px' }}
+                className="text-2xl sm:text-3xl lg:text-[30px] xl:text-[36px] font-extrabold text-slate-950 tracking-tight font-sans leading-[1.05] uppercase"
+              >
+                {['TIMELESS', 'DESIGN', 'WELLNESS-', 'FOCUSED', 'LIVING'].map((word) => (
+                  <motion.span
+                    key={word}
+                    variants={titleWordItem}
+                    className="block"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </motion.h2>
 
               {/* Subtitle positioned below the title as requested */}
               <p className="text-[11px] sm:text-xs font-sans uppercase tracking-[0.18em] text-[#BD7E6C] font-semibold pt-1">

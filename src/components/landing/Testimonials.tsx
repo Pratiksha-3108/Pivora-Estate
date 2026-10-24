@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Quote } from 'lucide-react';
+import { Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface TestimonialItem {
   id: string;
@@ -67,13 +67,13 @@ export default function Testimonials() {
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const total = TESTIMONIALS.length;
 
-  // Faster auto-rotation speed: changes every 3.0 seconds (pauses on hover)
+  // Snappy, smooth auto-slider: rotates every 2.6 seconds (pauses on hover)
   useEffect(() => {
     if (isPaused) return;
 
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % total);
-    }, 3000);
+    }, 2600);
 
     return () => clearInterval(timer);
   }, [isPaused, total]);
@@ -97,7 +97,7 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="pt-[50px] pb-4 sm:pb-6 bg-[#fbf9f5] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
+      className="pt-[50px] pb-10 sm:pb-14 bg-[#fbf9f5] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
     >
       {/* Soft Ambient Glows matching website palette */}
       <div className="absolute top-1/4 left-10 w-96 h-96 bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />
@@ -106,23 +106,61 @@ export default function Testimonials() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* SECTION HEADER */}
-        <div className="text-center space-y-2 mb-8 sm:mb-10">
-          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
+        <div className="text-center space-y-2 mb-8 sm:mb-12">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6 }}
+            className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block"
+          >
             SEE WHAT OUR CLIENTS HAVE TO SAY
-          </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans">
+          </motion.span>
+          <motion.h2
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans"
+          >
             Testimonials
-          </h2>
+          </motion.h2>
         </div>
 
-        {/* 3-CARD CAROUSEL: One-by-one elevated card transition */}
+        {/* 3-CARD CAROUSEL WITH LEFT & RIGHT SLIDER CONTROLS */}
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className="relative max-w-6xl mx-auto min-h-[330px] sm:min-h-[350px] flex items-center justify-center cursor-pointer"
+          className="relative max-w-6xl mx-auto min-h-[350px] sm:min-h-[380px] flex items-center justify-center"
         >
+          {/* Left Arrow Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePrev();
+            }}
+            aria-label="Previous Testimonial"
+            className="absolute left-0 sm:-left-5 md:-left-8 lg:-left-12 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-[#BD7E6C] text-slate-800 hover:text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] border border-[#eadfd9] hover:border-[#BD7E6C] flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group"
+          >
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:-translate-x-0.5" />
+          </button>
+
+          {/* Right Arrow Button */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleNext();
+            }}
+            aria-label="Next Testimonial"
+            className="absolute right-0 sm:-right-5 md:-right-8 lg:-right-12 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-[#BD7E6C] text-slate-800 hover:text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] border border-[#eadfd9] hover:border-[#BD7E6C] flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group"
+          >
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:translate-x-0.5" />
+          </button>
+
           {/* Deck Wrapper */}
-          <div className="relative w-full h-[330px] sm:h-[350px] flex items-center justify-center">
+          <div className="relative w-full h-[340px] sm:h-[365px] flex items-center justify-center">
             {TESTIMONIALS.map((item, index) => {
               const offset = getCardOffset(index);
               const isActive = offset === 0;
@@ -134,7 +172,7 @@ export default function Testimonials() {
                 if (offset === 0) {
                   return {
                     x: '0%',
-                    y: -26,
+                    y: -24,
                     scale: 1.05,
                     zIndex: 30,
                     opacity: 1,
@@ -142,20 +180,20 @@ export default function Testimonials() {
                 }
                 if (offset === -1) {
                   return {
-                    x: '-74%',
+                    x: '-70%',
                     y: 10,
                     scale: 0.9,
                     zIndex: 15,
-                    opacity: 0.68,
+                    opacity: 0.65,
                   };
                 }
                 if (offset === 1) {
                   return {
-                    x: '74%',
+                    x: '70%',
                     y: 10,
                     scale: 0.9,
                     zIndex: 15,
-                    opacity: 0.68,
+                    opacity: 0.65,
                   };
                 }
                 if (offset < -1) {
@@ -187,10 +225,12 @@ export default function Testimonials() {
                   }}
                   animate={animState}
                   transition={{
-                    duration: 0.45, // Faster, crisp smooth animation
-                    ease: [0.22, 1, 0.36, 1], // Smooth cubic-bezier
+                    type: 'spring',
+                    stiffness: 220,
+                    damping: 24,
+                    mass: 0.85,
                   }}
-                  className={`absolute w-[92%] sm:w-[380px] md:w-[420px] lg:w-[450px] flex flex-col items-center select-none ${
+                  className={`absolute w-[88%] sm:w-[380px] md:w-[420px] lg:w-[450px] flex flex-col items-center select-none ${
                     !isActive ? 'cursor-pointer hover:opacity-95' : ''
                   }`}
                 >
@@ -225,7 +265,7 @@ export default function Testimonials() {
                     <div className="h-3 sm:h-4" />
                   </div>
 
-                  {/* Overlapping Bottom Avatar & Maharashtrian Author Info */}
+                  {/* Overlapping Bottom Avatar & Author Info */}
                   <div className="flex flex-col items-center -mt-7 sm:-mt-8 z-40">
                     <div
                       className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-4 transition-all duration-400 ${
@@ -243,7 +283,7 @@ export default function Testimonials() {
                       />
                     </div>
 
-                    {/* Client Name & Maharashtrian Pune Details */}
+                    {/* Client Name & Details */}
                     <div className="text-center mt-2.5 sm:mt-3 space-y-0.5">
                       <h4 className="text-sm sm:text-base font-bold text-slate-950 tracking-tight font-sans">
                         {item.author}

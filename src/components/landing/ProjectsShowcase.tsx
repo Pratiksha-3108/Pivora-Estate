@@ -11,6 +11,7 @@ import {
 import { SHOWCASE_PROJECTS, ShowcaseProject } from '@/data/showcaseProjects';
 import { useEnquire } from '@/context/EnquireContext';
 import { MapPin, ArrowUpRight } from 'lucide-react';
+import WordFadeIn from '@/components/ui/WordFadeIn';
 
 /* ------------------------------------------------------------------ */
 /*  CONFIG                                                             */
@@ -152,7 +153,7 @@ export default function ProjectsShowcase() {
   return (
     <section
       id="projects"
-      className="relative bg-[#f5f4ef] font-poppins text-slate-800 scroll-mt-20 border-t border-stone-200/70 select-none"
+      className="relative bg-[#f5f4ef] font-poppins text-slate-800 scroll-mt-20 select-none"
     >
       {/* ---------- INTRO HEADER ---------- */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[50px] pb-3 sm:pb-4 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
@@ -166,17 +167,12 @@ export default function ProjectsShowcase() {
           <span className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block">
             OUR PROJECTS
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight">
-            {'Elevate Your Business & Living Standard.'.split(' ').map((word, i) => (
-              <span
-                key={i}
-                className="titleWord inline-block mr-[0.25em] last:mr-0"
-                style={{ animationDelay: `${i * 0.18}s` }}
-              >
-                {word}
-              </span>
-            ))}
-          </h2>
+          <WordFadeIn
+            text="Elevate Your Business & Living Standard."
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight"
+            delay={0.08}
+            stagger={0.1}
+          />
         </motion.div>
       </div>
 

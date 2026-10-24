@@ -2,6 +2,8 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import WordFadeIn from '@/components/ui/WordFadeIn';
 
 interface PartnerLogo {
   id: string;
@@ -56,48 +58,50 @@ export default function PartnerSlider() {
 
   return (
     <section className="py-[50px] bg-[#f5f4ef] relative overflow-hidden select-none">
-      {/* Gradient Edge Masks for Smooth Fade In/Out */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-36 bg-gradient-to-r from-[#f5f4ef] to-transparent z-20" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-36 bg-gradient-to-l from-[#f5f4ef] to-transparent z-20" />
-
       {/* Section Header - Matching About Us Section Exactly */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left mb-8 sm:mb-10">
         <div className="space-y-3 -mt-2">
-          <span className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block"
+          >
             OUR PARTNERS
-          </span>
+          </motion.span>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans">
-            {"Landmark Real Estate Giants".split(" ").map((word, wordIndex) => (
-              <span
-                key={wordIndex}
-                className="titleWord inline-block mr-[0.25em] last:mr-0"
-                style={{
-                  animationDelay: `${wordIndex * 0.18}s`,
-                }}
-              >
-                {word}
-              </span>
+          <WordFadeIn
+            text="Landmark Real Estate Giants"
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans"
+            delay={0.1}
+            stagger={0.12}
+          />
+        </div>
+      </div>
+
+      {/* Marquee Tracks Container with Gradient Edge Masks scoped strictly to logos */}
+      <div className="relative w-full overflow-hidden">
+        {/* Gradient Edge Masks for Smooth Fade In/Out */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-36 bg-gradient-to-r from-[#f5f4ef] to-transparent z-20" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-36 bg-gradient-to-l from-[#f5f4ef] to-transparent z-20" />
+
+        {/* Marquee Track 1: Moving Towards LEFT */}
+        <div className="relative w-full overflow-hidden mb-4 sm:mb-6 py-1">
+          <div className="animate-marquee-left">
+            {rowOneItems.map((logo, index) => (
+              <PartnerCard key={`row1-${logo.id}-${index}`} logo={logo} />
             ))}
-          </h2>
+          </div>
         </div>
-      </div>
 
-      {/* Marquee Track 1: Moving Towards LEFT */}
-      <div className="relative w-full overflow-hidden mb-4 sm:mb-6 py-1">
-        <div className="animate-marquee-left">
-          {rowOneItems.map((logo, index) => (
-            <PartnerCard key={`row1-${logo.id}-${index}`} logo={logo} />
-          ))}
-        </div>
-      </div>
-
-      {/* Marquee Track 2: Moving Towards RIGHT */}
-      <div className="relative w-full overflow-hidden py-1">
-        <div className="animate-marquee-right">
-          {rowTwoItems.map((logo, index) => (
-            <PartnerCard key={`row2-${logo.id}-${index}`} logo={logo} />
-          ))}
+        {/* Marquee Track 2: Moving Towards RIGHT */}
+        <div className="relative w-full overflow-hidden py-1">
+          <div className="animate-marquee-right">
+            {rowTwoItems.map((logo, index) => (
+              <PartnerCard key={`row2-${logo.id}-${index}`} logo={logo} />
+            ))}
+          </div>
         </div>
       </div>
 

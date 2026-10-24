@@ -53,11 +53,12 @@ export default function Footer() {
           <div className="flex flex-col items-start gap-4">
             <Link href="/" className="inline-block group">
               <Image
-                src="/assets/pivora logo_bg.png"
+                src="/assets/pivora_logo_footer.png"
                 alt="Pivora Estates Logo"
-                width={220}
-                height={70}
-                className="h-10 sm:h-11 w-auto object-contain transition-opacity group-hover:opacity-90"
+                width={260}
+                height={88}
+                priority
+                className="h-12 sm:h-14 w-auto object-contain transition-all duration-300 group-hover:scale-105"
               />
             </Link>
 

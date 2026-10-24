@@ -12,6 +12,7 @@ import {
   ArrowUpRight
 } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
+import WordFadeIn from '@/components/ui/WordFadeIn';
 
 interface AmenityItem {
   id: string;
@@ -85,19 +86,12 @@ export default function AmenitiesSection() {
           <span className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block">
             AMENITIES
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight">
-            {"Thoughtfully Designed Amenities.".split(" ").map((word, wordIndex) => (
-              <span
-                key={wordIndex}
-                className="titleWord inline-block mr-[0.25em] last:mr-0"
-                style={{
-                  animationDelay: `${wordIndex * 0.18}s`,
-                }}
-              >
-                {word}
-              </span>
-            ))}
-          </h2>
+          <WordFadeIn
+            text="Thoughtfully Designed Amenities."
+            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight"
+            delay={0.08}
+            stagger={0.1}
+          />
         </div>
 
         {/* 3 STAGGERED COLUMNS MATCHING REFERENCE VIDEO */}

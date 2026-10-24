@@ -28,37 +28,18 @@ export default function EnquireModal({
     email: '',
     mobile: '',
     projectName: '',
-    configuration: '',
+    requirement: '',
     message: '',
   });
 
   useEffect(() => {
     if (isOpen) {
-      const matched = SHOWCASE_PROJECTS.find(
-        (p) => p.name.toLowerCase() === (defaultProjectName || '').toLowerCase()
-      );
-      let initialConfig = '';
-      if (matched) {
-        const confLower = matched.configuration.toLowerCase();
-        if (confLower.includes('office') || confLower.includes('commercial')) {
-          initialConfig = 'Commercial';
-        } else if (confLower.includes('penthouse')) {
-          initialConfig = 'Penthouse';
-        } else if (confLower.includes('4 bhk')) {
-          initialConfig = '4 BHK';
-        } else if (confLower.includes('3 bhk')) {
-          initialConfig = '3 BHK';
-        } else if (confLower.includes('2 bhk')) {
-          initialConfig = '2 BHK';
-        }
-      }
-
       setFormData({
         fullName: '',
         email: '',
         mobile: '',
         projectName: defaultProjectName || '',
-        configuration: initialConfig,
+        requirement: '',
         message: '',
       });
       setSearchTerm('');
@@ -118,26 +99,9 @@ export default function EnquireModal({
   });
 
   const handleSelectProject = (projName: string) => {
-    const matched = SHOWCASE_PROJECTS.find((p) => p.name === projName);
-    let newConfig = formData.configuration;
-    if (matched && !newConfig) {
-      const confLower = matched.configuration.toLowerCase();
-      if (confLower.includes('office') || confLower.includes('commercial')) {
-        newConfig = 'Commercial';
-      } else if (confLower.includes('penthouse')) {
-        newConfig = 'Penthouse';
-      } else if (confLower.includes('4 bhk')) {
-        newConfig = '4 BHK';
-      } else if (confLower.includes('3 bhk')) {
-        newConfig = '3 BHK';
-      } else if (confLower.includes('2 bhk')) {
-        newConfig = '2 BHK';
-      }
-    }
     setFormData((prev) => ({
       ...prev,
       projectName: projName,
-      configuration: newConfig,
     }));
     setIsDropdownOpen(false);
     setSearchTerm('');
@@ -385,25 +349,27 @@ export default function EnquireModal({
                   )}
                 </div>
 
-                {/* CONFIGURATION */}
+                {/* REQUIREMENT */}
                 <div className="space-y-1.5 sm:col-span-2">
                   <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                    CONFIGURATION<span className="text-red-500">*</span>
+                    REQUIREMENT<span className="text-red-500">*</span>
                   </label>
                   <select
                     required
-                    value={formData.configuration}
-                    onChange={(e) => setFormData({ ...formData, configuration: e.target.value })}
-                    className="w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal text-slate-900 focus:outline-none focus:border-slate-900 transition-colors bg-transparent cursor-pointer"
+                    value={formData.requirement}
+                    onChange={(e) => setFormData({ ...formData, requirement: e.target.value })}
+                    className={`w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal focus:outline-none focus:border-slate-900 transition-colors bg-transparent cursor-pointer ${
+                      formData.requirement ? 'text-slate-900 font-medium' : 'text-slate-400'
+                    }`}
                   >
-                    <option value="" disabled>
-                      Select
+                    <option value="" disabled className="text-slate-400">
+                      Select requirement
                     </option>
-                    <option value="2 BHK">2 BHK Luxury Apartment</option>
-                    <option value="3 BHK">3 BHK Luxury Apartment</option>
-                    <option value="4 BHK">4 BHK Luxury Residence</option>
-                    <option value="Penthouse">Penthouse / Sky Villa</option>
-                    <option value="Commercial">Commercial Office / Suite</option>
+                    <option value="2 BHK" className="text-slate-900">2 BHK Luxury Apartment</option>
+                    <option value="3 BHK" className="text-slate-900">3 BHK Luxury Apartment</option>
+                    <option value="4 BHK" className="text-slate-900">4 BHK Luxury Residence</option>
+                    <option value="Penthouse" className="text-slate-900">Penthouse / Sky Villa</option>
+                    <option value="Commercial" className="text-slate-900">Commercial Office / Suite</option>
                   </select>
                 </div>
 

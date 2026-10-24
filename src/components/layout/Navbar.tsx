@@ -75,18 +75,14 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const firstSection = document.querySelector('section');
-      const threshold = firstSection ? firstSection.offsetHeight - 80 : window.innerHeight - 80;
-      setScrolled(window.scrollY > threshold);
+      setScrolled(window.scrollY > 20);
     };
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleScroll);
     };
-  }, [pathname]);
+  }, []);
 
   const navLinks = [
     { name: 'HOME', href: '/' },
@@ -100,29 +96,24 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
-          ? 'bg-[#f5f4ef]/95 backdrop-blur-md shadow-xs border-b border-stone-200/80 text-slate-900'
-          : 'bg-black/25 backdrop-blur-[2px] border-b border-white/10 text-white'
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#f5f4ef]/95 backdrop-blur-md border-b border-stone-200/80 text-slate-900 ${
+        scrolled ? 'shadow-md py-1.5' : 'shadow-xs py-2.5'
+      }`}
     >
 
       {/* ===== Main nav row ===== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div
-          className={`flex items-center justify-between transition-all duration-500 ${scrolled ? 'py-2' : 'py-3'
-            }`}
-        >
+        <div className="flex items-center justify-between">
           {/* Left: Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-14 w-52 sm:h-16 sm:w-64 flex items-center justify-start">
+            <div className="relative h-12 sm:h-14 flex items-center justify-start">
               <Image
-                src="/assets/pivora logo_bg.png"
+                src="/assets/pivora_logo_footer.png"
                 alt="Pivora Estates Logo"
-                width={300}
-                height={100}
+                width={260}
+                height={88}
                 priority
-                className={`h-full w-auto object-contain group-hover:scale-105 transition-all duration-300 ${scrolled ? 'brightness-0' : 'drop-shadow-sm'
-                  }`}
+                className="h-full w-auto object-contain brightness-0 group-hover:scale-105 transition-all duration-300"
               />
             </div>
           </Link>
@@ -136,14 +127,11 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`group relative py-1 text-xs font-semibold uppercase tracking-widest transition-colors ${scrolled
-                      ? active
-                        ? 'text-slate-950'
-                        : 'text-slate-700 hover:text-slate-950'
-                      : active
-                        ? 'text-white'
-                        : 'text-white/90 hover:text-white'
-                    }`}
+                  className={`group relative py-1 text-xs font-semibold uppercase tracking-widest transition-colors ${
+                    active
+                      ? 'text-slate-950 font-bold'
+                      : 'text-slate-700 hover:text-slate-950'
+                  }`}
                 >
                   {/* Rolling text wrapper */}
                   <span className="relative inline-block overflow-hidden h-4 leading-4">
@@ -157,8 +145,9 @@ export default function Navbar() {
 
                   {/* Active / Hover underline indicator */}
                   <span
-                    className={`absolute bottom-0 left-0 h-[2px] bg-[#BD7E6C] transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'
-                      }`}
+                    className={`absolute bottom-0 left-0 h-[2px] bg-[#BD7E6C] transition-all duration-300 ${
+                      active ? 'w-full' : 'w-0 group-hover:w-full'
+                    }`}
                   />
                 </Link>
               );
@@ -187,10 +176,7 @@ export default function Navbar() {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${scrolled
-                  ? 'text-slate-900 hover:bg-stone-200/60'
-                  : 'text-white hover:bg-white/15'
-                }`}
+              className="p-2 rounded-lg text-slate-900 hover:bg-stone-200/60 transition-colors cursor-pointer"
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -201,34 +187,22 @@ export default function Navbar() {
 
       {/* ===== Mobile drawer ===== */}
       {mobileMenuOpen && (
-        <div
-          className={`lg:hidden border-t px-6 py-6 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-200 backdrop-blur-xl ${scrolled
-              ? 'bg-[#f5f4ef]/95 border-stone-200/80 text-slate-900'
-              : 'bg-[#0c0b0a]/95 border-white/15 text-white'
-            }`}
-        >
+        <div className="lg:hidden border-t px-6 py-6 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-200 backdrop-blur-xl bg-[#f5f4ef]/95 border-stone-200/80 text-slate-900">
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`text-xs font-bold uppercase tracking-widest py-2 border-b hover:text-[#BD7E6C] ${scrolled ? 'border-stone-200/80' : 'border-white/10'
-                  } ${isActive(link.href)
-                    ? 'text-[#BD7E6C]'
-                    : scrolled
-                      ? 'text-slate-800'
-                      : 'text-white/90'
-                  }`}
+                className={`text-xs font-bold uppercase tracking-widest py-2 border-b border-stone-200/80 hover:text-[#BD7E6C] ${
+                  isActive(link.href) ? 'text-[#BD7E6C]' : 'text-slate-800'
+                }`}
               >
                 {link.name}
               </Link>
             ))}
 
-            <div
-              className={`flex items-center gap-5 pt-2 ${scrolled ? 'text-slate-600' : 'text-white/80'
-                }`}
-            >
+            <div className="flex items-center gap-5 pt-2 text-slate-600">
               {SOCIALS.map((s) => (
                 <a
                   key={s.name}

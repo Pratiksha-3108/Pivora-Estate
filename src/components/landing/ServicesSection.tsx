@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ArrowUpRight, X, ZoomIn } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
+import WordFadeIn from '@/components/ui/WordFadeIn';
 
 interface ServiceItem {
   id: string;
@@ -184,19 +185,12 @@ export default function ServicesSection() {
             <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
               COMPREHENSIVE REAL ESTATE SOLUTIONS
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight">
-              {"Our Services".split(" ").map((word, wordIndex) => (
-                <span
-                  key={wordIndex}
-                  className="titleWord inline-block mr-[0.25em] last:mr-0"
-                  style={{
-                    animationDelay: `${wordIndex * 0.18}s`,
-                  }}
-                >
-                  {word}
-                </span>
-              ))}
-            </h2>
+            <WordFadeIn
+              text="Our Services"
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight"
+              delay={0.08}
+              stagger={0.12}
+            />
           </div>
           <p className="text-sm sm:text-base text-slate-600 max-w-md font-normal leading-relaxed">
             From prime luxury residential sales and commercial leasing to NRI advisory and RERA compliance, we provide end-to-end real estate expertise across India.
