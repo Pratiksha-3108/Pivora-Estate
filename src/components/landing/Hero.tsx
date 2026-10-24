@@ -61,10 +61,9 @@ export default function Hero() {
           />
         </AnimatePresence>
 
-        {/* Ambient Dark Gradient Overlays for perfect readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-black/30 pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black/70 to-transparent pointer-events-none" />
-        <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/50 to-transparent pointer-events-none" />
+        {/* Subtle Ambient Overlay - drastically reduced black opacity for vibrant image clarity */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/10 pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
       </div>
 
       {/* Persistent 2-line tagline */}
