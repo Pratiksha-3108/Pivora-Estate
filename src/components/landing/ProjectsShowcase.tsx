@@ -20,9 +20,9 @@ const ACCENT = '#BD7E6C';
 const STRIPES = 8; // number of horizontal blinds
 const STRIPE_DURATION = 0.6;
 const STRIPE_STAGGER = 0.06;
-const SCROLL_PER_PROJECT_VH = 85; // how much scrolling each project takes
+const SCROLL_PER_PROJECT_VH = 70; // how much scrolling each project takes
 
-const CATEGORIES = ['All', 'Residences', 'Commercial'];
+const CATEGORIES = ['All', 'Residential', 'Commercial'];
 
 /* ------------------------------------------------------------------ */
 /*  BIG IMAGE WITH HORIZONTAL BLINDS TRANSITION                        */
@@ -98,12 +98,10 @@ export default function ProjectsShowcase() {
     () =>
       SHOWCASE_PROJECTS.filter((project: ShowcaseProject) => {
         if (activeCategory === 'All') return true;
-        if (activeCategory === 'Residences') return project.configuration.includes('BHK');
+        if (activeCategory === 'Residential' || activeCategory === 'Residences')
+          return project.category === 'Residential';
         if (activeCategory === 'Commercial')
-          return (
-            project.configuration.toLowerCase().includes('office') ||
-            project.configuration.toLowerCase().includes('commercial')
-          );
+          return project.category === 'Commercial';
         return true;
       }),
     [activeCategory]
