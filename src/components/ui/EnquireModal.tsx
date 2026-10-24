@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { X, CheckCircle, Search, ChevronDown, Check } from 'lucide-react';
+import { X, CheckCircle, Search, ChevronDown, Check, ArrowUpRight } from 'lucide-react';
 import { SHOWCASE_PROJECTS } from '@/data/showcaseProjects';
 
 interface EnquireModalProps {
@@ -408,9 +408,10 @@ export default function EnquireModal({
                 <button
                   type="submit"
                   disabled={!agreedPrivacy}
-                  className="px-10 py-3.5 rounded-full bg-black hover:bg-slate-900 disabled:opacity-50 text-white text-xs font-bold uppercase tracking-widest transition-all shadow-lg active:scale-95 cursor-pointer inline-block"
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#BD7E6C] text-white px-8 py-3.5 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-xl active:scale-95 cursor-pointer"
                 >
-                  SUBMIT INQUIRY
+                  <span>SUBMIT INQUIRY</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
                 </button>
               </div>
 
