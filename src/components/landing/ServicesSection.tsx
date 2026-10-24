@@ -249,7 +249,7 @@ export default function ServicesSection() {
                         className="overflow-hidden px-3 sm:px-4 pb-5 sm:pb-6"
                       >
                         <div className="pl-9 sm:pl-12 pr-4 space-y-4">
-                          <p className="text-sm sm:text-[15px] text-slate-600 leading-relaxed font-normal">
+                          <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
                             {service.fullDesc}
                           </p>
 
