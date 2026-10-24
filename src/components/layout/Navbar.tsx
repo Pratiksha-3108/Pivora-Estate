@@ -106,12 +106,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           {/* Left: Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-12 sm:h-14 flex items-center justify-start">
+            <div className="relative h-9 sm:h-11 flex items-center justify-start">
               <Image
                 src="/assets/pivora_logo_footer.png"
                 alt="Pivora Estates Logo"
-                width={260}
-                height={88}
+                width={220}
+                height={72}
                 priority
                 className="h-full w-auto object-contain brightness-0 group-hover:scale-105 transition-all duration-300"
               />
