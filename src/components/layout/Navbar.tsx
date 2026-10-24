@@ -7,65 +7,6 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
 
-// Small inline social icons (no extra packages needed)
-const Svg = ({ children }: { children: React.ReactNode }) => (
-  <svg
-    viewBox="0 0 24 24"
-    width="14"
-    height="14"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    {children}
-  </svg>
-);
-
-const SOCIALS = [
-  {
-    name: 'Facebook',
-    href: '#',
-    icon: (
-      <Svg>
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-      </Svg>
-    ),
-  },
-  {
-    name: 'Instagram',
-    href: '#',
-    icon: (
-      <Svg>
-        <rect x="2" y="2" width="20" height="20" rx="5" />
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-      </Svg>
-    ),
-  },
-  {
-    name: 'YouTube',
-    href: '#',
-    icon: (
-      <Svg>
-        <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
-        <path d="m10 15 5-3-5-3z" />
-      </Svg>
-    ),
-  },
-  {
-    name: 'LinkedIn',
-    href: '#',
-    icon: (
-      <Svg>
-        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-        <rect x="2" y="9" width="4" height="12" />
-        <circle cx="4" cy="4" r="2" />
-      </Svg>
-    ),
-  },
-];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -166,7 +107,14 @@ export default function Navbar() {
           </div>
 
           {/* Mobile trigger */}
-          <div className="flex items-center lg:hidden">
+          <div className="flex items-center gap-3 lg:hidden">
+            <button
+              onClick={() => openEnquire('ENQUIRE NOW')}
+              className="group md:hidden inline-flex items-center gap-1.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-3.5 py-2 text-[11px] font-bold tracking-wider uppercase shadow-xs transition-all duration-300"
+            >
+              <span>ENQUIRE</span>
+              <ArrowUpRight className="w-3 h-3 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
+            </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-slate-900 hover:bg-stone-200/60 transition-colors cursor-pointer"
@@ -195,18 +143,6 @@ export default function Navbar() {
               </Link>
             ))}
 
-            <div className="flex items-center gap-5 pt-2 text-slate-600">
-              {SOCIALS.map((s) => (
-                <a
-                  key={s.name}
-                  href={s.href}
-                  aria-label={s.name}
-                  className="hover:text-[#BD7E6C]"
-                >
-                  {s.icon}
-                </a>
-              ))}
-            </div>
 
             <button
               onClick={() => {
