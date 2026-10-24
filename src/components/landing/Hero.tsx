@@ -9,14 +9,17 @@ const HERO_SLIDES = [
   {
     id: 1,
     image: '/assets/real_estate1.jpg',
+    position: 'center top',
   },
   {
     id: 2,
     image: '/assets/real_estate2.jpg',
+    position: 'center top',
   },
   {
     id: 3,
     image: '/assets/real_estate5.webp',
+    position: 'center top',
   },
 ];
 
@@ -42,15 +45,19 @@ export default function Hero() {
         <AnimatePresence initial={false}>
           <motion.div
             key={slide.id}
-            initial={{ opacity: 0, scale: 1.08 }}
+            initial={{ opacity: 0, scale: 1.03 }}
             animate={{ opacity: 1, scale: 1.0 }}
             exit={{ opacity: 0 }}
             transition={{
               opacity: { duration: 1.6, ease: [0.25, 1, 0.5, 1] },
               scale: { duration: 6, ease: 'easeOut' },
             }}
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url('${slide.image}')` }}
+            className="absolute inset-0 bg-cover"
+            style={{
+              backgroundImage: `url('${slide.image}')`,
+              backgroundPosition: slide.position || 'center top',
+              transformOrigin: 'center top',
+            }}
           />
         </AnimatePresence>
 
