@@ -212,21 +212,25 @@ export default function ProjectsShowcase() {
           <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-start lg:items-center justify-center gap-8 lg:gap-0 lg:pl-16 xl:pl-28">
             {/* ===== LEFT : TEXT ===== */}
             <div className="w-full lg:w-[46%] flex items-stretch gap-4 sm:gap-6 order-2 lg:order-1">
-              {/* CATEGORY BUTTONS : stacked vertically, top-aligned with the line */}
+              {/* CATEGORY BUTTONS : styled like Enquire button with rounded-sm and rose gold accents */}
               <div className="flex flex-col justify-start gap-2.5 shrink-0 pt-2">
-                {CATEGORIES.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => changeCategory(cat)}
-                    className={`px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-medium transition-all cursor-pointer text-left ${
-                      activeCategory === cat
-                        ? 'bg-[#BD7E6C] text-white shadow-sm font-semibold scale-[1.02]'
-                        : 'bg-white border border-stone-200 text-slate-600 hover:text-slate-900 hover:border-stone-300'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
+                {CATEGORIES.map((cat) => {
+                  const isSelected = activeCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => changeCategory(cat)}
+                      className={`px-3.5 sm:px-4 py-2 rounded-sm text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer text-left ${
+                        isSelected
+                          ? 'bg-[#BD7E6C] hover:bg-[#183D35] text-white shadow-md'
+                          : 'bg-white border border-[#BD7E6C]/30 text-slate-700 hover:border-[#BD7E6C] hover:text-[#BD7E6C] hover:bg-[#BD7E6C]/5 shadow-2xs'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Progressive vertical line indicator - only orange line increases on scroll */}
@@ -348,13 +352,14 @@ export default function ProjectsShowcase() {
                     </div>
 
                     <button
+                      type="button"
                       onClick={() =>
                         openEnquire(`View Details - ${project.name}`, project.name)
                       }
-                      className="px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-[#BD7E6C] text-white text-[11px] font-bold transition-all duration-300 flex items-center gap-1.5 cursor-pointer shadow-md active:scale-95"
+                      className="group inline-flex items-center gap-2 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-5 py-2.5 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
                     >
-                      <span>View Details</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <span>VIEW DETAILS</span>
+                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
                     </button>
                   </motion.div>
                 </motion.div>
