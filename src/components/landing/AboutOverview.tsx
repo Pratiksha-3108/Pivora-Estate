@@ -2,136 +2,203 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, X, ZoomIn } from 'lucide-react';
+import { motion, type Variants } from 'framer-motion';
+import { ArrowUpRight, X, MapPin } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
 
-const OVERVIEW_IMAGES = [
+const ABOUT_IMAGES = [
   {
-    id: 'exterior',
-    src: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1600&q=90',
-    alt: 'Pivora Estates Architectural Skyscraper Exterior',
-  },
-  {
-    id: 'interior',
-    src: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1600&q=90',
-    alt: 'Pivora Estates Luxury Living Room Interior',
+    id: 'living-pavilion',
+    label: 'Living Pavilion',
+    src: '/assets/real_estate1.jpg',
+    alt: 'Pivora Estates Luxury Living Pavilion & Architecture',
   },
 ];
 
+// Smooth custom ease curve for fluid deceleration (fadeInUp)
+const smoothEase = [0.22, 1, 0.36, 1] as const;
+
+const fadeInUpVariant: Variants = {
+  hidden: { opacity: 0, y: 35 },
+  visible: (custom: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.85,
+      delay: custom * 0.12,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
+
 export default function AboutOverview() {
   const { openEnquire } = useEnquire();
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
-  const [hoveredImage, setHoveredImage] = useState<number | null>(null);
+
+  const activeImage = ABOUT_IMAGES[activeImageIndex];
 
   return (
-    <section id="about" className="py-[90px] bg-[#f5f4ef] relative overflow-hidden scroll-mt-20 select-none">
+    <section
+      id="about"
+      className="relative py-[50px] bg-[#f5f4ef] text-slate-900 overflow-hidden scroll-mt-20 select-none"
+    >
       {/* Target anchor for overview link */}
       <div id="overview" className="scroll-mt-24" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+      {/* Subtle Luxury Ambient Radial Glow in the Background */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-60"
+        style={{
+          background:
+            'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(189, 126, 108, 0.08), transparent 70%)',
+        }}
+      />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 lg:items-stretch">
           
-          {/* Left Content Column with Smooth Slide-in From Left Animation */}
-          <motion.div
-            initial={{ opacity: 0, x: -70 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1.0] }}
-            className="lg:col-span-6 space-y-5 sm:space-y-6"
-          >
-            <div className="space-y-3 -mt-2">
-              <span className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block">
-                ABOUT US
+          {/* ================= LEFT COLUMN ================= */}
+          {/* Exact vertical span matching center image: (ABOUT) at top, Title above Subtitle at bottom */}
+          <div className="lg:col-span-3 xl:col-span-3 flex flex-col justify-between h-full min-h-[420px] lg:h-[510px]">
+            {/* Top Tag: (ABOUT) - Horizontally aligned with top of center image and right paragraph */}
+            <motion.div
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={0}
+              className="pt-0"
+            >
+              <span className="text-xs sm:text-sm font-bold uppercase tracking-widest text-[#BD7E6C] block">
+                (ABOUT)
               </span>
+            </motion.div>
 
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans">
-                {"Welcome To Pivora Estates".split(" ").map((word, wordIndex) => (
-                  <span
-                    key={wordIndex}
-                    className="titleWord inline-block mr-[0.25em] last:mr-0"
-                    style={{
-                      animationDelay: `${wordIndex * 0.18}s`,
-                    }}
-                  >
-                    {word}
-                  </span>
-                ))}
+            {/* Bottom Block: Title ABOVE Subtitle - Horizontally aligned with bottom of center image */}
+            <motion.div
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={1}
+              className="mt-auto space-y-2.5 sm:space-y-3 pb-0"
+            >
+              {/* Title: 5 stacked lines matching reference, website font & bold weight */}
+              <h2 className="text-2xl sm:text-3xl lg:text-[32px] xl:text-[38px] font-extrabold text-slate-950 tracking-tight font-sans leading-[1.04] uppercase">
+                <span className="block">TIMELESS</span>
+                <span className="block">DESIGN</span>
+                <span className="block">WELLNESS-</span>
+                <span className="block">FOCUSED</span>
+                <span className="block">LIVING</span>
               </h2>
-            </div>
 
-            <div className="space-y-6 text-slate-700 text-base sm:text-lg leading-relaxed font-normal">
-              <p>
-                Step into a world where every detail is meticulously crafted. Pivora Estates offers expansive living spaces adorned with premium finishes and floor-to-ceiling windows that frame breathtaking views of Pune&apos;s skyline.
+              {/* Subtitle positioned below the title as requested */}
+              <p className="text-[11px] sm:text-xs font-sans uppercase tracking-[0.18em] text-[#BD7E6C] font-semibold pt-1">
+                PIVORA ESTATES <span className="text-slate-400 font-normal">•</span> <span className="text-slate-600 font-medium">HINJAWADI PHASE 1, PUNE</span>
               </p>
+            </motion.div>
+          </div>
 
-              <p>
-                Featuring 2, 3, and 4 BHK luxury residences starting at <span className="font-bold text-slate-900">₹1.19 Cr.</span> Experience unmatched elegance and a serene environment right in the heart of Hinjawadi Phase 1.
-              </p>
-            </div>
+          {/* ================= CENTER COLUMN (WIDER & REDUCED HEIGHT IMAGE CARD) ================= */}
+          <div className="lg:col-span-5 xl:col-span-5 flex justify-center items-center">
+            <motion.div
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={2}
+              className="relative w-full max-w-[480px] sm:max-w-[500px] lg:max-w-[520px] h-[430px] sm:h-[470px] lg:h-[510px] group"
+            >
+              {/* Image Card Container - Wider width, reduced height, smooth hover */}
+              <div
+                onClick={() => setZoomedImage(activeImage.src)}
+                className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_20px_45px_-12px_rgba(0,0,0,0.18)] transition-all duration-500 cursor-pointer bg-neutral-200"
+              >
+                {/* Image with subtle pan & smooth zoom on hover */}
+                <Image
+                  src={activeImage.src}
+                  alt={activeImage.alt}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 520px"
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
 
-            <div className="pt-2">
+              {/* Decorative Subtle Shadow Reflection */}
+              <div className="absolute -bottom-3 inset-x-6 h-6 bg-black/10 blur-xl rounded-full pointer-events-none" />
+            </motion.div>
+          </div>
+
+          {/* ================= RIGHT COLUMN (TEXT & WEBSITE DETAILS) ================= */}
+          <div className="lg:col-span-4 xl:col-span-4 flex flex-col justify-start h-full lg:pl-3 xl:pl-4 space-y-5 pt-0">
+            
+            {/* Top Paragraphs */}
+            <motion.p
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={1}
+              className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal"
+            >
+              Every element of Pivora Estates reflects a commitment to excellence. From the timeless elegance of its interiors to thoughtfully curated amenities, the property embodies a holistic approach to luxury living.
+            </motion.p>
+
+            <motion.p
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={2}
+              className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal"
+            >
+              Whether you&apos;re seeking a serene retreat, cultural hub, or a space that fosters personal growth, Pivora Estates offers it all.
+            </motion.p>
+
+            {/* Pivora Estate Highlights Pill Grid */}
+            <motion.div
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={3}
+              className="pt-1 space-y-2.5"
+            >
+              <div className="flex items-center gap-2.5 text-xs text-slate-800 font-medium">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#BD7E6C]" />
+                <span>2, 3 &amp; 4 BHK Ultra-Luxury Residences</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-xs text-slate-800 font-medium">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#BD7E6C]" />
+                <span>Starting at <span className="text-[#BD7E6C] font-bold">₹1.19 Cr.</span> Onwards</span>
+              </div>
+              <div className="flex items-center gap-2.5 text-xs text-slate-600 font-medium">
+                <MapPin className="w-3.5 h-3.5 text-[#BD7E6C]" />
+                <span>Hinjawadi Phase 1, Pune</span>
+              </div>
+            </motion.div>
+
+            {/* Action Button positioned right below Hinjawadi Phase 1, Pune */}
+            <motion.div
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={4}
+              className="pt-2"
+            >
               <button
-                onClick={() => openEnquire('ENQUIRE NOW')}
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#BD7E6C] hover:bg-[#a66a59] text-white text-xs font-bold uppercase tracking-widest transition-all shadow-md hover:shadow-lg cursor-pointer active:scale-95"
+                type="button"
+                onClick={() => openEnquire('Welcome to Pivora Estates', 'About Us Section')}
+                className="group inline-flex items-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-6 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
               >
                 <span>ENQUIRE NOW</span>
-                <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
               </button>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          {/* Right Dual Overlapping Images Column (Square Shaped with Hover Zoom) */}
-          <div className="lg:col-span-6 relative flex justify-center items-center py-6 sm:py-10">
-            <div className="relative w-full max-w-md sm:max-w-lg aspect-square">
-              
-              {/* Back Image (Exterior Building) - Square Shape */}
-              <div
-                onMouseEnter={() => setHoveredImage(0)}
-                onMouseLeave={() => setHoveredImage(null)}
-                onClick={() => setZoomedImage(OVERVIEW_IMAGES[0].src)}
-                className={`absolute transition-all duration-500 ease-out cursor-pointer rounded-[3rem] overflow-hidden shadow-xl border border-white/60 group aspect-square ${
-                  hoveredImage === 0
-                    ? 'top-0 left-0 w-full h-full z-30 scale-105 shadow-2xl border-2 border-white'
-                    : 'top-0 left-0 w-[82%] h-[82%] z-10'
-                }`}
-              >
-                <Image
-                  src={OVERVIEW_IMAGES[0].src}
-                  alt={OVERVIEW_IMAGES[0].alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className={`object-cover transition-transform duration-700 ease-out ${
-                    hoveredImage === 0 ? 'scale-110' : 'scale-100 group-hover:scale-105'
-                  }`}
-                  priority
-                />
-              </div>
-
-              {/* Front Image (Interior Living Room) - Square Shape */}
-              <div
-                onMouseEnter={() => setHoveredImage(1)}
-                onMouseLeave={() => setHoveredImage(null)}
-                onClick={() => setZoomedImage(OVERVIEW_IMAGES[1].src)}
-                className={`absolute transition-all duration-500 ease-out cursor-pointer rounded-[3rem] overflow-hidden shadow-2xl border-4 border-white group aspect-square ${
-                  hoveredImage === 1
-                    ? 'bottom-0 right-0 w-full h-full z-30 scale-105 shadow-2xl'
-                    : 'bottom-0 right-0 w-[78%] h-[78%] z-20'
-                }`}
-              >
-                <Image
-                  src={OVERVIEW_IMAGES[1].src}
-                  alt={OVERVIEW_IMAGES[1].alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className={`object-cover transition-transform duration-700 ease-out ${
-                    hoveredImage === 1 ? 'scale-110' : 'scale-100 group-hover:scale-105'
-                  }`}
-                  priority
-                />
-              </div>
-
-            </div>
           </div>
 
         </div>
@@ -141,7 +208,7 @@ export default function AboutOverview() {
       {zoomedImage && (
         <div
           onClick={() => setZoomedImage(null)}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-300"
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-300 select-none"
         >
           {/* Close button */}
           <button
@@ -155,13 +222,13 @@ export default function AboutOverview() {
           {/* Zoomed Image Container */}
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-5xl w-full h-[80vh] rounded-3xl overflow-hidden shadow-2xl border border-white/20 animate-in zoom-in-95 duration-300"
+            className="relative max-w-5xl w-full h-[85vh] rounded-3xl overflow-hidden shadow-2xl border border-white/20 animate-in zoom-in-95 duration-300"
           >
             <Image
               src={zoomedImage}
-              alt="Zoomed View"
+              alt="Pivora Estates View"
               fill
-              className="object-contain bg-black/60"
+              className="object-contain"
               priority
             />
           </div>
@@ -170,4 +237,3 @@ export default function AboutOverview() {
     </section>
   );
 }
-

@@ -12,10 +12,10 @@ const EnquireContext = createContext<EnquireContextType | undefined>(undefined);
 
 export function EnquireProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState('ENQUIRE NOW');
+  const [modalTitle, setModalTitle] = useState('Welcome to Pivora Estates');
   const [projectName, setProjectName] = useState('');
 
-  const openEnquire = (title = 'ENQUIRE NOW', defaultProjectName = '') => {
+  const openEnquire = (title = 'Welcome to Pivora Estates', defaultProjectName = '') => {
     setModalTitle(title);
     setProjectName(defaultProjectName);
     setIsOpen(true);
@@ -25,13 +25,14 @@ export function EnquireProvider({ children }: { children: React.ReactNode }) {
     setIsOpen(false);
   };
 
+
   return (
     <EnquireContext.Provider value={{ openEnquire, closeEnquire }}>
       {children}
-      <EnquireModal 
-        isOpen={isOpen} 
-        onClose={closeEnquire} 
-        title={modalTitle} 
+      <EnquireModal
+        isOpen={isOpen}
+        onClose={closeEnquire}
+        title={modalTitle}
         defaultProjectName={projectName}
       />
     </EnquireContext.Provider>

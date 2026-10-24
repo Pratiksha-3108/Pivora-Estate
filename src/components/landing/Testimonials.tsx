@@ -1,198 +1,262 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { Quote } from 'lucide-react';
 
 interface TestimonialItem {
   id: string;
   quote: string;
   author: string;
   role: string;
+  location: string;
+  avatar: string;
 }
 
-const TESTIMONIALS_DATA: TestimonialItem[] = [
+const TESTIMONIALS: TestimonialItem[] = [
   {
     id: 'test-1',
     quote:
-      'Pivora Estates helped us design our new luxury residence, and the outcome exceeded all our expectations. They managed to blend our lifestyle vision with a modern aesthetic that our family loves. Highly recommended for corporate and luxury living spaces.',
-    author: 'Vikram Malhotra',
+      'Pivora Estates understood our family’s deep roots in Pune and helped us acquire a breathtaking penthouse in Kalyani Nagar. Their architectural spatial insight and transparent negotiation saved us both substantial capital and invaluable time.',
+    author: 'Vikram Shinde',
     role: 'Penthouse Owner',
+    location: 'Kalyani Nagar, Pune',
+    avatar: '/assets/client1.jpg',
   },
   {
     id: 'test-2',
     quote:
-      'From the initial architectural consultation to possession, everything was managed with precision and elegance. Pivora Estates delivered beyond our highest expectations, crafting a home we take pride in every single day.',
-    author: 'Sonal Patil',
-    role: 'Home Buyer',
+      'From our first site visit to final registration in Baner, every milestone was executed with immaculate precision. Pivora Estates delivered complete peace of mind, finding a home that matches our cultural values and modern aspirations.',
+    author: 'Snehal Kulkarni',
+    role: 'Luxury Home Buyer',
+    location: 'Baner - Balewadi, Pune',
+    avatar: '/assets/client2.jpg',
   },
   {
     id: 'test-3',
     quote:
-      'Pivora Estates guided us through every detail of floorplan planning and finishes. Their spatial intelligence and transparent execution saved us both time and capital while creating a stunning sanctuary.',
-    author: 'Rajesh & Priya Sharma',
-    role: 'Villa Owners',
+      'Managing high-value commercial properties across Hinjawadi requires sharp local market intelligence. Pivora Estates provided clear feasibility studies, ensuring our commercial investments yielded optimal rental returns.',
+    author: 'Ajinkya Deshmukh',
+    role: 'Commercial Asset Investor',
+    location: 'Hinjawadi IT Park, Pune',
+    avatar: '/assets/client3.jpg',
   },
   {
     id: 'test-4',
     quote:
-      'Exceptional service from structural design to site supervision. They transformed our vision into an architectural masterpiece with unmatched elegance and serene surroundings.',
-    author: 'Ananya Deshmukh',
-    role: 'Commercial Investor',
+      'Their team guided us through custom luxury floorplans and premium finishes for our private villa. They transformed our lifestyle vision into a serene architectural sanctuary with unmatched elegance.',
+    author: 'Dr. Pradeep Joshi',
+    role: 'Private Villa Owner',
+    location: 'Balewadi High Street, Pune',
+    avatar: '/assets/client4.jpg',
+  },
+  {
+    id: 'test-5',
+    quote:
+      'Securing an expansive duplex residence near the EON IT corridor with private terraces seemed challenging until we partnered with Pivora. Their institutional credibility, RERA guidance, and dedication are truly exceptional.',
+    author: 'Tanvi Gaikwad',
+    role: 'Tech Entrepreneur & Duplex Owner',
+    location: 'Kharadi Annex, Pune',
+    avatar: '/assets/client5.jpg',
   },
 ];
 
 export default function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [direction, setDirection] = useState<number>(1);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
+  const total = TESTIMONIALS.length;
 
-  const total = TESTIMONIALS_DATA.length;
-  const current = TESTIMONIALS_DATA[currentIndex];
-
-  // Auto rotate slider every 4.5 seconds (pauses on hover)
+  // Faster auto-rotation speed: changes every 3.0 seconds (pauses on hover)
   useEffect(() => {
     if (isPaused) return;
 
     const timer = setInterval(() => {
-      setDirection(1);
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % total);
+      setActiveIndex((prev) => (prev + 1) % total);
     }, 3000);
 
     return () => clearInterval(timer);
   }, [isPaused, total]);
 
   const handlePrev = () => {
-    setDirection(-1);
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + total) % total);
+    setActiveIndex((prev) => (prev - 1 + total) % total);
   };
 
   const handleNext = () => {
-    setDirection(1);
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % total);
+    setActiveIndex((prev) => (prev + 1) % total);
   };
 
-  const slideVariants = {
-    enter: (dir: number) => ({
-      x: dir > 0 ? 50 : -50,
-      opacity: 0,
-      filter: 'blur(6px)',
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      filter: 'blur(0px)',
-    },
-    exit: (dir: number) => ({
-      x: dir < 0 ? 50 : -50,
-      opacity: 0,
-      filter: 'blur(6px)',
-    }),
+  // Helper to calculate circular distance offset relative to active card (-1, 0, 1)
+  const getCardOffset = (index: number) => {
+    let diff = (index - activeIndex) % total;
+    if (diff < -Math.floor(total / 2)) diff += total;
+    if (diff > Math.floor(total / 2)) diff -= total;
+    return diff;
   };
 
   return (
     <section
       id="testimonials"
-      className="py-[90px] bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
+      className="pt-[50px] pb-4 sm:pb-6 bg-[#fbf9f5] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      {/* Soft Ambient Glows matching website palette */}
+      <div className="absolute top-1/4 left-10 w-96 h-96 bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#e2be9b]/15 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* SECTION HEADER */}
-        <div className="space-y-2.5 mb-10 sm:mb-14">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
-            WHAT OUR CLIENTS SAY
+        <div className="text-center space-y-2 mb-8 sm:mb-10">
+          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
+            SEE WHAT OUR CLIENTS HAVE TO SAY
           </span>
-
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight">
-            {"Stories of Refined Living".split(" ").map((word, wordIndex) => (
-              <span
-                key={wordIndex}
-                className="titleWord inline-block mr-[0.25em] last:mr-0"
-                style={{
-                  animationDelay: `${wordIndex * 0.18}s`,
-                }}
-              >
-                {word}
-              </span>
-            ))}
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans">
+            Testimonials
           </h2>
         </div>
 
-        {/* SLIDER CONTAINER WITH OUTWARD SHIFTED SIDE ARROWS */}
+        {/* 3-CARD CAROUSEL: One-by-one elevated card transition */}
         <div
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
-          className="relative max-w-5xl sm:max-w-6xl mx-auto flex items-center justify-between gap-4 sm:gap-10 lg:gap-16 min-h-[200px] px-2 sm:px-4"
+          className="relative max-w-6xl mx-auto min-h-[330px] sm:min-h-[350px] flex items-center justify-center cursor-pointer"
         >
-          {/* LEFT ARROW BUTTON - SHIFTED LEFT */}
-          <button
-            onClick={handlePrev}
-            aria-label="Previous Testimonial"
-            className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-slate-400/80 hover:border-slate-950 text-slate-700 hover:text-slate-950 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer bg-transparent shrink-0 -translate-x-1 sm:-translate-x-3 lg:-translate-x-6"
-          >
-            <ChevronLeft className="w-6 h-6 stroke-[1.5]" />
-          </button>
+          {/* Deck Wrapper */}
+          <div className="relative w-full h-[330px] sm:h-[350px] flex items-center justify-center">
+            {TESTIMONIALS.map((item, index) => {
+              const offset = getCardOffset(index);
+              const isActive = offset === 0;
+              const isLeft = offset === -1;
+              const isRight = offset === 1;
 
-          {/* QUOTE CONTENT WITH SMOOTH DIRECTIONAL SLIDE ANIMATION */}
-          <div className="flex-1 px-2 sm:px-8 overflow-hidden">
-            <AnimatePresence mode="wait" custom={direction}>
-              <motion.div
-                key={current.id}
-                custom={direction}
-                variants={slideVariants}
-                initial="enter"
-                animate="center"
-                exit="exit"
-                transition={{
-                  x: { type: 'spring', stiffness: 260, damping: 28 },
-                  opacity: { duration: 0.35 },
-                  filter: { duration: 0.35 },
-                }}
-                className="space-y-6"
-              >
-                <p className="text-slate-700 text-base sm:text-lg lg:text-xl font-normal leading-relaxed max-w-3xl mx-auto">
-                  &ldquo;{current.quote}&rdquo;
-                </p>
+              // Smooth continuous coordinates
+              const getPositionStyles = () => {
+                if (offset === 0) {
+                  return {
+                    x: '0%',
+                    y: -26,
+                    scale: 1.05,
+                    zIndex: 30,
+                    opacity: 1,
+                  };
+                }
+                if (offset === -1) {
+                  return {
+                    x: '-74%',
+                    y: 10,
+                    scale: 0.9,
+                    zIndex: 15,
+                    opacity: 0.68,
+                  };
+                }
+                if (offset === 1) {
+                  return {
+                    x: '74%',
+                    y: 10,
+                    scale: 0.9,
+                    zIndex: 15,
+                    opacity: 0.68,
+                  };
+                }
+                if (offset < -1) {
+                  return {
+                    x: '-120%',
+                    y: 18,
+                    scale: 0.75,
+                    zIndex: 1,
+                    opacity: 0,
+                  };
+                }
+                return {
+                  x: '120%',
+                  y: 18,
+                  scale: 0.75,
+                  zIndex: 1,
+                  opacity: 0,
+                };
+              };
 
-                <h4 className="text-base sm:text-lg font-bold text-slate-950 font-sans tracking-tight">
-                  - {current.author}
-                </h4>
-              </motion.div>
-            </AnimatePresence>
+              const animState = getPositionStyles();
+
+              return (
+                <motion.div
+                  key={item.id}
+                  onClick={() => {
+                    if (isLeft) handlePrev();
+                    if (isRight) handleNext();
+                  }}
+                  animate={animState}
+                  transition={{
+                    duration: 0.45, // Faster, crisp smooth animation
+                    ease: [0.22, 1, 0.36, 1], // Smooth cubic-bezier
+                  }}
+                  className={`absolute w-[92%] sm:w-[380px] md:w-[420px] lg:w-[450px] flex flex-col items-center select-none ${
+                    !isActive ? 'cursor-pointer hover:opacity-95' : ''
+                  }`}
+                >
+                  {/* The Testimonial Card Box */}
+                  <div
+                    className={`relative w-full rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-center transition-colors duration-400 flex flex-col items-center justify-between min-h-[220px] sm:min-h-[245px] ${
+                      isActive
+                        ? 'bg-gradient-to-br from-[#c8816e] to-[#a96150] text-white shadow-[0_24px_55px_-12px_rgba(200,129,110,0.45)] border border-[#c8816e]/40'
+                        : 'bg-white text-slate-700 shadow-[0_10px_35px_-10px_rgba(0,0,0,0.08)] border border-[#eadfd9]'
+                    }`}
+                  >
+                    {/* Centered Large Stylized Quote Icon */}
+                    <div className="mb-2 sm:mb-3">
+                      <Quote
+                        className={`w-9 h-9 sm:w-11 sm:h-11 mx-auto transition-colors duration-400 ${
+                          isActive
+                            ? 'text-white/40 fill-white/20'
+                            : 'text-[#BD7E6C]/30 fill-[#BD7E6C]/10'
+                        }`}
+                      />
+                    </div>
+
+                    {/* Review Quote Text */}
+                    <p
+                      className={`text-xs sm:text-[13.5px] leading-relaxed transition-colors duration-400 font-normal ${
+                        isActive ? 'text-white font-medium drop-shadow-xs' : 'text-slate-600'
+                      }`}
+                    >
+                      &ldquo;{item.quote}&rdquo;
+                    </p>
+
+                    <div className="h-3 sm:h-4" />
+                  </div>
+
+                  {/* Overlapping Bottom Avatar & Maharashtrian Author Info */}
+                  <div className="flex flex-col items-center -mt-7 sm:-mt-8 z-40">
+                    <div
+                      className={`relative w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-4 transition-all duration-400 ${
+                        isActive
+                          ? 'border-white shadow-[0_10px_22px_rgba(200,129,110,0.4)] scale-105'
+                          : 'border-white shadow-md'
+                      }`}
+                    >
+                      <Image
+                        src={item.avatar}
+                        alt={item.author}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                      />
+                    </div>
+
+                    {/* Client Name & Maharashtrian Pune Details */}
+                    <div className="text-center mt-2.5 sm:mt-3 space-y-0.5">
+                      <h4 className="text-sm sm:text-base font-bold text-slate-950 tracking-tight font-sans">
+                        {item.author}
+                      </h4>
+                      <p className="text-[11px] sm:text-xs text-slate-500 font-normal">
+                        {item.role} &bull; {item.location}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
-
-          {/* RIGHT ARROW BUTTON - SHIFTED RIGHT */}
-          <button
-            onClick={handleNext}
-            aria-label="Next Testimonial"
-            className="w-11 h-11 sm:w-13 sm:h-13 rounded-full border border-slate-400/80 hover:border-slate-950 text-slate-700 hover:text-slate-950 flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer bg-transparent shrink-0 translate-x-1 sm:translate-x-3 lg:translate-x-6"
-          >
-            <ChevronRight className="w-6 h-6 stroke-[1.5]" />
-          </button>
-        </div>
-
-        {/* BOTTOM PROGRESS BAR & SLIDE COUNTER WITH DYNAMIC TIMER ANIMATION */}
-        <div className="mt-12 sm:mt-16 flex items-center justify-center gap-4 max-w-[220px] sm:max-w-[280px] mx-auto">
-          <span className="text-xs sm:text-sm font-bold text-[#BD7E6C] tracking-widest shrink-0">
-            {String(currentIndex + 1).padStart(2, '0')}
-          </span>
-
-          <div className="flex-1 h-[2.5px] bg-slate-300/80 relative rounded-full overflow-hidden">
-            <motion.div
-              key={`${currentIndex}-${isPaused}`}
-              className="h-full bg-[#BD7E6C] rounded-full"
-              initial={{ width: `${(currentIndex / total) * 100}%` }}
-              animate={{ width: `${((currentIndex + 1) / total) * 100}%` }}
-              transition={{
-                duration: isPaused ? 0.3 : 3.0,
-                ease: isPaused ? 'easeOut' : 'linear',
-              }}
-            />
-          </div>
-
-          <span className="text-xs sm:text-sm font-bold text-slate-400 tracking-widest shrink-0">
-            {String(total).padStart(2, '0')}
-          </span>
         </div>
 
       </div>

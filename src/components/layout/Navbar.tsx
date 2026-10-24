@@ -4,8 +4,68 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
+
+// Small inline social icons (no extra packages needed)
+const Svg = ({ children }: { children: React.ReactNode }) => (
+  <svg
+    viewBox="0 0 24 24"
+    width="14"
+    height="14"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {children}
+  </svg>
+);
+
+const SOCIALS = [
+  {
+    name: 'Facebook',
+    href: '#',
+    icon: (
+      <Svg>
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+      </Svg>
+    ),
+  },
+  {
+    name: 'Instagram',
+    href: '#',
+    icon: (
+      <Svg>
+        <rect x="2" y="2" width="20" height="20" rx="5" />
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+      </Svg>
+    ),
+  },
+  {
+    name: 'YouTube',
+    href: '#',
+    icon: (
+      <Svg>
+        <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
+        <path d="m10 15 5-3-5-3z" />
+      </Svg>
+    ),
+  },
+  {
+    name: 'LinkedIn',
+    href: '#',
+    icon: (
+      <Svg>
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+        <rect x="2" y="9" width="4" height="12" />
+        <circle cx="4" cy="4" r="2" />
+      </Svg>
+    ),
+  },
+];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -15,80 +75,122 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      const firstSection = document.querySelector('section');
+      const threshold = firstSection ? firstSection.offsetHeight - 80 : window.innerHeight - 80;
+      setScrolled(window.scrollY > threshold);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
+  }, [pathname]);
 
   const navLinks = [
+    { name: 'HOME', href: '/' },
     { name: 'ABOUT', href: '/#about' },
     { name: 'PROJECTS', href: '/#projects' },
-    { name: 'AMENITIES', href: '/#amenities' },
     { name: 'SERVICES', href: '/#services' },
     { name: 'CONTACT', href: '/contact' },
   ];
 
+  const isActive = (href: string) => href === '/' && pathname === '/';
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-sm py-3 border-b border-slate-200/80'
-          : 'bg-white/90 backdrop-blur-sm py-4 border-b border-slate-100'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+          ? 'bg-[#f5f4ef]/95 backdrop-blur-md shadow-xs border-b border-stone-200/80 text-slate-900'
+          : 'bg-black/25 backdrop-blur-[2px] border-b border-white/10 text-white'
+        }`}
     >
+
+      {/* ===== Main nav row ===== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Left Brand Logo */}
+        <div
+          className={`flex items-center justify-between transition-all duration-500 ${scrolled ? 'py-2' : 'py-3'
+            }`}
+        >
+          {/* Left: Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-12 w-44 sm:h-14 sm:w-56 flex items-center justify-start">
+            <div className="relative h-14 w-52 sm:h-16 sm:w-64 flex items-center justify-start">
               <Image
-                src="/assets/logo_new.png"
+                src="/assets/pivora logo_bg.png"
                 alt="Pivora Estates Logo"
-                width={240}
-                height={70}
+                width={300}
+                height={100}
                 priority
-                className="h-full w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                className={`h-full w-auto object-contain group-hover:scale-105 transition-all duration-300 ${scrolled ? 'brightness-0' : 'drop-shadow-sm'
+                  }`}
               />
             </div>
           </Link>
 
-          {/* Center Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-8">
+          {/* Center: Links (active link has underline) */}
+          {/* Center: Links with text roll (slide-up) hover animation */}
+          <nav className="hidden lg:flex items-center gap-9">
             {navLinks.map((link) => {
+              const active = isActive(link.href);
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className="text-xs font-bold uppercase tracking-widest text-slate-700 hover:text-[#c8816e] transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[2px] after:bg-[#c8816e] hover:after:w-full after:transition-all after:duration-300"
+                  className={`group relative py-1 text-xs font-semibold uppercase tracking-widest transition-colors ${scrolled
+                      ? active
+                        ? 'text-slate-950'
+                        : 'text-slate-700 hover:text-slate-950'
+                      : active
+                        ? 'text-white'
+                        : 'text-white/90 hover:text-white'
+                    }`}
                 >
-                  {link.name}
+                  {/* Rolling text wrapper */}
+                  <span className="relative inline-block overflow-hidden h-4 leading-4">
+                    <span className="block transition-transform duration-300 ease-out group-hover:-translate-y-full">
+                      {link.name}
+                    </span>
+                    <span className="absolute inset-0 block text-[#BD7E6C] transition-transform duration-300 ease-out translate-y-full group-hover:translate-y-0">
+                      {link.name}
+                    </span>
+                  </span>
+
+                  {/* Active / Hover underline indicator */}
+                  <span
+                    className={`absolute bottom-0 left-0 h-[2px] bg-[#BD7E6C] transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}
+                  />
                 </Link>
               );
             })}
           </nav>
 
-          {/* Right Action Button */}
+          {/* Right: Button */}
           <div className="hidden md:flex items-center gap-4">
             <button
               onClick={() => openEnquire('ENQUIRE NOW')}
-              className="rounded-full bg-[#BD7E6C] hover:bg-[#a66a59] text-white px-7 py-2.5 text-xs font-bold tracking-widest transition-all uppercase cursor-pointer shadow-md hover:shadow-lg active:scale-95"
+              className="group inline-flex items-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-6 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
             >
-              ENQUIRE NOW
+              <span>ENQUIRE NOW</span>
+              <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
             </button>
           </div>
 
-          {/* Mobile Menu Trigger */}
+          {/* Mobile trigger */}
           <div className="flex items-center gap-3 lg:hidden">
             <button
               onClick={() => openEnquire('ENQUIRE NOW')}
-              className="md:hidden rounded-full bg-[#BD7E6C] text-white px-4 py-1.5 text-[11px] font-bold tracking-wider uppercase shadow-xs"
+              className="group md:hidden inline-flex items-center gap-1.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-3.5 py-2 text-[11px] font-bold tracking-wider uppercase shadow-xs transition-all duration-300"
             >
-              ENQUIRE
+              <span>ENQUIRE</span>
+              <ArrowUpRight className="w-3 h-3 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-800 hover:bg-slate-100 transition-colors"
+              className={`p-2 rounded-lg transition-colors cursor-pointer ${scrolled
+                  ? 'text-slate-900 hover:bg-stone-200/60'
+                  : 'text-white hover:bg-white/15'
+                }`}
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -97,28 +199,57 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* ===== Mobile drawer ===== */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-slate-200 px-6 py-6 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-200">
+        <div
+          className={`lg:hidden border-t px-6 py-6 shadow-2xl animate-in fade-in slide-in-from-top-4 duration-200 backdrop-blur-xl ${scrolled
+              ? 'bg-[#f5f4ef]/95 border-stone-200/80 text-slate-900'
+              : 'bg-[#0c0b0a]/95 border-white/15 text-white'
+            }`}
+        >
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-xs font-bold text-slate-800 hover:text-[#BD7E6C] uppercase tracking-widest py-2 border-b border-slate-100"
+                className={`text-xs font-bold uppercase tracking-widest py-2 border-b hover:text-[#BD7E6C] ${scrolled ? 'border-stone-200/80' : 'border-white/10'
+                  } ${isActive(link.href)
+                    ? 'text-[#BD7E6C]'
+                    : scrolled
+                      ? 'text-slate-800'
+                      : 'text-white/90'
+                  }`}
               >
                 {link.name}
               </Link>
             ))}
+
+            <div
+              className={`flex items-center gap-5 pt-2 ${scrolled ? 'text-slate-600' : 'text-white/80'
+                }`}
+            >
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.name}
+                  href={s.href}
+                  aria-label={s.name}
+                  className="hover:text-[#BD7E6C]"
+                >
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 openEnquire('ENQUIRE NOW');
               }}
-              className="mt-2 w-full rounded-full bg-[#BD7E6C] hover:bg-[#a66a59] text-white py-3 text-xs font-bold tracking-widest uppercase text-center shadow-md active:scale-95 transition-all"
+              className="group mt-2 w-full inline-flex items-center justify-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white py-3 text-xs font-bold tracking-widest uppercase text-center shadow-md active:scale-95 transition-all"
             >
-              ENQUIRE NOW
+              <span>ENQUIRE NOW</span>
+              <ArrowUpRight className="w-4 h-4 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
             </button>
           </nav>
         </div>
@@ -126,5 +257,3 @@ export default function Navbar() {
     </header>
   );
 }
-
-

@@ -1,61 +1,93 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
+import { Home, IndianRupee, Leaf, Gem } from 'lucide-react';
 
-// CountUp component for animating counter numbers on scroll
-function AnimatedCounter({
-  target,
-  decimals = 0,
-  prefix = '',
-  suffix = '',
-  duration = 2000,
+// Single digit flip & roll component with 3D perspective and fast smooth ease
+function FlipDigit({
+  char,
+  delay = 0,
+  duration = 0.85,
+  hasAnimated,
 }: {
-  target: number;
-  decimals?: number;
-  prefix?: string;
-  suffix?: string;
+  char: string;
+  delay?: number;
   duration?: number;
+  hasAnimated: boolean;
 }) {
-  const [count, setCount] = useState(0);
-  const [hasAnimated, setHasAnimated] = useState(false);
-  const elementRef = useRef<HTMLSpanElement>(null);
+  const isDigit = /^[0-9]$/.test(char);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          let startTime: number | null = null;
-          const animate = (currentTime: number) => {
-            if (!startTime) startTime = currentTime;
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            // Cubic ease-out
-            const easeOut = 1 - Math.pow(1 - progress, 3);
-            setCount(easeOut * target);
-            if (progress < 1) {
-              requestAnimationFrame(animate);
-            }
-          };
-          requestAnimationFrame(animate);
-        }
-      },
-      { threshold: 0.2 }
+  if (!isDigit) {
+    return (
+      <span className="inline-block whitespace-pre">
+        {char}
+      </span>
     );
+  }
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [target, duration, hasAnimated]);
+  const targetDigit = parseInt(char, 10);
+  // Full rotation loop of numbers, then landing precisely on targetDigit
+  const sequence = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, targetDigit];
+  const targetIndex = sequence.length - 1;
 
   return (
-    <span ref={elementRef}>
-      {prefix}
-      {count.toFixed(decimals)}
-      {suffix}
+    <span className="inline-block overflow-hidden h-[1.15em] leading-[1.15em] relative [perspective:400px] align-baseline">
+      <motion.span
+        className="flex flex-col text-center"
+        initial={{ y: '0%', rotateX: -35, opacity: 0.7 }}
+        animate={
+          hasAnimated
+            ? {
+                y: `-${(targetIndex / sequence.length) * 100}%`,
+                rotateX: 0,
+                opacity: 1,
+              }
+            : { y: '0%', rotateX: -35, opacity: 0.7 }
+        }
+        transition={{
+          duration: duration,
+          delay: delay,
+          ease: [0.16, 1, 0.3, 1], // Snappy fast start with buttery-smooth deceleration
+        }}
+      >
+        {sequence.map((d, idx) => (
+          <span
+            key={idx}
+            className="h-[1.15em] flex items-center justify-center select-none"
+          >
+            {d}
+          </span>
+        ))}
+      </motion.span>
+    </span>
+  );
+}
+
+// Multi-character flip number container (supports decimals, commas, spaces)
+function FlipNumber({
+  value,
+  baseDelay = 0,
+}: {
+  value: string;
+  baseDelay?: number;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.25 });
+
+  const characters = value.split('');
+
+  return (
+    <span ref={ref} className="inline-flex items-baseline">
+      {characters.map((char, index) => (
+        <FlipDigit
+          key={index}
+          char={char}
+          delay={baseDelay + index * 0.05}
+          duration={0.85}
+          hasAnimated={isInView}
+        />
+      ))}
     </span>
   );
 }
@@ -63,139 +95,97 @@ function AnimatedCounter({
 const STATS_DATA = [
   {
     id: 'residences',
-    type: 'static',
-    mainValue: '2, 3 & 4',
+    value: '2, 3 & 4',
     unit: 'BHK',
     label: 'RESIDENCES',
-    badge: 'LUXURY HOMES',
-    highlight: false,
-    lineHeight: 'h-10 sm:h-12',
+    icon: 'home' as const,
   },
   {
     id: 'price',
-    type: 'counter',
-    targetNumber: 1.19,
-    decimals: 2,
+    value: '1.19',
     unit: 'Cr+',
     label: 'STARTING PRICE',
-    badge: 'ONWARDS',
-    highlight: false,
-    lineHeight: 'h-16 sm:h-20',
+    icon: 'rupee' as const,
   },
   {
     id: 'amenities',
-    type: 'counter',
-    targetNumber: 20,
-    decimals: 0,
+    value: '20',
     unit: '+',
     label: 'AMENITIES',
-    badge: 'LIFESTYLE',
-    highlight: false,
-    lineHeight: 'h-24 sm:h-28',
+    icon: 'leaf' as const,
   },
   {
     id: 'experience',
-    type: 'counter',
-    targetNumber: 100,
-    decimals: 0,
+    value: '100',
     unit: '%',
     label: 'PREMIUM LIVING',
-    badge: 'REFINED LIFESTYLE',
-    highlight: false,
-    lineHeight: 'h-32 sm:h-38',
+    icon: 'gem' as const,
   },
 ];
 
+function StatIcon({ icon }: { icon: 'home' | 'rupee' | 'leaf' | 'gem' }) {
+  if (icon === 'home') {
+    return <Home className="w-8 h-8 sm:w-9 sm:h-9 text-[#BD7E6C] stroke-[1.5] shrink-0" />;
+  }
+  if (icon === 'rupee') {
+    return (
+      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border-[1.75px] border-[#BD7E6C] flex items-center justify-center shrink-0 text-[#BD7E6C]">
+        <IndianRupee className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
+      </div>
+    );
+  }
+  if (icon === 'leaf') {
+    return <Leaf className="w-8 h-8 sm:w-9 sm:h-9 text-[#BD7E6C] stroke-[1.5] shrink-0" />;
+  }
+  return <Gem className="w-8 h-8 sm:w-9 sm:h-9 text-[#BD7E6C] stroke-[1.5] shrink-0" />;
+}
+
 export default function OverviewStats() {
   return (
-    <section className="relative w-full pt-[100px] pb-24 sm:pb-32 bg-slate-950 text-white overflow-hidden select-none">
-      {/* Background Skyscraper Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center opacity-100 scale-105"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2400&q=90')`,
-        }}
-      />
-
-      {/* Base Overlay with Minimal Opacity */}
-      <div className="absolute inset-0 bg-slate-950/10 pointer-events-none" />
-
-      {/* Balanced Side Gradient: Minimal/no dark overlay on the left to compensate for the photo's natural left shadow */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-slate-950/35 pointer-events-none" />
-
-      {/* Top and Bottom Light Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/30 via-transparent to-slate-950/30 pointer-events-none" />
-
-      {/* Content Container with FadeInUp Effect */}
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-8 items-end">
+    <section className="relative w-full py-[50px] bg-[#f5f4ef] select-none">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 items-center gap-y-8">
           {STATS_DATA.map((item, index) => (
-            <motion.div
+            <div
               key={item.id}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.12, ease: 'easeOut' }}
-              className="flex flex-col items-center text-center group"
+              className="relative flex items-center justify-center px-3 sm:px-6"
             >
-
-              {/* Pin Indicator: Double Ring Node Dot + Ascending Vertical Pin Line */}
-              <div className="flex flex-col items-center mb-6 sm:mb-8">
-                <div className="w-5 h-5 rounded-full border border-white/50 bg-white/10 flex items-center justify-center transition-all duration-300 group-hover:border-[#BD7E6C] group-hover:bg-[#BD7E6C]/25 group-hover:shadow-[0_0_18px_#BD7E6C]">
-                  <div className="w-1.5 h-1.5 rounded-full bg-white/80 group-hover:bg-[#BD7E6C] transition-colors duration-300" />
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.08, ease: 'easeOut' }}
+                className="flex items-center gap-3.5 sm:gap-4.5 justify-center"
+              >
+                <StatIcon icon={item.icon} />
+                <div className="flex flex-col items-start text-left">
+                  <div className="flex items-baseline font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-slate-950 tracking-tight leading-none whitespace-nowrap">
+                    <FlipNumber value={item.value} baseDelay={index * 0.08} />
+                    {item.unit && (
+                      <span className="font-sans text-xs sm:text-sm lg:text-base font-light text-slate-700 ml-1.5 uppercase">
+                        {item.unit}
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] text-slate-500 uppercase mt-1.5 whitespace-nowrap">
+                    {item.label}
+                  </span>
                 </div>
+              </motion.div>
 
-                {/* Ascending Line Length */}
-                <div className={`w-[1px] ${item.lineHeight} bg-gradient-to-b from-white/50 via-white/20 to-transparent transition-all duration-500`} />
-              </div>
+              {/* Vertical divider line between counters on desktop */}
+              {index < STATS_DATA.length - 1 && (
+                <div className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 h-14 sm:h-16 w-px bg-stone-300/80" />
+              )}
 
-              {/* Big Metric Value Display with Animated Counter */}
-              <div className="flex items-baseline justify-center gap-1.5 font-sans tracking-tight whitespace-nowrap drop-shadow-[0_4px_12px_rgba(0,0,0,0.9)]">
-                {item.type === 'counter' ? (
-                  <span className="text-4xl sm:text-5xl lg:text-6xl font-light text-white">
-                    <AnimatedCounter
-                      target={item.targetNumber!}
-                      decimals={item.decimals}
-                      duration={2200}
-                    />
-                  </span>
-                ) : (
-                  <span className="text-4xl sm:text-5xl lg:text-6xl font-light text-white">
-                    {item.mainValue}
-                  </span>
-                )}
-
-                {item.unit && (
-                  <span className="text-2xl sm:text-3xl font-light text-white/90">
-                    {item.unit}
-                  </span>
-                )}
-              </div>
-
-              {/* Uppercase Metric Label */}
-              <div className="mt-3 text-xs sm:text-sm font-bold tracking-[0.25em] text-white uppercase drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                {item.label}
-              </div>
-
-              {/* Rosegold / Gold Outline Pill Badge */}
-              <div className="mt-4 px-4 py-1.5 rounded-full bg-slate-950/70 border border-[#BD7E6C] backdrop-blur-md shadow-lg">
-                <span className="text-[10px] font-extrabold tracking-[0.2em] text-[#BD7E6C] uppercase">
-                  {item.badge}
-                </span>
-              </div>
-
-            </motion.div>
+              {/* Vertical divider line between columns on mobile (col 1 to col 2) */}
+              {index % 2 === 0 && (
+                <div className="lg:hidden block absolute right-0 top-1/2 -translate-y-1/2 h-14 sm:h-16 w-px bg-stone-300/80" />
+              )}
+            </div>
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }
-
-

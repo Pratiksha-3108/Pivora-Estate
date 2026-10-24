@@ -9,7 +9,7 @@ function InstagramIcon({ className = "w-5 h-5" }: { className?: string }) {
     <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
     </svg>
   );
 }
@@ -30,26 +30,34 @@ function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
+const NAV_LINKS = [
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/#about' },
+  { name: 'Projects', href: '/#projects' },
+  { name: 'Services', href: '/#services' },
+  { name: 'Contact', href: '/contact' },
+];
+
 export default function Footer() {
   return (
-    <footer className="bg-[#0c0b0a] text-white pt-6 pb-6 px-4 sm:px-6 lg:px-12 relative z-20">
+    <footer className="bg-[#0c0b0a] text-white py-[50px] px-4 sm:px-6 lg:px-12 relative z-20">
       <div className="max-w-7xl mx-auto">
         
-        {/* Top Horizontal Line ("Linnin") */}
+        {/* Top Horizontal Line */}
         <div className="w-full h-[1px] bg-white/45 mb-6" />
 
-        {/* Main Content Area */}
+        {/* Main Content Area: Flat Horizontal Layout like Initial */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-6">
           
           {/* Left Side: Logo & Social Icons */}
           <div className="flex flex-col items-start gap-4">
-            <Link href="/" className="inline-block">
+            <Link href="/" className="inline-block group">
               <Image
-                src="/assets/logo_new.png"
+                src="/assets/pivora logo_bg.png"
                 alt="Pivora Estates Logo"
-                width={200}
-                height={60}
-                className="h-10 w-auto object-contain"
+                width={220}
+                height={70}
+                className="h-10 sm:h-11 w-auto object-contain transition-opacity group-hover:opacity-90"
               />
             </Link>
 
@@ -67,63 +75,60 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Right Side: Main Nav Links & Policy Links */}
-          <div className="flex flex-col items-start lg:items-end gap-5 w-full lg:w-auto">
+          {/* Right Side: Main Nav Links & Privacy Policy */}
+          <div className="flex flex-col items-start lg:items-end gap-4 w-full lg:w-auto">
             {/* Main Nav Links Row */}
             <nav className="flex flex-wrap items-center gap-6 sm:gap-10 text-sm sm:text-base font-normal text-white">
-              <Link href="/#about" className="hover:text-[#d49581] transition-colors">
-                About Us
-              </Link>
-              <Link href="/#projects" className="hover:text-[#d49581] transition-colors">
-                Projects
-              </Link>
-              <Link href="/#amenities" className="hover:text-[#d49581] transition-colors">
-                Amenities
-              </Link>
-              <Link href="/#services" className="hover:text-[#d49581] transition-colors">
-                Services
-              </Link>
-              <Link href="/contact" className="hover:text-[#d49581] transition-colors">
-                Contact
-              </Link>
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="hover:text-[#d49581] transition-colors"
+                >
+                  {link.name}
+                </Link>
+              ))}
             </nav>
 
-            {/* Inline Policy Links */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-xs sm:text-sm text-slate-300">
-              <Link href="#" className="hover:text-white transition-colors">
-                Payment Policy
-              </Link>
-              <span className="text-white/30 font-light">|</span>
+            {/* Inline Policy Link: Only Privacy Policy (Terms & Conditions removed) */}
+            <div className="flex items-center text-xs sm:text-sm text-slate-300">
               <Link href="/privacy-policy" className="hover:text-white transition-colors">
                 Privacy Policy
-              </Link>
-              <span className="text-white/30 font-light">|</span>
-              <Link href="#" className="hover:text-white transition-colors">
-                Terms & Conditions
               </Link>
             </div>
           </div>
 
         </div>
 
-        {/* Bottom Horizontal Line ("Linnin") */}
-        <div className="w-full h-[1px] bg-white/45 my-5" />
+        {/* Disclaimer Text */}
+        <div className="border-t border-white/20 pt-4 pb-3">
+          <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-normal">
+            <span className="text-[#d49581] font-semibold">Disclaimer:</span> We are an authorised marketing partner for this project. Provided content is given by respective owners and this website and content is for information purpose only and it does not constitute an offer to avail for any services. Prices mentioned are subject to change without prior notice and properties mentioned are subject to availability. You can expect a call, SMS or emails on details registered with us.
+          </p>
+        </div>
 
-        {/* Bottom Address & Copyright Row */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs sm:text-sm text-slate-300 leading-relaxed">
-          {/* Left: Office Address */}
-          <div>
-            <p className="text-slate-300 font-normal">
-              Mundhwa, Pune, Maharashtra - 411036, India
-            </p>
-          </div>
+        {/* Bottom Horizontal Line */}
+        <div className="w-full h-[1px] bg-white/20 my-3" />
 
-          {/* Right: Copyright */}
-          <div>
-            <p className="text-slate-300 font-normal">
-              Powered by Pivora Estates Private Limited © {new Date().getFullYear()}. All rights reserved.
-            </p>
-          </div>
+        {/* All-in-One-Line: Address | Phones | Email | Copyright */}
+        <div className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs sm:text-[13px] text-slate-300 text-center py-1">
+          <span>Hinjawadi Phase 1, Pune, Maharashtra, India</span>
+          <span className="text-white/30 font-light">|</span>
+          <a href="tel:+919876543210" className="hover:text-white transition-colors">
+            +919876543210
+          </a>
+          <span className="text-white/30 font-light">|</span>
+          <a href="tel:+919876543211" className="hover:text-white transition-colors">
+            +919876543211
+          </a>
+          <span className="text-white/30 font-light">|</span>
+          <a href="mailto:contact@pivoraestates.com" className="hover:text-white transition-colors">
+            contact@pivoraestates.com
+          </a>
+          <span className="hidden md:inline text-white/30 font-light">|</span>
+          <span className="text-slate-300">
+            Powered by Pivora Estates Private Limited © {new Date().getFullYear()}. All rights reserved.
+          </span>
         </div>
 
       </div>

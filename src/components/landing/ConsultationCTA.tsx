@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ArrowRight, Play, X, Volume2, VolumeX } from 'lucide-react';
+import { ArrowUpRight, Play, X, Volume2, VolumeX } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
 
 export default function ConsultationCTA() {
@@ -13,7 +13,7 @@ export default function ConsultationCTA() {
 
   return (
     <>
-      <section className="relative w-full overflow-hidden select-none py-12 sm:py-16 lg:py-20">
+      <section className="relative w-full overflow-hidden select-none pt-4 sm:pt-6 pb-[50px]">
         {/* SPLIT BACKGROUND */}
         <div className="absolute inset-0 z-0 flex flex-col">
           <div className="flex-1 bg-[#f5f4ef]"></div>
@@ -22,7 +22,7 @@ export default function ConsultationCTA() {
 
         {/* CONTENT CONTAINER */}
         <div className="max-w-6xl mx-auto py-10 sm:py-14 bg-white rounded-xl shadow-2xl relative z-10 text-[#0B1B2D] overflow-hidden">
-          
+
           {/* CARD BACKGROUND IMAGE */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -40,10 +40,10 @@ export default function ConsultationCTA() {
           <div className="relative z-10 px-6 sm:px-10 lg:px-12">
             {/* TOP 08 BADGE & TOP RIGHT OVERLAY QUOTE GRID */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
-              
+
               {/* LEFT COLUMN: 08 BADGE + MAIN TEXT & BUTTONS */}
               <div className="md:col-span-8 lg:col-span-7 space-y-4 sm:space-y-5">
-                
+
                 {/* BRAND SUB-HEADING BADGE AS PER WEBSITE */}
                 <div>
                   <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C]">
@@ -68,10 +68,10 @@ export default function ConsultationCTA() {
                   {/* PRIMARY CTA: EXPLORE RESIDENCES (REDIRECTS TO CONTACT US PAGE) */}
                   <Link
                     href="/contact"
-                    className="inline-flex items-center justify-center gap-3 px-7 py-3.5 sm:px-8 sm:py-4 rounded-full bg-[#0B1B2D] hover:bg-[#061424] text-white text-xs font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-xl active:scale-95 cursor-pointer group"
+                    className="group inline-flex items-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-6 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
                   >
                     <span>EXPLORE RESIDENCES</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
                   </Link>
                 </div>
 
@@ -99,11 +99,11 @@ export default function ConsultationCTA() {
       {/* LUXURY ESTATE VIDEO WALKTHROUGH MODAL */}
       {isVideoOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
-          <div 
+          <div
             className="relative w-full max-w-4xl bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-stone-700"
             onClick={(e) => e.stopPropagation()}
           >
-           
+
             <div className="flex items-center justify-between px-6 py-4 bg-slate-900/90 border-b border-slate-800">
               <div className="flex items-center gap-3">
                 <span className="w-3 h-3 rounded-full bg-[#c8816e] animate-pulse" />
@@ -111,7 +111,7 @@ export default function ConsultationCTA() {
                   Pivora Estates — Architectural Showcase
                 </h3>
               </div>
-              
+
               <button
                 onClick={() => setIsVideoOpen(false)}
                 className="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-stone-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
@@ -121,7 +121,7 @@ export default function ConsultationCTA() {
               </button>
             </div>
 
-        
+
             <div className="relative aspect-video w-full bg-black">
               <iframe
                 src="https://www.youtube-nocookie.com/embed/5Peo-ivmupE?autoplay=1&rel=0&modestbranding=1"
@@ -132,7 +132,7 @@ export default function ConsultationCTA() {
               />
             </div>
 
-           
+
             <div className="px-6 py-4 bg-slate-900 flex flex-wrap items-center justify-between gap-4 text-xs text-stone-400 border-t border-slate-800">
               <p>Experience ultra-luxury residence design & bespoke architectural spaces.</p>
               <button

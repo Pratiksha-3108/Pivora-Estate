@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+import Link from 'next/link';
 import ContactForm from '@/components/contact/ContactForm';
 import ContactDetailsCards from '@/components/contact/ContactDetailsCards';
 import type { Metadata } from 'next';
@@ -11,30 +12,32 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="w-full bg-[#fbf9f5] min-h-screen font-poppins text-slate-800">
-      {/* Top Hero Image Banner matching reference screenshot 1 */}
-      <section className="relative w-full h-[55vh] min-h-[420px] max-h-[600px] flex items-center justify-center overflow-hidden select-none bg-slate-950">
-        {/* Full Cover High-Res Luxury Skyscraper Hero Image */}
+      {/* Top Hero Image Banner */}
+      <section className="relative w-full h-[50vh] min-h-[380px] max-h-[550px] overflow-hidden select-none bg-slate-950">
+        {/* Full Cover Banner Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80')`
+            backgroundImage: `url('/assets/contact_banner.jpeg')`
           }}
         />
         
-        {/* Luxury Vignette & Dark Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/80 via-slate-950/50 to-slate-950/90 backdrop-brightness-[0.85]" />
+        {/* Subtle dark gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/30 pointer-events-none" />
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center space-y-4 pt-16">
-          <h1 className="text-5xl sm:text-7xl lg:text-8xl font-serif font-light text-stone-100 tracking-[0.18em] uppercase">
-            Contact
+        {/* Glassy Box in Bottom-Left Corner matching reference */}
+        <div className="absolute bottom-0 left-0 z-20 bg-stone-900/80 sm:bg-black/75 backdrop-blur-md px-6 py-5 sm:px-10 sm:py-7 border-t border-r border-white/15 max-w-sm sm:max-w-md">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-normal text-white uppercase tracking-wider leading-tight">
+            CONTACT US
           </h1>
-
-          <div className="w-16 h-[2px] bg-[#BD7E6C] mx-auto opacity-80" />
-
-          <p className="text-xs sm:text-sm uppercase tracking-[0.3em] sm:tracking-[0.4em] text-stone-200 font-medium max-w-3xl mx-auto leading-relaxed">
-            Connect With Pivora Real Estate & Site Experience Centres
-          </p>
+          <div className="w-16 h-[1.5px] bg-white/50 my-2.5" />
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-serif text-slate-200">
+            <Link href="/" className="hover:text-[#BD7E6C] transition-colors">
+              Home
+            </Link>
+            <span className="text-white/40 font-sans">/</span>
+            <span className="text-white font-medium">Contact Us</span>
+          </div>
         </div>
       </section>
 
