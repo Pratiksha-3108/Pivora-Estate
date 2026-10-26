@@ -2,86 +2,73 @@
 
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 
-const CHEVRON_IMAGES = [
-  {
-    id: 'vision',
-    src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Professional woman observing urban city architecture'
-  },
-  {
-    id: 'sanctuary',
-    src: 'https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Sunlit modern master bedroom suite'
-  },
-  {
-    id: 'lifestyle',
-    src: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Executive living lounge with designer chair and lighting'
-  },
-  {
-    id: 'legacy',
-    src: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Distinguished executive gentleman looking ahead'
-  }
-];
+const smoothEase = [0.22, 1, 0.36, 1] as const;
 
 export default function TaglineBanner() {
   return (
-    <section className="py-14 sm:py-20 lg:py-24 bg-white relative overflow-hidden select-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* SINGLE TAGLINE: ONLY 'This isn’t just about real estate.' (No title, no subtitle content) */}
-        <div className="text-center max-w-4xl mx-auto mb-10 sm:mb-14 lg:mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight font-sans text-slate-950 leading-tight"
-          >
-            This isn’t just{' '}
-            <span className="font-normal text-slate-400">about real estate.</span>
-          </motion.h2>
-        </div>
-
-        {/* CHEVRON ARROW PHOTO BANNER: Exact shape and clean display matching reference UI */}
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="w-full max-w-5xl lg:max-w-6xl mx-auto"
-        >
-          <div className="chevron-banner-container flex items-center justify-center w-full h-[240px] sm:h-[300px] md:h-[360px] lg:h-[400px]">
-            {CHEVRON_IMAGES.map((item, index) => {
-              return (
-                <div
-                  key={item.id}
-                  className="chevron-slice relative flex-1 h-full overflow-hidden group cursor-pointer transition-transform duration-500 hover:brightness-105"
-                  style={{
-                    marginLeft: index === 0 ? '0px' : 'var(--overlap)',
-                    zIndex: index + 1,
-                  }}
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 640px) 25vw, (max-width: 1024px) 25vw, 300px"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                    priority={index < 2}
-                  />
-
-                  {/* Subtle lighting overlay for photo depth */}
-                  <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300" />
-                </div>
-              );
-            })}
+    <section className="relative bg-[#f5f4ef] pb-10 sm:pb-12 lg:pb-14 pt-0 select-none overflow-hidden">
+      {/* Container with exact same max-w-7xl and left/right margins & padding as above section */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden min-h-[140px] sm:min-h-[155px] lg:min-h-[165px] flex flex-col sm:flex-row sm:items-center justify-between gap-5 sm:gap-8 px-6 sm:px-10 lg:px-12 py-6 sm:py-7 shadow-[0_12px_35px_-8px_rgba(0,0,0,0.18)] border border-stone-300/60 bg-stone-950">
+          
+          {/* Background Architectural Construction Image */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/assets/skyline_banner_bg.jpg"
+              alt="Skyline of Punawale - Pivora Estates"
+              fill
+              priority
+              sizes="(max-width: 1280px) 100vw, 1280px"
+              className="object-cover object-center"
+            />
+            {/* Dark cinematic gradient overlays for contrast and readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 via-55% to-black/45" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40" />
+            {/* Rose gold ambient accent glow */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-30"
+              style={{
+                background:
+                  'radial-gradient(ellipse 60% 50% at 20% 50%, rgba(189, 126, 108, 0.18), transparent 70%)',
+              }}
+            />
           </div>
-        </motion.div>
 
+          {/* ONLY ONE LINE TAGLINE */}
+          <div className="relative z-10 min-w-0">
+            <motion.h2
+              initial={{ opacity: 0, x: -16 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.6, ease: smoothEase }}
+              className="text-lg sm:text-xl md:text-2xl lg:text-[28px] xl:text-[32px] font-extrabold tracking-tight text-white font-sans leading-snug whitespace-normal sm:whitespace-nowrap"
+            >
+              Crafting Pune&apos;s Next Iconic Living Experience.
+            </motion.h2>
+          </div>
+
+          {/* CONTACT US BUTTON */}
+          <motion.div
+            initial={{ opacity: 0, x: 16 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, delay: 0.1, ease: smoothEase }}
+            className="relative z-10 shrink-0 self-start sm:self-center"
+          >
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 rounded-sm bg-[#BD7E6C] hover:bg-[#a66a59] text-white font-bold text-xs uppercase tracking-widest transition-all duration-300 shadow-lg hover:shadow-[0_10px_25px_rgba(189,126,108,0.4)] hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group"
+            >
+              <span>CONTACT US</span>
+              <ArrowUpRight className="w-4 h-4 stroke-[2.2] transition-transform duration-300 group-hover:rotate-45" />
+            </Link>
+          </motion.div>
+
+        </div>
       </div>
     </section>
   );

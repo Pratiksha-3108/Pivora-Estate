@@ -7,23 +7,36 @@ import { usePathname } from 'next/navigation';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
 
-
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [pastAbout, setPastAbout] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { openEnquire } = useEnquire();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (pathname === '/') {
+        // Track whether scroll position has reached the About section
+        const aboutEl = document.getElementById('about');
+        if (aboutEl) {
+          const rect = aboutEl.getBoundingClientRect();
+          // Navbar height offset is ~80px
+          setPastAbout(rect.top <= 80);
+        } else {
+          setPastAbout(window.scrollY > window.innerHeight - 100);
+        }
+      } else {
+        // On sub-pages without the home hero, show background after initial scroll
+        setPastAbout(window.scrollY > 40);
+      }
     };
+
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [pathname]);
 
   const navLinks = [
     { name: 'HOME', href: '/' },
@@ -35,32 +48,37 @@ export default function Navbar() {
 
   const isActive = (href: string) => href === '/' && pathname === '/';
 
+  // Transparent navbar when at top of home page (before reaching the About section)
+  const isTransparent = !pastAbout;
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#f5f4ef]/95 backdrop-blur-md border-b border-stone-200/80 text-slate-900 ${
-        scrolled ? 'shadow-md py-1.5' : 'shadow-xs py-2.5'
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isTransparent
+          ? 'bg-transparent border-b border-transparent shadow-none py-3 sm:py-4'
+          : 'bg-[#f5f4ef]/95 backdrop-blur-md border-b border-stone-200/80 shadow-md py-2 sm:py-2.5 text-slate-900'
       }`}
     >
-
       {/* ===== Main nav row ===== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          {/* Left: Logo */}
+          {/* Left: Logo (bg_remove_logo.png when transparent before about section, footer logo when scrolled) */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-9 sm:h-11 flex items-center justify-start">
+            <div className="relative h-10 sm:h-12 flex items-center justify-start">
               <Image
-                src="/assets/pivora_logo_footer.png"
+                src={isTransparent ? '/assets/bg_remove_logo.png' : '/assets/pivora_logo_footer.png'}
                 alt="Pivora Estates Logo"
                 width={220}
                 height={72}
                 priority
-                className="h-full w-auto object-contain brightness-0 group-hover:scale-105 transition-all duration-300"
+                className={`h-full w-auto object-contain group-hover:scale-105 transition-all duration-300 ${
+                  isTransparent ? '' : 'brightness-0'
+                }`}
               />
             </div>
           </Link>
 
-          {/* Center: Links (active link has underline) */}
-          {/* Center: Links with text roll (slide-up) hover animation */}
+          {/* Center: Links with text roll hover animation */}
           <nav className="hidden lg:flex items-center gap-9">
             {navLinks.map((link) => {
               const active = isActive(link.href);
@@ -69,7 +87,11 @@ export default function Navbar() {
                   key={link.name}
                   href={link.href}
                   className={`group relative py-1 text-xs font-semibold uppercase tracking-widest transition-colors ${
-                    active
+                    isTransparent
+                      ? active
+                        ? 'text-white font-bold'
+                        : 'text-white/85 hover:text-white'
+                      : active
                       ? 'text-slate-950 font-bold'
                       : 'text-slate-700 hover:text-slate-950'
                   }`}
@@ -95,7 +117,7 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Right: Button */}
+          {/* Right: Enquire Button */}
           <div className="hidden md:flex items-center gap-4">
             <button
               onClick={() => openEnquire('ENQUIRE NOW')}
@@ -117,7 +139,9 @@ export default function Navbar() {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-slate-900 hover:bg-stone-200/60 transition-colors cursor-pointer"
+              className={`p-2 rounded-lg transition-colors cursor-pointer ${
+                isTransparent ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-stone-200/60'
+              }`}
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -142,7 +166,6 @@ export default function Navbar() {
                 {link.name}
               </Link>
             ))}
-
 
             <button
               onClick={() => {

@@ -171,7 +171,7 @@ export default function ServicesSection() {
   return (
     <section
       id="services"
-      className="py-[50px] bg-[#fbf9f5] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
+      className="py-[50px] bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
     >
       {/* Soft Background Accent Glows */}
       <div className="absolute top-1/3 left-0 w-[450px] h-[450px] bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />
@@ -282,9 +282,6 @@ export default function ServicesSection() {
               onMouseLeave={() => setIsStackHovered(false)}
               className="relative w-full max-w-lg h-[560px] sm:h-[620px] flex items-center justify-center cursor-pointer group"
             >
-              {/* Soft Backdrop Shadow Glow */}
-              <div className="absolute inset-4 bg-stone-900/5 rounded-3xl blur-2xl transform group-hover:scale-105 transition-all duration-500" />
-
               <AnimatePresence mode="wait">
                 <motion.div
                   key={activeService.id}
@@ -338,7 +335,7 @@ export default function ServicesSection() {
                           setSelectedPreviewImage(imgObj.url);
                         }}
                         style={{ zIndex: zIdx }}
-                        className="absolute w-[220px] sm:w-[260px] md:w-[275px] bg-white p-1.5 sm:p-2 rounded-2xl shadow-[0_16px_35px_rgba(0,0,0,0.13)] border border-stone-200/90 transition-shadow duration-300 hover:shadow-[0_25px_50px_rgba(0,0,0,0.22)]"
+                        className="absolute w-[220px] sm:w-[260px] md:w-[275px] bg-white p-1.5 sm:p-2 rounded-2xl border border-stone-200/90 shadow-none"
                       >
                         {/* Image Container with Tall Vertical Aspect Ratio (3/4 ratio) */}
                         <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-100">

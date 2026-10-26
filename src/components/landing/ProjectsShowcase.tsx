@@ -1,403 +1,407 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useMotionValueEvent,
-} from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, ArrowUpRight, MapPin } from 'lucide-react';
 import { SHOWCASE_PROJECTS, ShowcaseProject } from '@/data/showcaseProjects';
 import { useEnquire } from '@/context/EnquireContext';
-import { MapPin, ArrowUpRight } from 'lucide-react';
-import WordFadeIn from '@/components/ui/WordFadeIn';
 
-/* ------------------------------------------------------------------ */
-/*  CONFIG                                                             */
-/* ------------------------------------------------------------------ */
-const ACCENT = '#BD7E6C';
-const SCROLL_PER_PROJECT_VH = 70; // how much scrolling each project takes
-
-const CATEGORIES = ['All', 'Residential', 'Commercial'];
-
-const STRIPES = 8; // number of horizontal blinds
-const STRIPE_DURATION = 0.65;
-const STRIPE_STAGGER = 0.055;
-
-/* ------------------------------------------------------------------ */
-/*  BLINDS IMAGE COMPONENT (DIRECTIONAL: FROM TOP OR FROM BOTTOM)     */
-/* ------------------------------------------------------------------ */
-function BlindsImage({
-  src,
-  alt,
-  direction = 'from-bottom',
-  className = '',
-  imageClassName = '',
-}: {
-  src: string;
-  alt: string;
-  direction?: 'from-top' | 'from-bottom';
-  className?: string;
-  imageClassName?: string;
-}) {
-  const [base, setBase] = useState<string>(src);
-
-  useEffect(() => {
-    if (src === base) return;
-    const total = (STRIPE_DURATION + STRIPE_STAGGER * STRIPES) * 1000 + 80;
-    const t = setTimeout(() => setBase(src), total);
-    return () => clearTimeout(t);
-  }, [src, base]);
-
-  const h = 100 / STRIPES;
-
-  return (
-    <div className={`absolute inset-0 overflow-hidden bg-stone-900 ${className}`}>
-      {/* Base (previous) image */}
-      <Image
-        src={base}
-        alt={alt}
-        fill
-        sizes="(max-width: 1024px) 80vw, 40vw"
-        className={`object-cover ${imageClassName}`}
-        priority
-      />
-
-      {/* Incoming image, revealed stripe by stripe in the requested direction */}
-      {src !== base &&
-        Array.from({ length: STRIPES }).map((_, i) => {
-          const top = i * h;
-          const delay =
-            direction === 'from-bottom'
-              ? (STRIPES - 1 - i) * STRIPE_STAGGER
-              : i * STRIPE_STAGGER;
-
-          // If from-bottom: each stripe wipes upward
-          // If from-top: each stripe wipes downward
-          const initialClip =
-            direction === 'from-bottom'
-              ? `inset(${top + h}% 0% ${100 - top - h}% 0%)`
-              : `inset(${top}% 0% ${100 - top}% 0%)`;
-
-          return (
-            <motion.div
-              key={`${src}-${i}`}
-              className="absolute inset-0"
-              initial={{ clipPath: initialClip }}
-              animate={{
-                clipPath: `inset(${top - 0.15}% 0% ${100 - top - h - 0.15}% 0%)`,
-              }}
-              transition={{
-                duration: STRIPE_DURATION,
-                delay,
-                ease: [0.76, 0, 0.24, 1],
-              }}
-            >
-              <Image
-                src={src}
-                alt={alt}
-                fill
-                sizes="(max-width: 1024px) 80vw, 40vw"
-                className={`object-cover ${imageClassName}`}
-              />
-            </motion.div>
-          );
-        })}
-    </div>
-  );
+interface CategoryOption {
+  id: 'Residential' | 'Commercial' | 'All';
+  title: string;
+  tagline: string;
+  description: string;
 }
 
-/* ------------------------------------------------------------------ */
-/*  MAIN SECTION                                                       */
-/* ------------------------------------------------------------------ */
+const CATEGORY_DATA: CategoryOption[] = [
+  {
+    id: 'Residential',
+    title: 'Residential Spaces',
+    tagline: 'Luxury Apartments & Sky Villas',
+    description:
+      'Tailored living spaces including luxury apartments, exclusive villas, and modern row houses designed for premier comfort and high appreciation.',
+  },
+  {
+    id: 'Commercial',
+    title: 'Commercial Properties',
+    tagline: 'Corporate Towers & Retail Boulevards',
+    description:
+      'Grade-A corporate towers, prime high-street retail showrooms, and LEED-certified tech suites strategically situated across Pune’s highest rental-yield corridors.',
+  },
+  {
+    id: 'All',
+    title: 'All Projects',
+    tagline: 'Comprehensive Portfolio',
+    description:
+      'Discover our complete collection of bespoke residential sanctuaries and state-of-the-art commercial hubs curated for discerning investors.',
+  },
+];
+
+// Header title word stagger & blur-to-sharp animation variants
+const titleContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const titleWordVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 14,
+    filter: 'blur(6px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.65,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const TITLE_WORDS = [
+  { text: 'Discover', highlight: false },
+  { text: 'More', highlight: false },
+  { text: 'Real', highlight: false },
+  { text: 'Estate', highlight: false },
+  { text: 'Options', highlight: false },
+  { text: 'in', highlight: false },
+  { text: 'Pune', highlight: true },
+];
+
 export default function ProjectsShowcase() {
   const { openEnquire } = useEnquire();
-  const [activeCategory, setActiveCategory] = useState<string>('All');
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const trackRef = useRef<HTMLDivElement>(null);
+  const [activeCategory, setActiveCategory] = useState<'Residential' | 'Commercial' | 'All'>('Residential');
+  const [isPaused, setIsPaused] = useState(false);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
-  const filteredProjects = useMemo(
-    () =>
-      SHOWCASE_PROJECTS.filter((project: ShowcaseProject) => {
-        if (activeCategory === 'All') return true;
-        if (activeCategory === 'Residential' || activeCategory === 'Residences')
-          return project.category === 'Residential';
-        if (activeCategory === 'Commercial')
-          return project.category === 'Commercial';
-        return true;
-      }),
-    [activeCategory]
-  );
+  // Filter projects by category
+  const filteredProjects = useMemo(() => {
+    if (activeCategory === 'All') return SHOWCASE_PROJECTS;
+    return SHOWCASE_PROJECTS.filter((p) => p.category === activeCategory);
+  }, [activeCategory]);
 
-  const total = filteredProjects.length;
-  const project = filteredProjects[Math.min(activeIndex, total - 1)];
-
-  // scroll progress of the tall track -> active project
-  const { scrollYProgress } = useScroll({
-    target: trackRef,
-    offset: ['start start', 'end end'],
-  });
-
-  useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    if (total === 0) return;
-    const idx = Math.min(total - 1, Math.max(0, Math.floor(v * total)));
-    setActiveIndex((prev) => (prev === idx ? prev : idx));
-  });
-
-  // jump to a project when a dot is clicked
-  const goTo = (i: number) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const trackTop = el.getBoundingClientRect().top + window.scrollY;
-    const scrollable = el.offsetHeight - window.innerHeight;
-    window.scrollTo({
-      top: trackTop + (scrollable * (i + 0.5)) / total,
-      behavior: 'smooth',
-    });
-  };
-
-  const changeCategory = (cat: string) => {
-    setActiveCategory(cat);
-    setActiveIndex(0);
-    const el = trackRef.current;
-    if (el) {
-      const trackTop = el.getBoundingClientRect().top + window.scrollY;
-      if (window.scrollY > trackTop) window.scrollTo({ top: trackTop });
+  // Whenever category changes, cleanly reset carousel scroll position to start (left: 0)
+  useEffect(() => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollTo({ left: 0, behavior: 'instant' });
     }
+  }, [activeCategory]);
+
+  // Auto-scroll carousel smoothly every 3.5 seconds (pauses on hover or touch)
+  useEffect(() => {
+    if (isPaused) return;
+
+    const interval = setInterval(() => {
+      if (!carouselRef.current) return;
+      const el = carouselRef.current;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+
+      // When reaching or near the end, loop smoothly back to beginning
+      if (el.scrollLeft >= maxScroll - 20) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        // Step forward by 1 card (card width + 16px gap)
+        const firstCard = el.firstElementChild as HTMLElement | null;
+        const cardStep = firstCard ? firstCard.offsetWidth + 16 : 300;
+        el.scrollBy({ left: cardStep, behavior: 'smooth' });
+      }
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isPaused, filteredProjects]);
+
+  // Smooth scroll carousel with arrow buttons (scrolls by 1 full view of cards)
+  const scroll = (direction: 'left' | 'right') => {
+    if (!carouselRef.current) return;
+    const containerWidth = carouselRef.current.clientWidth;
+    const scrollAmount = direction === 'left' ? -containerWidth : containerWidth;
+    carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
   };
 
-  if (!project) return null;
-
-  const titleWords = project.name.split(' ');
+  const handleCategorySelect = (catId: 'Residential' | 'Commercial' | 'All') => {
+    setActiveCategory(catId);
+  };
 
   return (
     <section
       id="projects"
-      className="relative bg-[#f5f4ef] font-poppins text-slate-800 scroll-mt-20 select-none"
+      className="relative bg-[#f5f4ef] text-slate-900 py-[50px] overflow-hidden scroll-mt-20 select-none"
     >
-      {/* ---------- INTRO HEADER ---------- */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[50px] pb-3 sm:pb-4 flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="space-y-2 max-w-2xl"
-        >
-          <span className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block">
-            OUR PROJECTS
-          </span>
-          <WordFadeIn
-            text="Elevate Your Business & Living Standard."
-            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-950 tracking-tight font-sans leading-tight"
-            delay={0.08}
-            stagger={0.1}
-          />
-        </motion.div>
-      </div>
-
-      {/* ---------- TALL SCROLL TRACK (drives the pinned slideshow) ---------- */}
+      {/* Luxury ambient radial glow */}
       <div
-        ref={trackRef}
-        style={{ height: `${100 + total * SCROLL_PER_PROJECT_VH}vh` }}
-        className="relative"
-      >
-        {/* PINNED STAGE */}
-        <div className="sticky top-16 lg:top-20 h-[calc(100vh-64px)] lg:h-[calc(100vh-80px)] w-full overflow-hidden flex items-start pt-2 sm:pt-4">
-          {/* ambient glows */}
-          <div className="absolute top-1/3 left-0 w-96 h-96 bg-[#BD7E6C]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-10 right-0 w-[30rem] h-[30rem] bg-[#BD7E6C]/10 rounded-full blur-3xl pointer-events-none" />
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          background:
+            'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(189, 126, 108, 0.08), transparent 70%)',
+        }}
+      />
 
-          <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-start lg:items-center justify-center gap-8 lg:gap-0 lg:pl-16 xl:pl-28">
-            {/* ===== LEFT : TEXT ===== */}
-            <div className="w-full lg:w-[46%] flex items-stretch gap-4 sm:gap-6 order-2 lg:order-1">
-              {/* CATEGORY BUTTONS : styled like Enquire button with rounded-sm and rose gold accents */}
-              <div className="flex flex-col justify-start gap-2.5 shrink-0 pt-2">
-                {CATEGORIES.map((cat) => {
-                  const isSelected = activeCategory === cat;
-                  return (
-                    <button
-                      key={cat}
-                      type="button"
-                      onClick={() => changeCategory(cat)}
-                      className={`px-3.5 sm:px-4 py-2 rounded-sm text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer text-left ${
-                        isSelected
-                          ? 'bg-[#BD7E6C] hover:bg-[#183D35] text-white shadow-md'
-                          : 'bg-white border border-[#BD7E6C]/30 text-slate-700 hover:border-[#BD7E6C] hover:text-[#BD7E6C] hover:bg-[#BD7E6C]/5 shadow-2xs'
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* ================= HEADER SECTION ================= */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-12">
+          <div className="max-w-3xl space-y-2.5">
+            <motion.span
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block"
+            >
+              OUR DEVELOPMENTS
+            </motion.span>
+
+            <motion.h2
+              variants={titleContainerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-950 font-sans leading-tight"
+            >
+              {TITLE_WORDS.map((item, i) => (
+                <motion.span
+                  key={`${item.text}-${i}`}
+                  variants={titleWordVariants}
+                  className={`inline-block mr-[0.25em] last:mr-0 ${
+                    item.highlight ? 'text-[#BD7E6C]' : 'text-slate-950'
+                  }`}
+                >
+                  {item.text}
+                </motion.span>
+              ))}
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.65, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-2xl"
+            >
+              Tailored property categories designed to match your exact investment goals and lifestyle requirements.
+            </motion.p>
+          </div>
+
+          {/* Carousel Arrow Controls */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center gap-3 shrink-0 self-start sm:self-auto"
+          >
+            <button
+              type="button"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onClick={() => scroll('left')}
+              className="w-11 h-11 rounded-full border border-stone-300 bg-white hover:bg-[#BD7E6C] hover:border-[#BD7E6C] text-slate-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 cursor-pointer"
+              aria-label="Previous Projects"
+            >
+              <ChevronLeft className="w-5 h-5 stroke-[2.2]" />
+            </button>
+            <button
+              type="button"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onClick={() => scroll('right')}
+              className="w-11 h-11 rounded-full border border-stone-300 bg-white hover:bg-[#BD7E6C] hover:border-[#BD7E6C] text-slate-700 hover:text-white flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md active:scale-95 cursor-pointer"
+              aria-label="Next Projects"
+            >
+              <ChevronRight className="w-5 h-5 stroke-[2.2]" />
+            </button>
+          </motion.div>
+        </div>
+
+        {/* ================= MAIN CONTENT: LEFT ACCORDION & RIGHT CAROUSEL (3 FULL CARDS EDGE-TO-EDGE) ================= */}
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-7 items-start">
+          
+          {/* ----- LEFT COLUMN: ACCORDION SELECTOR ----- */}
+          <div className="w-full lg:w-[280px] xl:w-[300px] shrink-0 flex flex-col gap-3.5">
+            {CATEGORY_DATA.map((cat) => {
+              const isExpanded = activeCategory === cat.id;
+
+              return (
+                <div
+                  key={cat.id}
+                  className={`rounded-2xl transition-all duration-300 overflow-hidden ${
+                    isExpanded
+                      ? 'border-2 border-[#BD7E6C] bg-white shadow-[0_12px_32px_-8px_rgba(189,126,108,0.22)]'
+                      : 'border border-stone-200 bg-white/80 hover:bg-white hover:border-[#BD7E6C]/60 shadow-xs cursor-pointer'
+                  }`}
+                  onClick={() => handleCategorySelect(cat.id)}
+                >
+                  {/* Category Header Row */}
+                  <div className="flex items-center justify-between p-5 sm:p-5.5 select-none">
+                    <span
+                      className={`text-base sm:text-[17px] font-bold tracking-tight transition-colors duration-200 ${
+                        isExpanded ? 'text-[#BD7E6C]' : 'text-slate-800 hover:text-slate-950'
                       }`}
                     >
-                      {cat}
-                    </button>
-                  );
-                })}
-              </div>
+                      {cat.title}
+                    </span>
+                    <div
+                      className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                        isExpanded ? 'text-[#BD7E6C]' : 'text-slate-400'
+                      }`}
+                    >
+                      {isExpanded ? (
+                        <ChevronUp className="w-5 h-5 stroke-[2.2]" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 stroke-[2.2]" />
+                      )}
+                    </div>
+                  </div>
 
-              {/* Progressive vertical line indicator - only orange line increases on scroll */}
-              <div
-                onClick={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const ratio = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
-                  goTo(Math.min(total - 1, Math.floor(ratio * total)));
-                }}
-                className="relative w-[2px] shrink-0 my-2 self-stretch cursor-pointer"
-                title="Project progress"
-              >
-                <motion.div
-                  className="absolute top-0 left-0 right-0 bg-[#BD7E6C] rounded-full"
-                  initial={false}
-                  animate={{
-                    height: `${total > 0 ? ((activeIndex + 1) / total) * 100 : 0}%`,
-                  }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                />
-              </div>
+                  {/* Expandable Accordion Body */}
+                  <AnimatePresence initial={false}>
+                    {isExpanded && (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="px-5 pb-5 sm:px-5.5 sm:pb-5.5 pt-0">
+                          <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
+                            {cat.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={project.id}
-                  initial="hidden"
-                  animate="show"
-                  exit="exit"
-                  className="py-2 space-y-4 sm:space-y-5 max-w-md"
-                >
-                  {/* location */}
+          {/* ----- RIGHT COLUMN: HORIZONTAL CAROUSEL (3 FULL CARDS CLEAR & UNCUT) ----- */}
+          <div className="w-full lg:flex-1 min-w-0 relative">
+            <div
+              ref={carouselRef}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
+              onTouchStart={() => setIsPaused(true)}
+              onTouchEnd={() => setIsPaused(false)}
+              className="flex gap-4 sm:gap-4 overflow-x-auto scrollbar-none snap-x snap-mandatory py-2 px-0 scroll-smooth scroll-px-0"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              <AnimatePresence mode="popLayout">
+                {filteredProjects.map((project: ShowcaseProject, index: number) => (
                   <motion.div
-                    variants={{
-                      hidden: { opacity: 0, y: 12 },
-                      show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-                      exit: { opacity: 0, y: -12, transition: { duration: 0.25 } },
-                    }}
-                    className="flex items-center gap-1.5 text-xs text-[#BD7E6C] font-semibold tracking-wide"
+                    key={project.id}
+                    initial={{ opacity: 0, scale: 0.96 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.35, delay: index * 0.04 }}
+                    className="w-[270px] sm:w-[290px] lg:w-[calc((100%-2rem)/3)] shrink-0 h-[335px] sm:h-[355px] lg:h-[370px] snap-start snap-always relative rounded-2xl overflow-hidden group border border-stone-200/90 hover:border-[#BD7E6C] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.15)] hover:shadow-[0_18px_40px_-8px_rgba(189,126,108,0.3)] transition-all duration-500 cursor-pointer bg-stone-900 flex flex-col justify-end"
+                    onClick={() => openEnquire(`View Details - ${project.name}`, project.name)}
                   >
-                    <MapPin className="w-3.5 h-3.5 shrink-0" />
-                    <span className="truncate">{project.location}</span>
-                  </motion.div>
+                    {/* Background Project Image - Crystal clear with high quality */}
+                    <Image
+                      src={project.image}
+                      alt={project.name}
+                      fill
+                      sizes="(max-width: 768px) 300px, (max-width: 1200px) 33vw, 450px"
+                      quality={95}
+                      priority={index < 3}
+                      className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                    />
 
-                  {/* title : words rise out of a mask in a balanced, elegant font */}
-                  <h3 className="font-serif text-xl sm:text-2xl lg:text-3xl uppercase font-normal text-slate-950 leading-snug tracking-tight">
-                    {titleWords.map((word, i) => (
-                      <span key={i} className="inline-block overflow-hidden mr-[0.28em] pb-0.5 align-bottom">
-                        <motion.span
-                          className="inline-block"
-                          variants={{
-                            hidden: { y: '110%' },
-                            show: {
-                              y: '0%',
-                              transition: {
-                                duration: 0.6,
-                                delay: 0.1 + i * 0.06,
-                                ease: [0.22, 1, 0.36, 1],
-                              },
-                            },
-                            exit: {
-                              y: '-110%',
-                              transition: { duration: 0.25, delay: i * 0.03 },
-                            },
-                          }}
-                        >
-                          {word}
-                        </motion.span>
+                    {/* Gradient Overlay - Focused strictly at the bottom so the building is bright & clear */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 via-25% to-transparent group-hover:from-black/95 group-hover:via-black/70 group-hover:via-45% group-hover:to-transparent transition-all duration-500 pointer-events-none" />
+
+                    {/* Bottom Card Content */}
+                    <div className="relative p-4 sm:p-4.5 flex flex-col justify-end text-left z-10">
+                      {/* INITIALLY VISIBLE INFO (Tag, Title, Subtitle) */}
+                      <span className="text-[11px] sm:text-xs font-semibold text-[#BD7E6C] tracking-wide mb-1 block">
+                        {project.badge || project.configuration.split(' ')[0]}
                       </span>
-                    ))}
-                  </h3>
 
-                  {/* description */}
-                  <motion.p
-                    variants={{
-                      hidden: { opacity: 0, y: 16 },
-                      show: {
-                        opacity: 1,
-                        y: 0,
-                        transition: { duration: 0.6, delay: 0.45 },
-                      },
-                      exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
-                    }}
-                    className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal font-sans line-clamp-4"
-                  >
-                    {project.description}
-                  </motion.p>
+                      <h3 className="font-sans text-lg sm:text-xl font-bold text-white leading-snug tracking-tight group-hover:text-[#BD7E6C] transition-colors duration-300">
+                        {project.name}
+                      </h3>
 
-                  {/* meta + CTA */}
-                  <motion.div
-                    variants={{
-                      hidden: { opacity: 0, y: 16 },
-                      show: {
-                        opacity: 1,
-                        y: 0,
-                        transition: { duration: 0.6, delay: 0.55 },
-                      },
-                      exit: { opacity: 0, transition: { duration: 0.2 } },
-                    }}
-                    className="pt-4 border-t border-slate-900/15 flex flex-wrap items-center justify-between gap-4"
-                  >
-                    <div className="flex items-center gap-4 text-xs">
-                      <div>
-                        <span className="text-slate-500 uppercase text-[9px] tracking-wider block font-bold">
-                          CARPET AREA
-                        </span>
-                        <span className="text-slate-900 font-semibold text-xs">
-                          {project.sizeSqft}
-                        </span>
-                      </div>
-                      <div className="h-6 w-px bg-slate-900/20" />
-                      <div>
-                        <span className="text-slate-500 uppercase text-[9px] tracking-wider block font-bold">
-                          STARTS AT
-                        </span>
-                        <span className="text-[#BD7E6C] font-bold text-sm">
-                          {project.price}
-                        </span>
+                      <p className="text-xs sm:text-[13px] text-stone-200/90 font-normal line-clamp-1 mt-0.5">
+                        {project.configuration}
+                      </p>
+
+                      {/* HOVER REVEALED INFO (Location, Description, Carpet Area, Starts At, View Details Button) */}
+                      <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
+                        <div className="overflow-hidden">
+                          <div className="pt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                            {/* Location with MapPin Icon */}
+                            <div className="flex items-center gap-1.5 text-xs text-stone-300 mt-1">
+                              <MapPin className="w-3.5 h-3.5 text-[#BD7E6C] shrink-0" />
+                              <span className="truncate">{project.location}</span>
+                            </div>
+
+                            {/* Description Paragraph */}
+                            <p className="text-[11px] sm:text-xs text-stone-300 leading-relaxed font-normal mt-1.5 line-clamp-2">
+                              {project.description}
+                            </p>
+
+                            {/* Divider Line */}
+                            <div className="border-t border-white/20 my-2.5" />
+
+                            {/* Specs Row: CARPET AREA & STARTS AT */}
+                            <div className="flex items-center justify-between text-xs gap-3">
+                              <div className="min-w-0">
+                                <span className="text-stone-400 uppercase text-[8.5px] tracking-wider block font-bold">
+                                  CARPET AREA
+                                </span>
+                                <span className="text-white font-semibold text-[11px] sm:text-xs truncate block mt-0.5">
+                                  {project.sizeSqft}
+                                </span>
+                              </div>
+
+                              <div className="h-5 w-px bg-white/25 shrink-0" />
+
+                              <div className="min-w-0">
+                                <span className="text-stone-400 uppercase text-[8.5px] tracking-wider block font-bold">
+                                  STARTS AT
+                                </span>
+                                <span className="text-[#BD7E6C] font-bold text-[11px] sm:text-xs truncate block mt-0.5">
+                                  {project.price}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* VIEW DETAILS Action Button */}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                openEnquire(`View Details - ${project.name}`, project.name);
+                              }}
+                              className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white py-2 px-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-xl group/btn cursor-pointer"
+                            >
+                              <span>VIEW DETAILS</span>
+                              <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 group-hover/btn:rotate-45" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        openEnquire(`View Details - ${project.name}`, project.name)
-                      }
-                      className="group inline-flex items-center gap-2 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-5 py-2.5 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
-                    >
-                      <span>VIEW DETAILS</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
-                    </button>
                   </motion.div>
-                </motion.div>
+                ))}
               </AnimatePresence>
-            </div>
-
-            {/* ===== RIGHT : OVERLAPPING IMAGES ===== */}
-            <div className="relative w-full lg:w-[54%] order-1 lg:order-2 flex justify-center lg:justify-start">
-              <div className="relative w-[78%] sm:w-[62%] lg:w-[58%] aspect-[4/5] max-h-[52vh] lg:max-h-[70vh] lg:ml-[30%]">
-                
-                {/* BIG IMAGE (Blinds animation cascading from BOTTOM) */}
-                <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl bg-stone-900">
-                  <BlindsImage
-                    src={project.image}
-                    alt={project.name}
-                    direction="from-bottom"
-                    className="rounded-2xl sm:rounded-3xl"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/25 to-transparent pointer-events-none rounded-2xl sm:rounded-3xl" />
-                </div>
-
-                {/* SMALL OVERLAPPING IMAGE (Same Blinds animation cascading from ABOVE / TOP) */}
-                <div className="absolute -left-[30%] top-[16%] w-[62%] aspect-[1/1.2] rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_20px_45px_-10px_rgba(0,0,0,0.28)] border-4 border-[#f5f4ef] z-20 bg-stone-900">
-                  <BlindsImage
-                    src={project.image}
-                    alt={`${project.name} detail`}
-                    direction="from-top"
-                    className="rounded-xl sm:rounded-2xl"
-                    imageClassName="object-left"
-                  />
-                </div>
-
-              </div>
             </div>
           </div>
 
-
         </div>
+
       </div>
     </section>
   );
