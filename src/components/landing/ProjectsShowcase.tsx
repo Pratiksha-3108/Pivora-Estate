@@ -2,8 +2,9 @@
 
 import React, { useRef, useState, useMemo, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ChevronDown, ChevronUp, ArrowUpRight, MapPin } from 'lucide-react';
+import WordFadeIn from '@/components/ui/WordFadeIn';
 import { SHOWCASE_PROJECTS, ShowcaseProject } from '@/data/showcaseProjects';
 import { useEnquire } from '@/context/EnquireContext';
 
@@ -38,44 +39,7 @@ const CATEGORY_DATA: CategoryOption[] = [
   },
 ];
 
-// Header title word stagger & blur-to-sharp animation variants
-const titleContainerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1,
-    },
-  },
-};
 
-const titleWordVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 14,
-    filter: 'blur(6px)',
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: {
-      duration: 0.65,
-      ease: [0.22, 1, 0.36, 1],
-    },
-  },
-};
-
-const TITLE_WORDS = [
-  { text: 'Discover', highlight: false },
-  { text: 'More', highlight: false },
-  { text: 'Real', highlight: false },
-  { text: 'Estate', highlight: false },
-  { text: 'Options', highlight: false },
-  { text: 'in', highlight: false },
-  { text: 'Pune', highlight: true },
-];
 
 export default function ProjectsShowcase() {
   const { openEnquire } = useEnquire();
@@ -160,25 +124,12 @@ export default function ProjectsShowcase() {
               OUR DEVELOPMENTS
             </motion.span>
 
-            <motion.h2
-              variants={titleContainerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
+            <WordFadeIn
+              text="Discover More Real Estate Options in Pune"
               className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-950 font-sans leading-tight"
-            >
-              {TITLE_WORDS.map((item, i) => (
-                <motion.span
-                  key={`${item.text}-${i}`}
-                  variants={titleWordVariants}
-                  className={`inline-block mr-[0.25em] last:mr-0 ${
-                    item.highlight ? 'text-[#BD7E6C]' : 'text-slate-950'
-                  }`}
-                >
-                  {item.text}
-                </motion.span>
-              ))}
-            </motion.h2>
+              delay={0.1}
+              stagger={0.1}
+            />
 
             <motion.p
               initial={{ opacity: 0, y: 15 }}

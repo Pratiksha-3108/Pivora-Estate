@@ -3,8 +3,46 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion, type Variants } from 'framer-motion';
 import { ArrowUpRight, Play, X, Volume2, VolumeX } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
+
+const titleContainerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const titleWordVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 14,
+    filter: 'blur(6px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const TITLE_WORDS = [
+  { text: 'Discover', highlight: false },
+  { text: 'Premium', highlight: false },
+  { text: 'Residences', highlight: false },
+  { text: 'in', highlight: false },
+  { text: 'Pivora', highlight: true },
+  { text: 'Estates', highlight: true },
+];
 
 export default function ConsultationCTA() {
   const { openEnquire } = useEnquire();
@@ -45,22 +83,47 @@ export default function ConsultationCTA() {
               <div className="md:col-span-8 lg:col-span-7 space-y-4 sm:space-y-5">
 
                 {/* BRAND SUB-HEADING BADGE AS PER WEBSITE */}
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C]">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: '-40px' }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
                     PREMIUM LIVING | PIVORA ESTATES
                   </span>
-                </div>
+                </motion.div>
 
                 {/* HEADLINE & PARAGRAPH */}
-                <div className="space-y-4 max-w-2xl">
-                  <h2 className="text-3xl sm:text-4xl lg:text-[40px] xl:text-[46px] font-extrabold text-slate-950 tracking-tight font-sans leading-[1.18]">
-                    <span className="sm:whitespace-nowrap">Discover Premium Residences</span> <br className="hidden sm:block" />
-                    <span>in Pivora Estates</span>
-                  </h2>
+                <div className="space-y-3.5 max-w-2xl">
+                  <motion.h2
+                    variants={titleContainerVariants}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, margin: '-40px' }}
+                    className="text-3xl sm:text-4xl lg:text-[40px] xl:text-[46px] font-extrabold text-slate-950 tracking-tight font-sans leading-[1.18]"
+                  >
+                    {TITLE_WORDS.map((item, i) => (
+                      <motion.span
+                        key={`${item.text}-${i}`}
+                        variants={titleWordVariants}
+                        className={`inline-block mr-[0.25em] last:mr-0 ${item.highlight ? 'text-[#BD7E6C]' : 'text-slate-950'
+                          }`}
+                      >
+                        {item.text}
+                      </motion.span>
+                    ))}
+                  </motion.h2>
 
-                  <p className="text-slate-600 text-sm sm:text-base font-normal leading-relaxed max-w-lg pt-1">
+                  <motion.p
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-40px' }}
+                    transition={{ duration: 0.65, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                    className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-lg pt-1"
+                  >
                     Modern architecture, prime location and a lifestyle designed for your tomorrow. Explore our exclusive residences and find the perfect place to call home.
-                  </p>
+                  </motion.p>
                 </div>
 
                 {/* ACTION BUTTONS */}

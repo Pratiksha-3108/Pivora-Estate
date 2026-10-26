@@ -53,11 +53,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isTransparent
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isTransparent
           ? 'bg-transparent border-b border-transparent shadow-none py-3 sm:py-4'
           : 'bg-[#f5f4ef]/95 backdrop-blur-md border-b border-stone-200/80 shadow-md py-2 sm:py-2.5 text-slate-900'
-      }`}
+        }`}
     >
       {/* ===== Main nav row ===== */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -66,14 +65,13 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative h-10 sm:h-12 flex items-center justify-start">
               <Image
-                src={isTransparent ? '/assets/bg_remove_logo.png' : '/assets/pivora_logo_footer.png'}
+                src={isTransparent ? '/assets/pivora_logo_footer.png' : '/assets/pivora_logo_footer.png'}
                 alt="Pivora Estates Logo"
                 width={220}
                 height={72}
                 priority
-                className={`h-full w-auto object-contain group-hover:scale-105 transition-all duration-300 ${
-                  isTransparent ? '' : 'brightness-0'
-                }`}
+                className={`h-full w-auto object-contain group-hover:scale-105 transition-all duration-300 ${isTransparent ? '' : 'brightness-0'
+                  }`}
               />
             </div>
           </Link>
@@ -86,15 +84,14 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`group relative py-1 text-xs font-semibold uppercase tracking-widest transition-colors ${
-                    isTransparent
+                  className={`group relative py-1 text-xs font-semibold uppercase tracking-widest transition-colors ${isTransparent
                       ? active
                         ? 'text-white font-bold'
                         : 'text-white/85 hover:text-white'
                       : active
-                      ? 'text-slate-950 font-bold'
-                      : 'text-slate-700 hover:text-slate-950'
-                  }`}
+                        ? 'text-slate-950 font-bold'
+                        : 'text-slate-700 hover:text-slate-950'
+                    }`}
                 >
                   {/* Rolling text wrapper */}
                   <span className="relative inline-block overflow-hidden h-4 leading-4">
@@ -108,9 +105,8 @@ export default function Navbar() {
 
                   {/* Active / Hover underline indicator */}
                   <span
-                    className={`absolute bottom-0 left-0 h-[2px] bg-[#BD7E6C] transition-all duration-300 ${
-                      active ? 'w-full' : 'w-0 group-hover:w-full'
-                    }`}
+                    className={`absolute bottom-0 left-0 h-[2px] bg-[#BD7E6C] transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}
                   />
                 </Link>
               );
@@ -139,9 +135,8 @@ export default function Navbar() {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`p-2 rounded-lg transition-colors cursor-pointer ${
-                isTransparent ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-stone-200/60'
-              }`}
+              className={`p-2 rounded-lg transition-colors cursor-pointer ${isTransparent ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-stone-200/60'
+                }`}
               aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -159,9 +154,8 @@ export default function Navbar() {
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`text-xs font-bold uppercase tracking-widest py-2 border-b border-stone-200/80 hover:text-[#BD7E6C] ${
-                  isActive(link.href) ? 'text-[#BD7E6C]' : 'text-slate-800'
-                }`}
+                className={`text-xs font-bold uppercase tracking-widest py-2 border-b border-stone-200/80 hover:text-[#BD7E6C] ${isActive(link.href) ? 'text-[#BD7E6C]' : 'text-slate-800'
+                  }`}
               >
                 {link.name}
               </Link>
