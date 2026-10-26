@@ -276,11 +276,11 @@ export default function ProjectsShowcase() {
                     {/* Bottom Card Content */}
                     <div className="relative p-4 sm:p-4.5 flex flex-col justify-end text-left z-10">
                       {/* INITIALLY VISIBLE INFO (Tag, Title, Subtitle) */}
-                      <span className="text-[11px] sm:text-xs font-semibold text-[#BD7E6C] tracking-wide mb-1 block">
+                      <span className="text-[11px] sm:text-xs font-semibold text-white/90 tracking-wide mb-1 block">
                         {project.badge || project.configuration.split(' ')[0]}
                       </span>
 
-                      <h3 className="font-sans text-lg sm:text-xl font-bold text-white leading-snug tracking-tight group-hover:text-[#BD7E6C] transition-colors duration-300">
+                      <h3 className="font-sans text-lg sm:text-xl font-bold text-white leading-snug tracking-tight">
                         {project.name}
                       </h3>
 

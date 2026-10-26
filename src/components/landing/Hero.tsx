@@ -2,8 +2,25 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Phone, X, ArrowUpRight } from 'lucide-react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { Search, ChevronDown, MapPin } from 'lucide-react';
+
+const PUNE_LOCATIONS = [
+  'Pune (All)',
+  'Koregaon Park',
+  'Kalyani Nagar',
+  'Boat Club Road',
+  'Baner',
+  'Balewadi',
+  'Aundh',
+  'Model Colony',
+  'Kharadi',
+  'Viman Nagar',
+  'Magarpatta',
+  'Mundhwa',
+  'Hinjawadi',
+  'Wakad',
+];
 
 const HERO_SLIDES = [
   {
@@ -25,7 +42,26 @@ const HERO_SLIDES = [
 
 export default function Hero() {
   const [current, setCurrent] = useState(0);
-  const [showWhatsAppPopup, setShowWhatsAppPopup] = useState(false);
+  const [activeTab, setActiveTab] = useState<'residential' | 'commercial'>('residential');
+  const [propertyType, setPropertyType] = useState('All Residential');
+  const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState('Pune, Maharashtra');
+  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const typeOptions = activeTab === 'residential'
+    ? ['All Residential', 'Luxury Apartments', 'Penthouses', 'Villas & Mansions', 'Plots']
+    : ['All Commercial', 'Office Spaces', 'Retail & Showrooms', 'IT & Business Parks'];
+
+  const handleBrowse = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const projectsEl = document.getElementById('projects');
+    if (projectsEl) {
+      projectsEl.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      window.location.href = '/#projects';
+    }
+  };
 
   // Smooth auto-slide every 5 seconds
   useEffect(() => {
@@ -38,170 +74,233 @@ export default function Hero() {
 
   const slide = HERO_SLIDES[current];
 
+  // Scroll transforms for smooth zoom-out, blur and card effect
+  const { scrollY } = useScroll();
+  const scale = useTransform(scrollY, [0, 650], [1, 0.85]);
+  const opacity = useTransform(scrollY, [0, 650], [1, 0.6]);
+  const borderRadius = useTransform(scrollY, [0, 650], ['0px', '36px']);
+  const y = useTransform(scrollY, [0, 650], [0, 60]);
+  const filter = useTransform(
+    scrollY,
+    (v) => `blur(${Math.min(14, Math.max(0, (v / 650) * 14)).toFixed(1)}px)`
+  );
+  const pointerEvents = useTransform(scrollY, (v) => (v > 500 ? 'none' : 'auto'));
+
+  // Smoothly fade out initial hero headline and info card as user scrolls towards About section
+  const heroContentOpacity = useTransform(scrollY, [0, 320], [1, 0]);
+  const heroContentY = useTransform(scrollY, [0, 320], [0, -30]);
+
   return (
-    <section className="relative w-full h-screen min-h-[660px] overflow-hidden bg-slate-950 select-none">
-      {/* BACKGROUND CAROUSEL: 3 images cross-fading smoothly */}
-      <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950">
-        <AnimatePresence initial={false}>
-          <motion.div
-            key={slide.id}
-            initial={{ opacity: 0, scale: 1.03 }}
-            animate={{ opacity: 1, scale: 1.0 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              opacity: { duration: 1.6, ease: [0.25, 1, 0.5, 1] },
-              scale: { duration: 6, ease: 'easeOut' },
-            }}
-            className="absolute inset-0 bg-cover"
-            style={{
-              backgroundImage: `url('${slide.image}')`,
-              backgroundPosition: slide.position || 'center top',
-              transformOrigin: 'center top',
-            }}
-          />
-        </AnimatePresence>
+    <section className="fixed inset-0 z-0 w-full h-screen overflow-hidden bg-black select-none">
+      <motion.div
+        style={{ scale, opacity, borderRadius, y, filter, pointerEvents }}
+        className="relative w-full h-full overflow-hidden origin-center bg-slate-950 shadow-2xl"
+      >
+        {/* BACKGROUND CAROUSEL: 3 images cross-fading smoothly */}
+        <div className="absolute inset-0 z-0 overflow-hidden bg-slate-950">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={slide.id}
+              initial={{ opacity: 0, scale: 1.03 }}
+              animate={{ opacity: 1, scale: 1.0 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                opacity: { duration: 1.6, ease: [0.25, 1, 0.5, 1] },
+                scale: { duration: 6, ease: 'easeOut' },
+              }}
+              className="absolute inset-0 bg-cover"
+              style={{
+                backgroundImage: `url('${slide.image}')`,
+                backgroundPosition: slide.position || 'center top',
+                transformOrigin: 'center top',
+              }}
+            />
+          </AnimatePresence>
 
-        {/* Subtle Ambient Overlay - drastically reduced black opacity for vibrant image clarity */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/10 pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
-      </div>
-
-      {/* Persistent 2-line tagline */}
-      <div className="relative z-10 max-w-7xl mx-auto h-full px-6 sm:px-10 lg:px-16 flex items-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 18 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1.05, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-3xl pt-16"
-        >
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-white leading-[1.12] tracking-tight drop-shadow-2xl">
-            <span className="block">Where Vision Becomes</span>
-            <span className="block">Your Address</span>
-          </h1>
-        </motion.div>
-      </div>
-
-      {/* Slide navigation dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
-        {HERO_SLIDES.map((s, idx) => (
-          <button
-            key={s.id}
-            type="button"
-            onClick={() => setCurrent(idx)}
-            aria-label={`Go to slide ${idx + 1}`}
-            className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-              idx === current
-                ? 'w-7 bg-[#BD7E6C]'
-                : 'w-2 bg-white/40 hover:bg-white/80'
-            }`}
-          />
-        ))}
-      </div>
-
-      {/* Bottom-right project info card */}
-      <div className="absolute z-10 bottom-6 right-4 sm:right-16 left-4 sm:left-auto sm:w-[26rem]">
-        <div className="bg-black/40 backdrop-blur-md border border-white/20 text-white rounded-2xl p-5 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
-          <h2 className="text-lg sm:text-xl font-serif font-bold tracking-wide uppercase">
-            PIVORA ESTATES
-          </h2>
-          <p className="text-xs text-slate-300 font-medium mt-0.5">Mundhwa, Pune</p>
-          <div className="my-3 h-px w-full bg-white/20" />
-          <div className="grid grid-cols-3 gap-3">
-            <p className="text-[10px] font-bold tracking-wider uppercase">INR 1.70 CR. ONWARDS</p>
-            <p className="border-l border-white/20 pl-3 text-[10px] font-bold tracking-wider uppercase">
-              POSSESSION MAY 2032
-            </p>
-            <p className="border-l border-white/20 pl-3 text-[10px] font-bold tracking-wider uppercase">
-              2, 3 &amp; 4 BHK
-            </p>
-          </div>
+          {/* Subtle Ambient Overlay - drastically reduced black opacity for vibrant image clarity */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/10 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
         </div>
-      </div>
 
-      {/* Floating bottom-left action buttons with Pop-Up Effect */}
-      <div className="fixed bottom-32 sm:bottom-6 left-3 sm:left-5 z-40 flex flex-col items-start gap-3">
-        {/* Call button */}
-        <a
-          href="tel:+919876543210"
-          aria-label="Call Us"
-          className="group relative w-12 h-12 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all border border-slate-200"
-        >
-          <Phone className="w-5 h-5 text-slate-800 transition-transform group-hover:rotate-12" />
-          <span className="absolute left-full ml-3 px-2.5 py-1 bg-slate-950 text-white text-[11px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md">
-            +91-987 654 3210
-          </span>
-        </a>
+      {/* Initial Hero Content (Tagline, Dots, Project Card) that fades out on scroll */}
+      <motion.div
+        style={{ opacity: heroContentOpacity, y: heroContentY }}
+        className="absolute inset-0 z-10"
+      >
+        {/* Persistent 2-line tagline & Search Bar */}
+        <div className="relative max-w-7xl mx-auto h-full px-6 sm:px-10 lg:px-16 flex flex-col justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 18 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 1.05, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            className="max-w-3xl pt-10 sm:pt-14"
+          >
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-white leading-[1.12] tracking-tight drop-shadow-2xl">
+              <span className="block">Where Vision Becomes</span>
+              <span className="block">Your Address</span>
+            </h1>
+          </motion.div>
 
-        {/* WhatsApp with Pop-Up Effect */}
-        <div className="relative">
-          {/* Interactive Pop-Up Chat Window with reduced radius */}
-          {showWhatsAppPopup && (
-            <div className="absolute bottom-20 left-0 w-80 max-w-[calc(100vw-32px)] bg-white rounded-md shadow-2xl border border-stone-200/90 p-4 text-slate-800 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300">
-              {/* Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-stone-100">
-                <div className="flex items-center gap-2.5">
-                  <div className="relative w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold text-xs">
-                    PE
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900">Pivora Estates VIP</h4>
-                    <p className="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      Online | Replies instantly
-                    </p>
-                  </div>
+          {/* Search Bar Widget (matching user reference) */}
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.95, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-8 sm:mt-10 max-w-3xl lg:max-w-7xl w-full"
+          >
+            {/* Top Tabs (Residential / Commercial) */}
+            <div className="inline-flex rounded-t-xl overflow-hidden bg-black/45 backdrop-blur-md border-t border-x border-white/20">
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('residential');
+                  setPropertyType('All Residential');
+                }}
+                className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                  activeTab === 'residential'
+                    ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                Residential
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setActiveTab('commercial');
+                  setPropertyType('All Commercial');
+                }}
+                className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                  activeTab === 'commercial'
+                    ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
+                    : 'text-white/70 hover:text-white'
+                }`}
+              >
+                Commercial
+              </button>
+            </div>
+
+            {/* Main Search Bar Card */}
+            <form
+              onSubmit={handleBrowse}
+              className="bg-white rounded-2xl rounded-tl-none shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-2 sm:p-2.5 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 border border-white/30"
+            >
+              {/* Type Dropdown Field */}
+             
+
+              {/* Where Input Field */}
+              <div className="px-4 py-1.5 flex-1 md:border-r border-slate-200">
+                <span className="text-[11px] font-medium text-slate-400 block mb-0.5">Where</span>
+                <div className="flex items-center gap-2">
+                  <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search locality/landmark"
+                    className="w-full text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 font-medium bg-transparent focus:outline-none"
+                  />
                 </div>
+              </div>
+
+              {/* Location Field (Pune) */}
+              <div className="relative px-4 py-1.5 md:border-r border-slate-200 min-w-[170px] sm:min-w-[210px]">
+                <span className="text-[11px] font-medium text-slate-400 block mb-0.5">Location</span>
                 <button
                   type="button"
-                  onClick={() => setShowWhatsAppPopup(false)}
-                  className="p-1 rounded-sm text-slate-400 hover:text-slate-700 hover:bg-stone-100 transition-colors cursor-pointer"
-                  aria-label="Close popup"
+                  onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
+                  className="w-full flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 hover:text-slate-950 transition-colors cursor-pointer text-left py-0.5"
                 >
-                  <X className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 truncate">
+                    <MapPin className="w-4 h-4 text-[#0090d8] shrink-0" />
+                    <span className="truncate">{selectedLocation}</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 shrink-0 ml-1 transition-transform duration-200 ${
+                      locationDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {locationDropdownOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-40"
+                      onClick={() => setLocationDropdownOpen(false)}
+                    />
+                    <div className="absolute top-full right-0 mt-3 w-64 bg-white rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.18)] border border-slate-200/80 py-2 z-50">
+                      <div className="px-3.5 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                        Pune Localities
+                      </div>
+                      <div className="max-h-60 overflow-y-auto divide-y divide-slate-50">
+                        {PUNE_LOCATIONS.map((loc) => {
+                          const isSelected =
+                            selectedLocation === loc ||
+                            selectedLocation === `${loc}, Pune` ||
+                            (loc === 'Pune (All)' && selectedLocation === 'Pune, Maharashtra');
+                          return (
+                            <button
+                              key={loc}
+                              type="button"
+                              onClick={() => {
+                                setSelectedLocation(
+                                  loc === 'Pune (All)' ? 'Pune, Maharashtra' : `${loc}, Pune`
+                                );
+                                setLocationDropdownOpen(false);
+                              }}
+                              className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm font-medium transition-colors flex items-center justify-between cursor-pointer ${
+                                isSelected
+                                  ? 'bg-blue-50 text-[#0090d8] font-semibold'
+                                  : 'text-slate-700 hover:bg-slate-50 hover:text-slate-950'
+                              }`}
+                            >
+                              <span>{loc}</span>
+                              {isSelected && (
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#0090d8]" />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Browse Properties Button */}
+              <div className="p-1">
+                <button
+                  type="submit"
+                  className="w-full md:w-auto bg-[#0090d8] hover:bg-[#007ec2] text-white font-medium text-xs sm:text-sm px-6 sm:px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap cursor-pointer"
+                >
+                  Search
                 </button>
               </div>
-
-              {/* Message Bubble */}
-              <div className="py-3 text-xs leading-relaxed text-slate-600 space-y-1.5">
-                <p className="bg-stone-100 p-2.5 rounded-sm text-slate-700">
-                  👋 Hello! Welcome to Pivora Estates. Looking for floor plans, pricing, or an exclusive site visit in Hinjawadi, Pune?
-                </p>
-              </div>
-
-              {/* Action Button */}
-              <a
-                href="https://wa.me/919876543210?text=Hi%2C%20I%20am%20interested%20in%20Pivora%20Estates%20residences."
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md active:scale-95"
-              >
-                <span>Start WhatsApp Chat</span>
-                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
-              </a>
-            </div>
-          )}
-
-          {/* Continuous Radar Pulse Ping Ring */}
-          <span className="absolute inset-1 rounded-full bg-emerald-500/35 animate-ping pointer-events-none" />
-
-          {/* WhatsApp Trigger Button */}
-          <button
-            type="button"
-            onClick={() => setShowWhatsAppPopup(!showWhatsAppPopup)}
-            aria-label="Contact on WhatsApp"
-            className="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center hover:scale-115 active:scale-90 transition-all duration-300 drop-shadow-2xl cursor-pointer"
-          >
-            <Image
-              src="/assets/whatsapp-logo-icon-isolated-on-transparent-background-free-png.webp"
-              alt="WhatsApp"
-              width={64}
-              height={64}
-              className="w-full h-full object-contain filter drop-shadow-md"
-            />
-          </button>
+            </form>
+          </motion.div>
         </div>
-      </div>
+
+        {/* Slide navigation dots */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
+          {HERO_SLIDES.map((s, idx) => (
+            <button
+              key={s.id}
+              type="button"
+              onClick={() => setCurrent(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+                idx === current
+                  ? 'w-7 bg-[#BD7E6C]'
+                  : 'w-2 bg-white/40 hover:bg-white/80'
+              }`}
+            />
+          ))}
+        </div>
+
+      
+      </motion.div>
+      </motion.div>
     </section>
   );
 }

@@ -141,7 +141,7 @@ export default function Testimonials() {
               handlePrev();
             }}
             aria-label="Previous Testimonial"
-            className="absolute left-0 sm:-left-5 md:-left-8 lg:-left-12 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-[#BD7E6C] text-slate-800 hover:text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] border border-[#eadfd9] hover:border-[#BD7E6C] flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group"
+            className="absolute -left-2 sm:-left-6 md:-left-9 lg:-left-14 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-[#BD7E6C] text-slate-800 hover:text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] border border-[#eadfd9] hover:border-[#BD7E6C] flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:-translate-x-0.5" />
           </button>
@@ -154,7 +154,7 @@ export default function Testimonials() {
               handleNext();
             }}
             aria-label="Next Testimonial"
-            className="absolute right-0 sm:-right-5 md:-right-8 lg:-right-12 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-[#BD7E6C] text-slate-800 hover:text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] border border-[#eadfd9] hover:border-[#BD7E6C] flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group"
+            className="absolute -right-2 sm:-right-6 md:-right-9 lg:-right-14 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-white/95 hover:bg-[#BD7E6C] text-slate-800 hover:text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.15)] border border-[#eadfd9] hover:border-[#BD7E6C] flex items-center justify-center transition-all duration-300 cursor-pointer active:scale-90 group"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 group-hover:translate-x-0.5" />
           </button>
@@ -180,25 +180,25 @@ export default function Testimonials() {
                 }
                 if (offset === -1) {
                   return {
-                    x: '-70%',
+                    x: '-95%',
                     y: 10,
-                    scale: 0.9,
+                    scale: 0.88,
                     zIndex: 15,
-                    opacity: 0.65,
+                    opacity: 0.72,
                   };
                 }
                 if (offset === 1) {
                   return {
-                    x: '70%',
+                    x: '95%',
                     y: 10,
-                    scale: 0.9,
+                    scale: 0.88,
                     zIndex: 15,
-                    opacity: 0.65,
+                    opacity: 0.72,
                   };
                 }
                 if (offset < -1) {
                   return {
-                    x: '-120%',
+                    x: '-145%',
                     y: 18,
                     scale: 0.75,
                     zIndex: 1,
@@ -206,7 +206,7 @@ export default function Testimonials() {
                   };
                 }
                 return {
-                  x: '120%',
+                  x: '145%',
                   y: 18,
                   scale: 0.75,
                   zIndex: 1,

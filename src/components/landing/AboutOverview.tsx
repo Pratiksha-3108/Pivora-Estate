@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
-import { ArrowUpRight, X, MapPin } from 'lucide-react';
-import { useEnquire } from '@/context/EnquireContext';
+import { X, MapPin } from 'lucide-react';
 
 const ABOUT_IMAGES = [
   {
@@ -15,48 +14,68 @@ const ABOUT_IMAGES = [
   },
 ];
 
-// Smooth custom ease curve for fluid deceleration (fadeInUp)
-const smoothEase = [0.22, 1, 0.36, 1] as const;
-
 const fadeInUpVariant: Variants = {
-  hidden: { opacity: 0, y: 35 },
+  hidden: { opacity: 0, y: 30 },
   visible: (custom: number = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.85,
-      delay: custom * 0.12,
+      duration: 0.8,
+      delay: custom * 0.1,
       ease: [0.22, 1, 0.36, 1],
     },
   }),
 };
 
-const titleWordsContainer: Variants = {
-  hidden: { opacity: 0 },
+// Smooth word-by-word reveal variants with subtle blur & opacity lift
+const paragraphOneContainer: Variants = {
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.024,
+      delayChildren: 0.15,
     },
   },
 };
 
-const titleWordItem: Variants = {
-  hidden: { opacity: 0, y: 12, filter: 'blur(6px)' },
+const paragraphTwoContainer: Variants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.024,
+      delayChildren: 0.85,
+    },
+  },
+};
+
+const wordRevealVariant: Variants = {
+  hidden: {
+    opacity: 0.15,
+    y: 4,
+    filter: 'blur(3px)',
+  },
   visible: {
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
     transition: {
-      duration: 0.65,
+      duration: 0.45,
       ease: [0.22, 1, 0.36, 1],
     },
   },
 };
 
+const PARAGRAPH_ONE_WORDS = [
+  'At', 'Pivora', 'Estates,', 'light', 'takes', 'center', 'stage', '—', 'shaping', 'spaces,', 'moods,', 'and', 'moments', 'with', 'effortless', 'grace.', 'Designed', 'around', 'the', 'idea', 'of', 'harmony', 'and', 'radiance,', 'every', 'home', 'reflects', 'a', 'balance', 'of', 'nature', 'and', 'modern', 'design.'
+];
+
+const PARAGRAPH_TWO_WORDS = [
+  'Set', 'in', 'Hinjawadi', 'Phase', '1,', 'Pivora', 'Estates', 'marks', 'the', 'next', 'chapter', 'of', "Pune's", 'growth', 'story', '—', 'with', 'a', '1-acre', 'forest', 'zone,', '40+', 'lifestyle', 'amenities,', 'and', 'a', '30,000', 'sq.', 'ft.', 'clubhouse.', 'Pivora', 'Estates', 'redefines', 'refined', 'living', '—', 'where', 'natural', 'light,', 'open', 'spaces,', 'and', 'timeless', 'elegance', 'come', 'together', 'in', 'a', 'true', 'Symphony', 'of', 'Lights.'
+];
+
 export default function AboutOverview() {
-  const { openEnquire } = useEnquire();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
 
@@ -65,173 +84,146 @@ export default function AboutOverview() {
   return (
     <section
       id="about"
-      className="relative py-[50px] bg-[#f5f4ef] text-slate-900 overflow-hidden scroll-mt-20 select-none"
+      className="relative z-20 w-full py-[60px] lg:py-[80px] text-white overflow-hidden scroll-mt-20 select-none bg-transparent"
     >
       {/* Target anchor for overview link */}
       <div id="overview" className="scroll-mt-24" />
 
-      {/* Subtle Luxury Ambient Radial Glow in the Background */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-60"
-        style={{
-          background:
-            'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(189, 126, 108, 0.08), transparent 70%)',
-        }}
-      />
-
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 xl:gap-8 lg:items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           
-          {/* ================= LEFT COLUMN ================= */}
-          <div className="lg:col-span-3 xl:col-span-3 flex flex-col justify-start h-full">
-            {/* Top Tag: ABOUT */}
+          {/* ================= LEFT COLUMN: OVERVIEW & NARRATIVE ================= */}
+          <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
+            
+            {/* Top Tag: OVERVIEW */}
             <motion.div
               variants={fadeInUpVariant}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
               custom={0}
-              className="pt-0 mb-3 sm:mb-4"
             >
-              <span className="text-xs font-bold uppercase tracking-widest text-[#BD7E6C] block">
-                ABOUT
+              <span className="text-xs sm:text-[13px] font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
+                OVERVIEW
               </span>
             </motion.div>
 
-            {/* Title and Subtitle Block: Positioned directly below ABOUT */}
+            {/* Title & Subtitle */}
             <motion.div
               variants={fadeInUpVariant}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
               custom={1}
-              className="space-y-2.5 sm:space-y-3"
+              className="space-y-3"
             >
-              {/* Title: 5 stacked lines with smooth word-by-word fade-in */}
-              <motion.h2
-                variants={titleWordsContainer}
+              <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-serif text-white font-normal leading-[1.15] tracking-tight drop-shadow-md">
+                A Vision of <span className="font-serif italic font-normal text-white">Inspired Living</span>
+              </h2>
+
+              <p className="text-[11px] sm:text-xs font-sans uppercase tracking-[0.18em] text-[#BD7E6C] font-semibold">
+                PIVORA ESTATES <span className="text-white/40 font-normal">•</span> <span className="text-white/80 font-medium">HINJAWADI PHASE 1, PUNE</span>
+              </p>
+            </motion.div>
+
+            {/* Narrative Story Description - Displayed cleanly over the hero background */}
+            <motion.div
+              variants={fadeInUpVariant}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: '-40px' }}
+              custom={2}
+              className="space-y-4 text-white/85 text-sm sm:text-base leading-relaxed font-normal drop-shadow-sm"
+            >
+              <motion.p
+                variants={paragraphOneContainer}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: '-40px' }}
-                className="text-2xl sm:text-3xl lg:text-[30px] xl:text-[36px] font-extrabold text-slate-950 tracking-tight font-sans leading-[1.05] uppercase"
+                className="leading-relaxed"
               >
-                {['TIMELESS', 'DESIGN', 'WELLNESS-', 'FOCUSED', 'LIVING'].map((word) => (
+                {PARAGRAPH_ONE_WORDS.map((word, idx) => (
                   <motion.span
-                    key={word}
-                    variants={titleWordItem}
-                    className="block"
+                    key={`p1-${idx}`}
+                    variants={wordRevealVariant}
+                    className="inline-block mr-[0.28em] will-change-transform"
                   >
                     {word}
                   </motion.span>
                 ))}
-              </motion.h2>
+              </motion.p>
 
-              {/* Subtitle positioned below the title as requested */}
-              <p className="text-[11px] sm:text-xs font-sans uppercase tracking-[0.18em] text-[#BD7E6C] font-semibold pt-1">
-                PIVORA ESTATES <span className="text-slate-400 font-normal">•</span> <span className="text-slate-600 font-medium">HINJAWADI PHASE 1, PUNE</span>
-              </p>
-            </motion.div>
-          </div>
-
-          {/* ================= CENTER COLUMN (WIDER & REDUCED HEIGHT IMAGE CARD) ================= */}
-          <div className="lg:col-span-5 xl:col-span-5 flex justify-center items-center">
-            <motion.div
-              variants={fadeInUpVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
-              custom={2}
-              className="relative w-full max-w-[480px] sm:max-w-[500px] lg:max-w-[520px] h-[430px] sm:h-[470px] lg:h-[510px] group"
-            >
-              {/* Image Card Container - Wider width, reduced height, smooth hover */}
-              <div
-                onClick={() => setZoomedImage(activeImage.src)}
-                className="relative w-full h-full rounded-xl sm:rounded-2xl overflow-hidden shadow-[0_20px_45px_-12px_rgba(0,0,0,0.18)] transition-all duration-500 cursor-pointer bg-neutral-200"
+              <motion.p
+                variants={paragraphTwoContainer}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-40px' }}
+                className="leading-relaxed"
               >
-                {/* Image with subtle pan & smooth zoom on hover */}
-                <Image
-                  src={activeImage.src}
-                  alt={activeImage.alt}
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 520px"
-                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-              </div>
-
-              {/* Decorative Subtle Shadow Reflection */}
-              <div className="absolute -bottom-3 inset-x-6 h-6 bg-black/10 blur-xl rounded-full pointer-events-none" />
+                {PARAGRAPH_TWO_WORDS.map((word, idx) => (
+                  <motion.span
+                    key={`p2-${idx}`}
+                    variants={wordRevealVariant}
+                    className="inline-block mr-[0.28em] will-change-transform"
+                  >
+                    {word}
+                  </motion.span>
+                ))}
+              </motion.p>
             </motion.div>
-          </div>
 
-          {/* ================= RIGHT COLUMN (TEXT & WEBSITE DETAILS) ================= */}
-          <div className="lg:col-span-4 xl:col-span-4 flex flex-col justify-start h-full lg:pl-3 xl:pl-4 space-y-5 pt-0">
-            
-            {/* Top Paragraphs */}
-            <motion.p
-              variants={fadeInUpVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
-              custom={1}
-              className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal"
-            >
-              Every element of Pivora Estates reflects a commitment to excellence. From the timeless elegance of its interiors to thoughtfully curated amenities, the property embodies a holistic approach to luxury living.
-            </motion.p>
-
-            <motion.p
-              variants={fadeInUpVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
-              custom={2}
-              className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal"
-            >
-              Whether you&apos;re seeking a serene retreat, cultural hub, or a space that fosters personal growth, Pivora Estates offers it all.
-            </motion.p>
-
-            {/* Pivora Estate Highlights Pill Grid */}
+            {/* Pivora Estate Highlights Row */}
             <motion.div
               variants={fadeInUpVariant}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
               custom={3}
-              className="pt-1 space-y-2.5"
+              className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2.5 text-xs text-white/90 font-medium border-t border-white/15 pt-5"
             >
-              <div className="flex items-center gap-2.5 text-xs text-slate-800 font-medium">
+              <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#BD7E6C]" />
-                <span>2, 3 &amp; 4 BHK Ultra-Luxury Residences</span>
+                <span>2, 3 &amp; 4 BHK Ultra-Luxury</span>
               </div>
-              <div className="flex items-center gap-2.5 text-xs text-slate-800 font-medium">
+              <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-[#BD7E6C]" />
                 <span>Starting at <span className="text-[#BD7E6C] font-bold">₹1.19 Cr.</span> Onwards</span>
               </div>
-              <div className="flex items-center gap-2.5 text-xs text-slate-600 font-medium">
+              <div className="flex items-center gap-2 text-white/80">
                 <MapPin className="w-3.5 h-3.5 text-[#BD7E6C]" />
                 <span>Hinjawadi Phase 1, Pune</span>
               </div>
             </motion.div>
 
-            {/* Action Button positioned right below Hinjawadi Phase 1, Pune */}
+          </div>
+
+          {/* ================= RIGHT COLUMN: LARGE LANDSCAPE LUXURY IMAGE ================= */}
+          <div className="lg:col-span-6 flex justify-center items-center">
             <motion.div
               variants={fadeInUpVariant}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-40px' }}
-              custom={4}
-              className="pt-2"
+              custom={2}
+              className="relative w-full group"
             >
-              <button
-                type="button"
-                onClick={() => openEnquire('Welcome to Pivora Estates', 'About Us Section')}
-                className="group inline-flex items-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-6 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
+              <div
+                onClick={() => setZoomedImage(activeImage.src)}
+                className="relative w-full aspect-[4/3] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl border border-white/20 transition-all duration-500 cursor-pointer bg-black/40 backdrop-blur-xs"
               >
-                <span>ENQUIRE NOW</span>
-                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
-              </button>
-            </motion.div>
+                <Image
+                  src={activeImage.src}
+                  alt={activeImage.alt}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+              </div>
 
+              {/* Decorative Soft Reflection / Grounding Shadow */}
+              <div className="absolute -bottom-4 inset-x-8 h-8 bg-black/40 blur-xl rounded-full pointer-events-none" />
+            </motion.div>
           </div>
 
         </div>

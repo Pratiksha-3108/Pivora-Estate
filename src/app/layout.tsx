@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import FloatingContactButtons from '@/components/common/FloatingContactButtons';
 import { EnquireProvider } from '@/context/EnquireContext';
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-grow">{children}</main>
           <Footer />
+          <FloatingContactButtons />
         </EnquireProvider>
       </body>
     </html>

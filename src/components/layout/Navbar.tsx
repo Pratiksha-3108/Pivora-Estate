@@ -16,14 +16,15 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       if (pathname === '/') {
-        // Track whether scroll position has reached the About section
-        const aboutEl = document.getElementById('about');
-        if (aboutEl) {
-          const rect = aboutEl.getBoundingClientRect();
-          // Navbar height offset is ~80px
+        // Find the beginning of the light content section directly below the About section (#light-content / PartnerSlider)
+        const lightContentEl = document.getElementById('light-content') || document.getElementById('partners');
+        if (lightContentEl) {
+          const rect = lightContentEl.getBoundingClientRect();
+          // Navbar stays 100% transparent on Hero AND on About section.
+          // It switches to solid background color ONLY when the section below About reaches the navbar (top <= 80px)
           setPastAbout(rect.top <= 80);
         } else {
-          setPastAbout(window.scrollY > window.innerHeight - 100);
+          setPastAbout(window.scrollY > (window.innerHeight * 1.8));
         }
       } else {
         // On sub-pages without the home hero, show background after initial scroll
