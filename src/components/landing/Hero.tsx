@@ -22,6 +22,8 @@ const PUNE_LOCATIONS = [
   'Wakad',
 ];
 
+const TOP_LOCATIONS = ['Hinjawadi', 'Kharadi', 'Wakad', 'Baner', 'Viman Nagar'];
+
 const HERO_SLIDES = [
   {
     id: 1,
@@ -148,48 +150,124 @@ export default function Hero() {
             transition={{ duration: 0.95, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="mt-8 sm:mt-10 max-w-3xl lg:max-w-7xl w-full"
           >
-            {/* Top Tabs (Residential / Commercial) */}
-            <div className="inline-flex rounded-t-xl overflow-hidden bg-black/45 backdrop-blur-md border-t border-x border-white/20">
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('residential');
-                  setPropertyType('All Residential');
-                }}
-                className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                  activeTab === 'residential'
-                    ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
-                    : 'text-white/70 hover:text-white'
-                }`}
-              >
-                Residential
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setActiveTab('commercial');
-                  setPropertyType('All Commercial');
-                }}
-                className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                  activeTab === 'commercial'
-                    ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
-                    : 'text-white/70 hover:text-white'
-                }`}
-              >
-                Commercial
-              </button>
+            {/* Top Bar: Tabs on left + Top Locations on the red line */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-2.5 mb-0">
+              {/* Top Tabs (Residential / Commercial) */}
+              <div className="inline-flex rounded-t-xl overflow-hidden bg-black/45 backdrop-blur-md border-t border-x border-white/20 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('residential');
+                    setPropertyType('All Residential');
+                  }}
+                  className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                    activeTab === 'residential'
+                      ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
+                      : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  Residential
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveTab('commercial');
+                    setPropertyType('All Commercial');
+                  }}
+                  className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
+                    activeTab === 'commercial'
+                      ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
+                      : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  Commercial
+                </button>
+              </div>
+
+              {/* Top Locations (placed at the red line, as shown in user image) */}
+              <div className="flex items-center gap-2 sm:gap-3.5 pb-2 px-1 text-xs sm:text-sm overflow-x-auto scrollbar-none">
+                <span className="font-bold text-white whitespace-nowrap drop-shadow-md">
+                  Top Locations:
+                </span>
+                <div className="flex items-center gap-2.5 sm:gap-3.5">
+                  {TOP_LOCATIONS.map((loc) => {
+                    const isSelected =
+                      searchQuery.toLowerCase() === loc.toLowerCase() ||
+                      selectedLocation.toLowerCase().startsWith(loc.toLowerCase());
+                    return (
+                      <button
+                        key={loc}
+                        type="button"
+                        onClick={() => {
+                          setSearchQuery(loc);
+                          setSelectedLocation(`${loc}, Pune`);
+                        }}
+                        className={`font-semibold cursor-pointer transition-all whitespace-nowrap drop-shadow-sm ${
+                          isSelected
+                            ? 'text-white underline decoration-[#0090d8] decoration-2 underline-offset-4'
+                            : 'text-white/90 hover:text-white hover:underline underline-offset-4'
+                        }`}
+                      >
+                        {loc}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* More Pune localities dropdown */}
+                <div className="relative shrink-0 ml-1">
+                  <button
+                    type="button"
+                    onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
+                    className="flex items-center gap-1 text-[11px] sm:text-xs font-medium text-white/85 hover:text-white cursor-pointer px-2 py-0.5 rounded-md bg-black/30 hover:bg-black/40 transition-all border border-white/20 backdrop-blur-sm"
+                  >
+                    {/* <span>More</span> */}
+                   
+                  </button>
+
+                  {locationDropdownOpen && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-40"
+                        onClick={() => setLocationDropdownOpen(false)}
+                      />
+                      <div className="absolute right-0 bottom-full mb-2 w-56 bg-white rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.25)] border border-slate-200/80 py-2 z-50 text-slate-800">
+                        <div className="px-3.5 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
+                          Pune Localities
+                        </div>
+                        <div className="max-h-56 overflow-y-auto divide-y divide-slate-50">
+                          {PUNE_LOCATIONS.map((loc) => (
+                            <button
+                              key={loc}
+                              type="button"
+                              onClick={() => {
+                                const q = loc === 'Pune (All)' ? '' : loc;
+                                setSearchQuery(q);
+                                setSelectedLocation(
+                                  loc === 'Pune (All)' ? 'Pune, Maharashtra' : `${loc}, Pune`
+                                );
+                                setLocationDropdownOpen(false);
+                              }}
+                              className="w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-slate-50 hover:text-[#0090d8] transition-colors"
+                            >
+                              {loc}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Main Search Bar Card */}
             <form
               onSubmit={handleBrowse}
-              className="bg-white rounded-2xl rounded-tl-none shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-2 sm:p-2.5 flex flex-col md:flex-row md:items-center gap-2 md:gap-0 border border-white/30"
+              className="bg-white rounded-2xl rounded-tl-none shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-2 sm:p-2.5 flex items-center gap-2 border border-white/30"
             >
-              {/* Type Dropdown Field */}
-             
-
               {/* Where Input Field */}
-              <div className="px-4 py-1.5 flex-1 md:border-r border-slate-200">
+              <div className="px-4 py-1.5 sm:py-2 flex-1">
                 <span className="text-[11px] font-medium text-slate-400 block mb-0.5">Where</span>
                 <div className="flex items-center gap-2">
                   <Search className="w-4 h-4 text-slate-400 shrink-0" />
@@ -200,79 +278,23 @@ export default function Hero() {
                     placeholder="Search locality/landmark"
                     className="w-full text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 font-medium bg-transparent focus:outline-none"
                   />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="text-slate-400 hover:text-slate-600 text-xs px-1 cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  )}
                 </div>
               </div>
 
-              {/* Location Field (Pune) */}
-              <div className="relative px-4 py-1.5 md:border-r border-slate-200 min-w-[170px] sm:min-w-[210px]">
-                <span className="text-[11px] font-medium text-slate-400 block mb-0.5">Location</span>
-                <button
-                  type="button"
-                  onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
-                  className="w-full flex items-center justify-between text-xs sm:text-sm font-semibold text-slate-800 hover:text-slate-950 transition-colors cursor-pointer text-left py-0.5"
-                >
-                  <div className="flex items-center gap-1.5 truncate">
-                    <MapPin className="w-4 h-4 text-[#0090d8] shrink-0" />
-                    <span className="truncate">{selectedLocation}</span>
-                  </div>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 text-slate-400 shrink-0 ml-1 transition-transform duration-200 ${
-                      locationDropdownOpen ? 'rotate-180' : ''
-                    }`}
-                  />
-                </button>
-
-                {/* Dropdown Menu */}
-                {locationDropdownOpen && (
-                  <>
-                    <div
-                      className="fixed inset-0 z-40"
-                      onClick={() => setLocationDropdownOpen(false)}
-                    />
-                    <div className="absolute top-full right-0 mt-3 w-64 bg-white rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.18)] border border-slate-200/80 py-2 z-50">
-                      <div className="px-3.5 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                        Pune Localities
-                      </div>
-                      <div className="max-h-60 overflow-y-auto divide-y divide-slate-50">
-                        {PUNE_LOCATIONS.map((loc) => {
-                          const isSelected =
-                            selectedLocation === loc ||
-                            selectedLocation === `${loc}, Pune` ||
-                            (loc === 'Pune (All)' && selectedLocation === 'Pune, Maharashtra');
-                          return (
-                            <button
-                              key={loc}
-                              type="button"
-                              onClick={() => {
-                                setSelectedLocation(
-                                  loc === 'Pune (All)' ? 'Pune, Maharashtra' : `${loc}, Pune`
-                                );
-                                setLocationDropdownOpen(false);
-                              }}
-                              className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm font-medium transition-colors flex items-center justify-between cursor-pointer ${
-                                isSelected
-                                  ? 'bg-blue-50 text-[#0090d8] font-semibold'
-                                  : 'text-slate-700 hover:bg-slate-50 hover:text-slate-950'
-                              }`}
-                            >
-                              <span>{loc}</span>
-                              {isSelected && (
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#0090d8]" />
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
               {/* Browse Properties Button */}
-              <div className="p-1">
+              <div className="p-1 shrink-0">
                 <button
                   type="submit"
-                  className="w-full md:w-auto bg-[#0090d8] hover:bg-[#007ec2] text-white font-medium text-xs sm:text-sm px-6 sm:px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap cursor-pointer"
+                  className="bg-[#0090d8] hover:bg-[#007ec2] text-white font-medium text-xs sm:text-sm px-6 sm:px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap cursor-pointer"
                 >
                   Search
                 </button>
