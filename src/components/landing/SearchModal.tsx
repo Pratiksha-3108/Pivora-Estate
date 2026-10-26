@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Heart, ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -162,7 +163,12 @@ export default function SearchModal({
     requirements: '',
   });
 
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const trimmedQuery = (query || '').trim();
   const normalizedQuery = trimmedQuery.toLowerCase();
@@ -211,9 +217,9 @@ export default function SearchModal({
     setLeadSubmitted(true);
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5">
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-5">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -474,6 +480,7 @@ export default function SearchModal({
           )}
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

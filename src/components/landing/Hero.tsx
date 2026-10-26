@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Search, ChevronDown, MapPin } from 'lucide-react';
+import SearchModal from './SearchModal';
 
 const PUNE_LOCATIONS = [
   'Pune (All)',
@@ -48,8 +49,8 @@ export default function Hero() {
   const [propertyType, setPropertyType] = useState('All Residential');
   const [typeDropdownOpen, setTypeDropdownOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState('Pune, Maharashtra');
-  const [locationDropdownOpen, setLocationDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
   const typeOptions = activeTab === 'residential'
     ? ['All Residential', 'Luxury Apartments', 'Penthouses', 'Villas & Mansions', 'Plots']
@@ -57,12 +58,7 @@ export default function Hero() {
 
   const handleBrowse = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    const projectsEl = document.getElementById('projects');
-    if (projectsEl) {
-      projectsEl.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.location.href = '/#projects';
-    }
+    setIsSearchModalOpen(true);
   };
 
   // Smooth auto-slide every 5 seconds
@@ -201,6 +197,7 @@ export default function Hero() {
                         onClick={() => {
                           setSearchQuery(loc);
                           setSelectedLocation(`${loc}, Pune`);
+                          setIsSearchModalOpen(true);
                         }}
                         className={`font-semibold cursor-pointer transition-all whitespace-nowrap drop-shadow-sm ${
                           isSelected
@@ -212,51 +209,6 @@ export default function Hero() {
                       </button>
                     );
                   })}
-                </div>
-
-                {/* More Pune localities dropdown */}
-                <div className="relative shrink-0 ml-1">
-                  <button
-                    type="button"
-                    onClick={() => setLocationDropdownOpen(!locationDropdownOpen)}
-                    className="flex items-center gap-1 text-[11px] sm:text-xs font-medium text-white/85 hover:text-white cursor-pointer px-2 py-0.5 rounded-md bg-black/30 hover:bg-black/40 transition-all border border-white/20 backdrop-blur-sm"
-                  >
-                    {/* <span>More</span> */}
-                   
-                  </button>
-
-                  {locationDropdownOpen && (
-                    <>
-                      <div
-                        className="fixed inset-0 z-40"
-                        onClick={() => setLocationDropdownOpen(false)}
-                      />
-                      <div className="absolute right-0 bottom-full mb-2 w-56 bg-white rounded-xl shadow-[0_12px_40px_rgba(0,0,0,0.25)] border border-slate-200/80 py-2 z-50 text-slate-800">
-                        <div className="px-3.5 py-1.5 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                          Pune Localities
-                        </div>
-                        <div className="max-h-56 overflow-y-auto divide-y divide-slate-50">
-                          {PUNE_LOCATIONS.map((loc) => (
-                            <button
-                              key={loc}
-                              type="button"
-                              onClick={() => {
-                                const q = loc === 'Pune (All)' ? '' : loc;
-                                setSearchQuery(q);
-                                setSelectedLocation(
-                                  loc === 'Pune (All)' ? 'Pune, Maharashtra' : `${loc}, Pune`
-                                );
-                                setLocationDropdownOpen(false);
-                              }}
-                              className="w-full text-left px-3.5 py-2 text-xs font-medium hover:bg-slate-50 hover:text-[#0090d8] transition-colors"
-                            >
-                              {loc}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
             </div>
@@ -323,6 +275,13 @@ export default function Hero() {
       
       </motion.div>
       </motion.div>
+
+      {/* Recommended Properties & Lead Capture Search Modal */}
+      <SearchModal
+        isOpen={isSearchModalOpen}
+        onClose={() => setIsSearchModalOpen(false)}
+        query={searchQuery}
+      />
     </section>
   );
 }
