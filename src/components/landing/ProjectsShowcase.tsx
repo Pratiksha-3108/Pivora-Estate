@@ -120,6 +120,23 @@ export default function ProjectsShowcase() {
     };
   }, []);
 
+  // Enable automatic hover/cursor detection in desktop and Chrome DevTools mobile emulation
+  useEffect(() => {
+    const handleGlobalPointer = (e: MouseEvent) => {
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const card = el?.closest('[data-category-card]');
+      if (card) {
+        const catId = card.getAttribute('data-category-card') as 'Residential' | 'Commercial' | 'All';
+        if (catId && catId !== activeCategory) {
+          handleCategorySelect(catId);
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', handleGlobalPointer, { passive: true });
+    return () => window.removeEventListener('mousemove', handleGlobalPointer);
+  }, [activeCategory]);
+
   // Auto-scroll carousel smoothly every 3.5 seconds (pauses on hover or touch)
   useEffect(() => {
     if (isPaused) return;
@@ -260,13 +277,30 @@ export default function ProjectsShowcase() {
               return (
                 <div
                   key={cat.id}
+                  data-category-card={cat.id}
                   className={`rounded-2xl transition-all duration-300 overflow-hidden ${
                     isExpanded
                       ? 'border-2 border-[#BD7E6C] bg-white shadow-[0_12px_32px_-8px_rgba(189,126,108,0.22)]'
                       : 'border border-stone-200 bg-white/80 hover:bg-white hover:border-[#BD7E6C]/60 shadow-xs cursor-pointer'
                   }`}
-                  onMouseEnter={() => handleCategorySelect(cat.id)}
-                  onClick={() => handleCategorySelect(cat.id)}
+                  onMouseEnter={() => {
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                  }}
+                  onPointerEnter={() => {
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                  }}
+                  onPointerMove={() => {
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                  }}
+                  onPointerDown={() => {
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                  }}
+                  onTouchStart={() => {
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                  }}
+                  onClick={() => {
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                  }}
                 >
                   {/* Category Header Row */}
                   <div className="flex items-center justify-between p-5 sm:p-5.5 select-none">

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -67,6 +67,48 @@ const wordRevealVariant: Variants = {
   },
 };
 
+// Mobile-specific fast reveal variants (instantly visible & sharp)
+const mobileFadeInVariant: Variants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: (custom: number = 0) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.35,
+      delay: custom * 0.05,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
+
+const mobileParagraphContainer: Variants = {
+  hidden: { opacity: 1 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.003,
+      delayChildren: 0.02,
+    },
+  },
+};
+
+const mobileWordRevealVariant: Variants = {
+  hidden: {
+    opacity: 0.85,
+    y: 0,
+    filter: 'blur(0px)',
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.15,
+      ease: 'easeOut',
+    },
+  },
+};
+
 const PARAGRAPH_ONE_TEXT =
   "At Pivora Estates, we serve as Pune's premier authorized real estate channel partner and strategic property advisory, bridging discerning homebuyers and commercial investors with the region's most reputable Grade-A developers. From luxury residential penthouses to high-yielding corporate office spaces, we curate verified developments across Pune's top growth corridors.";
 
@@ -79,8 +121,23 @@ const PARAGRAPH_TWO_WORDS = PARAGRAPH_TWO_TEXT.split(' ');
 export default function AboutOverview() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [zoomedImage, setZoomedImage] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 640);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const activeImage = ABOUT_IMAGES[activeImageIndex];
+
+  // Desktop keeps original slow stagger word reveal; mobile uses fast, crisp reveal
+  const currentFadeIn = isMobile ? mobileFadeInVariant : fadeInUpVariant;
+  const currentP1Container = isMobile ? mobileParagraphContainer : paragraphOneContainer;
+  const currentP2Container = isMobile ? mobileParagraphContainer : paragraphTwoContainer;
+  const currentWordVariant = isMobile ? mobileWordRevealVariant : wordRevealVariant;
+  const currentMargin = isMobile ? '0px' : '-40px';
 
   return (
     <section
@@ -98,10 +155,10 @@ export default function AboutOverview() {
             
             {/* Top Tag: OVERVIEW */}
             <motion.div
-              variants={fadeInUpVariant}
+              variants={currentFadeIn}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
+              viewport={{ once: true, margin: currentMargin }}
               custom={0}
             >
               <span className="text-xs sm:text-[13px] font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
@@ -111,10 +168,10 @@ export default function AboutOverview() {
 
             {/* Title & Subtitle */}
             <motion.div
-              variants={fadeInUpVariant}
+              variants={currentFadeIn}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
+              viewport={{ once: true, margin: currentMargin }}
               custom={1}
               className="space-y-3"
             >
@@ -129,24 +186,24 @@ export default function AboutOverview() {
 
             {/* Narrative Story Description - Displayed cleanly over the hero background */}
             <motion.div
-              variants={fadeInUpVariant}
+              variants={currentFadeIn}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
+              viewport={{ once: true, margin: currentMargin }}
               custom={2}
               className="space-y-4 text-white/85 text-sm sm:text-base leading-relaxed font-normal drop-shadow-sm"
             >
               <motion.p
-                variants={paragraphOneContainer}
+                variants={currentP1Container}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: '-40px' }}
+                viewport={{ once: true, margin: currentMargin }}
                 className="leading-relaxed"
               >
                 {PARAGRAPH_ONE_WORDS.map((word, idx) => (
                   <motion.span
                     key={`p1-${idx}`}
-                    variants={wordRevealVariant}
+                    variants={currentWordVariant}
                     className="inline-block mr-[0.28em] will-change-transform"
                   >
                     {word}
@@ -155,16 +212,16 @@ export default function AboutOverview() {
               </motion.p>
 
               <motion.p
-                variants={paragraphTwoContainer}
+                variants={currentP2Container}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, margin: '-40px' }}
+                viewport={{ once: true, margin: currentMargin }}
                 className="leading-relaxed"
               >
                 {PARAGRAPH_TWO_WORDS.map((word, idx) => (
                   <motion.span
                     key={`p2-${idx}`}
-                    variants={wordRevealVariant}
+                    variants={currentWordVariant}
                     className="inline-block mr-[0.28em] will-change-transform"
                   >
                     {word}
@@ -179,10 +236,10 @@ export default function AboutOverview() {
           {/* ================= RIGHT COLUMN: LARGE LANDSCAPE LUXURY IMAGE ================= */}
           <div className="lg:col-span-6 flex justify-center items-center">
             <motion.div
-              variants={fadeInUpVariant}
+              variants={currentFadeIn}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
+              viewport={{ once: true, margin: currentMargin }}
               custom={2}
               className="relative w-full group"
             >
