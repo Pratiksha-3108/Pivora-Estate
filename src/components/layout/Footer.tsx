@@ -42,13 +42,13 @@ export default function Footer() {
   return (
     <footer className="bg-[#0c0b0a] text-white py-[50px] px-4 sm:px-6 lg:px-12 relative z-20">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Top Horizontal Line */}
         <div className="w-full h-[1px] bg-white/45 mb-6" />
 
         {/* Main Content Area: Flat Horizontal Layout like Initial */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-6">
-          
+
           {/* Left Side: Logo & Social Icons */}
           <div className="flex flex-col items-start gap-4">
             <Link href="/" className="inline-block group">
@@ -124,7 +124,7 @@ export default function Footer() {
           </a>
           <span className="text-white/30 font-light">|</span>
           <a href="mailto:contact@pivoraestates.com" className="hover:text-white transition-colors">
-            contact@pivoraestates.com
+            info@pivoraestates.com
           </a>
           <span className="hidden md:inline text-white/30 font-light">|</span>
           <span className="text-slate-300">

@@ -9,6 +9,11 @@ export const metadata: Metadata = {
   title: 'Pivora Estates | Timeless Residences & Ultra-Luxury Real Estate',
   description: 'Pivora Estates represents iconic architectural mansions, penthouses, and private coastal compounds worldwide. Discreet advisory for high-net-worth clients.',
   keywords: 'luxury real estate, private estates, penthouse, mansion, coastal villas, real estate advisory, high net worth real estate',
+  icons: {
+    icon: '/assets/home_logo.jpeg',
+    shortcut: '/assets/home_logo.jpeg',
+    apple: '/assets/home_logo.jpeg',
+  },
   openGraph: {
     title: 'Pivora Estates | Timeless Residences',
     description: 'Iconic architectural mansions, penthouses, and private coastal compounds worldwide.',

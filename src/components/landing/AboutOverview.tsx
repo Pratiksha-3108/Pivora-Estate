@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
-import { X, MapPin } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const ABOUT_IMAGES = [
   {
@@ -172,28 +172,6 @@ export default function AboutOverview() {
               </motion.p>
             </motion.div>
 
-            {/* Pivora Estate Highlights Row */}
-            <motion.div
-              variants={fadeInUpVariant}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: '-40px' }}
-              custom={3}
-              className="pt-2 flex flex-wrap items-center gap-x-6 gap-y-2.5 text-xs text-white/90 font-medium border-t border-white/15 pt-5"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#BD7E6C]" />
-                <span>2, 3 &amp; 4 BHK Ultra-Luxury</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#BD7E6C]" />
-                <span>Starting at <span className="text-[#BD7E6C] font-bold">₹1.19 Cr.</span> Onwards</span>
-              </div>
-              <div className="flex items-center gap-2 text-white/80">
-                <MapPin className="w-3.5 h-3.5 text-[#BD7E6C]" />
-                <span>Hinjawadi Phase 1, Pune</span>
-              </div>
-            </motion.div>
 
           </div>
 
