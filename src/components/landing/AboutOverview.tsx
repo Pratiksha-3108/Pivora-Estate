@@ -85,7 +85,7 @@ export default function AboutOverview() {
   return (
     <section
       id="about"
-      className="relative z-20 w-full py-[50px] text-white overflow-hidden scroll-mt-20 select-none bg-transparent"
+      className="relative z-20 w-full py-10 sm:py-[50px] text-white overflow-hidden scroll-mt-20 select-none bg-transparent"
     >
       {/* Target anchor for overview link */}
       <div id="overview" className="scroll-mt-24" />

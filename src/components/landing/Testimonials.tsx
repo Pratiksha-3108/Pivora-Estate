@@ -97,7 +97,7 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="py-[50px] bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
+      className="py-10 sm:py-[50px] bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
     >
       {/* Soft Ambient Glows matching website palette */}
       <div className="absolute top-1/4 left-10 w-96 h-96 bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />
@@ -106,7 +106,7 @@ export default function Testimonials() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* SECTION HEADER */}
-        <div className="text-center space-y-2 mb-8 sm:mb-12">
+        <div className="text-center space-y-2 mb-6 sm:mb-12">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

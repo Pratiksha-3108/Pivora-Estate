@@ -61,6 +61,65 @@ export default function ProjectsShowcase() {
     }
   }, [activeCategory]);
 
+  // Listen for direct project selection from the Search Modal or URL hash
+  useEffect(() => {
+    const scrollToSpecificCard = (id: string) => {
+      const executeScroll = () => {
+        const cardEl = document.getElementById(`project-card-${id}`);
+        if (!cardEl) return;
+
+        // 1. Vertically center the specific card directly in the browser viewport
+        const cardRect = cardEl.getBoundingClientRect();
+        const idealOffset = Math.max(80, (window.innerHeight - cardRect.height) / 2);
+        const verticalTarget = window.scrollY + cardRect.top - idealOffset;
+        window.scrollTo({ top: Math.max(0, verticalTarget), behavior: 'smooth' });
+
+        // 2. Horizontally scroll the carousel container directly to this specific card
+        if (carouselRef.current) {
+          const containerRect = carouselRef.current.getBoundingClientRect();
+          const cardLeft = cardEl.getBoundingClientRect().left;
+          const scrollTarget = carouselRef.current.scrollLeft + (cardLeft - containerRect.left);
+          carouselRef.current.scrollTo({ left: Math.max(0, scrollTarget), behavior: 'smooth' });
+        }
+      };
+
+      // Execute with timing to allow any category tab switch and DOM re-render
+      setTimeout(executeScroll, 120);
+      setTimeout(executeScroll, 320);
+    };
+
+    const handleSelectProjectEvent = (e: Event) => {
+      const customEvent = e as CustomEvent<{ id: string; category: string }>;
+      const { id, category } = customEvent.detail;
+      const targetCat = category.toLowerCase() === 'commercial' ? 'Commercial' : 'Residential';
+      setActiveCategory(targetCat);
+      setHoveredCardId(id);
+      setIsPaused(true);
+      scrollToSpecificCard(id);
+    };
+
+    const checkHash = () => {
+      if (typeof window !== 'undefined' && window.location.hash.startsWith('#project-card-')) {
+        const id = window.location.hash.replace('#project-card-', '');
+        const targetProj = SHOWCASE_PROJECTS.find((p) => p.id === id);
+        if (targetProj) {
+          setActiveCategory(targetProj.category);
+          setHoveredCardId(id);
+          setIsPaused(true);
+          scrollToSpecificCard(id);
+        }
+      }
+    };
+
+    window.addEventListener('select-project', handleSelectProjectEvent);
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
+    return () => {
+      window.removeEventListener('select-project', handleSelectProjectEvent);
+      window.removeEventListener('hashchange', checkHash);
+    };
+  }, []);
+
   // Auto-scroll carousel smoothly every 3.5 seconds (pauses on hover or touch)
   useEffect(() => {
     if (isPaused) return;
@@ -115,7 +174,7 @@ export default function ProjectsShowcase() {
   return (
     <section
       id="projects"
-      className="relative bg-[#f5f4ef] text-slate-900 py-[50px] overflow-hidden scroll-mt-20 select-none"
+      className="relative bg-[#f5f4ef] text-slate-900 py-10 sm:py-[50px] overflow-hidden scroll-mt-20 select-none"
     >
       {/* Luxury ambient radial glow */}
       <div
@@ -129,7 +188,7 @@ export default function ProjectsShowcase() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* ================= HEADER SECTION ================= */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10 sm:mb-12">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8 sm:mb-12">
           <div className="max-w-3xl space-y-2.5">
             <motion.span
               initial={{ opacity: 0, y: 10 }}
@@ -299,6 +358,7 @@ export default function ProjectsShowcase() {
                   return (
                     <motion.div
                       key={project.id}
+                      id={`project-card-${project.id}`}
                       data-project-card
                       initial={{ opacity: 0, scale: 0.96 }}
                       animate={{ opacity: 1, scale: 1 }}
@@ -306,7 +366,11 @@ export default function ProjectsShowcase() {
                       transition={{ duration: 0.35, delay: index * 0.04 }}
                       onMouseEnter={() => setHoveredCardId(project.id)}
                       onMouseLeave={() => setHoveredCardId(null)}
-                      className="w-full min-w-full sm:min-w-0 sm:w-[290px] lg:w-[calc((100%-2rem)/3)] shrink-0 h-[370px] sm:h-[355px] lg:h-[370px] snap-start snap-always relative rounded-2xl overflow-hidden group border border-stone-200/90 hover:border-[#BD7E6C] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.15)] hover:shadow-[0_18px_40px_-8px_rgba(189,126,108,0.3)] transition-all duration-500 cursor-pointer bg-stone-900 flex flex-col justify-end"
+                      className={`w-full min-w-full sm:min-w-0 sm:w-[290px] lg:w-[calc((100%-2rem)/3)] shrink-0 h-[370px] sm:h-[355px] lg:h-[370px] snap-start snap-always relative rounded-2xl overflow-hidden group border transition-all duration-500 cursor-pointer bg-stone-900 flex flex-col justify-end ${
+                        isHovered
+                          ? 'border-2 border-[#BD7E6C] ring-4 ring-[#BD7E6C]/30 shadow-[0_20px_45px_-8px_rgba(189,126,108,0.45)]'
+                          : 'border-stone-200/90 hover:border-[#BD7E6C] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.15)] hover:shadow-[0_18px_40px_-8px_rgba(189,126,108,0.3)]'
+                      }`}
                       onClick={() => {
                         if (typeof window !== 'undefined' && window.innerWidth < 640) {
                           // On mobile, tapping anywhere on the card only toggles the info reveal, does NOT open the form

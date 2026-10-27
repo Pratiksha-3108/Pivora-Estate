@@ -42,7 +42,7 @@ export default function ContactPage() {
       </section>
 
       {/* Main Contact Section with Landing Page Background Colour */}
-      <section className="py-16 sm:py-20 lg:py-24 bg-[#fbf9f5] relative overflow-hidden border-t border-stone-200/80">
+      <section className="py-12 sm:py-20 lg:py-24 bg-[#fbf9f5] relative overflow-hidden border-t border-stone-200/80">
         {/* Soft Ambient Radial Background Glows matching landing page */}
         <div className="absolute top-1/3 left-0 w-[450px] h-[450px] bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute bottom-10 right-0 w-[450px] h-[450px] bg-[#e2be9b]/15 rounded-full blur-[100px] pointer-events-none" />

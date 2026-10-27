@@ -51,7 +51,7 @@ export default function ConsultationCTA() {
 
   return (
     <>
-      <section className="relative w-full overflow-hidden select-none py-[50px]">
+      <section className="relative w-full overflow-hidden select-none py-10 sm:py-[50px]">
         {/* SPLIT BACKGROUND */}
         <div className="absolute inset-0 z-0 flex flex-col">
           <div className="flex-1 bg-[#f5f4ef]"></div>
@@ -59,7 +59,7 @@ export default function ConsultationCTA() {
         </div>
 
         {/* CONTENT CONTAINER */}
-        <div className="max-w-6xl mx-auto py-10 sm:py-14 bg-white rounded-xl shadow-2xl relative z-10 text-[#0B1B2D] overflow-hidden">
+        <div className="max-w-6xl mx-auto py-8 sm:py-14 bg-white rounded-xl shadow-2xl relative z-10 text-[#0B1B2D] overflow-hidden">
 
           {/* CARD BACKGROUND IMAGE */}
           <div className="absolute inset-0 z-0">

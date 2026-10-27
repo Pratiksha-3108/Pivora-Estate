@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Heart, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { SHOWCASE_PROJECTS } from '@/data/showcaseProjects';
 
 export interface SearchProperty {
   id: string;
@@ -18,208 +19,18 @@ export interface SearchProperty {
   category: 'residential' | 'commercial';
 }
 
-export const SEARCH_PROPERTIES: SearchProperty[] = [
-  // HINJAWADI
-  {
-    id: 'sp-1',
-    title: 'Lodha Panache',
-    builder: 'Lodha',
-    configuration: '3 BHK',
-    location: 'Hinjawadi Phase 1, Pune',
-    price: '1.7 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate21.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-2',
-    title: 'Gera Joy on the Tree Tops',
-    builder: 'Gera',
-    configuration: '2 BHK - Duplex',
-    location: 'Hinjawadi Phase 3, Pune',
-    price: '1.05 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate23.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-3',
-    title: 'Godrej Aqua Retreat',
-    builder: 'Godrej',
-    configuration: '2 BHK',
-    location: 'Hinjawadi Phase 1, Pune',
-    price: '1.13 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate24.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-4',
-    title: 'Shapoorji Pallonji Sensorium',
-    builder: 'Shapoorji Pallonji',
-    configuration: '3 BHK',
-    location: 'Hinjawadi Phase 1, Pune',
-    price: '1.50 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate22.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-5',
-    title: 'Kolte Patil Life Republic',
-    builder: 'Kolte Patil',
-    configuration: '4 BHK',
-    location: 'Hinjawadi (Life Republic Township), Pune',
-    price: '2.59 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate20.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-6',
-    title: 'VTP Monarque',
-    builder: 'VTP',
-    configuration: 'Mansion',
-    location: 'Hinjawadi Phase 1, Pune',
-    price: '2.33 Cr - 3.07 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate25.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-comm-hinj',
-    title: 'Pivora One Corporate Towers',
-    builder: 'Pivora Commercial',
-    configuration: 'Grade-A IT & Office Suites',
-    location: 'Hinjawadi Phase 1, Pune',
-    price: '3.20 Cr - 9.40 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate16.webp',
-    category: 'commercial',
-  },
-
-  // KHARADI
-  {
-    id: 'sp-7',
-    title: 'Panchshil Sky Pent-Villas',
-    builder: 'Panchshil Realty',
-    configuration: '4 & 5 BHK Duplex',
-    location: 'Kharadi Annex, Pune',
-    price: '4.90 Cr - 7.50 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate12.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-7b',
-    title: 'Panchshil Business Park',
-    builder: 'Panchshil Realty',
-    configuration: 'Grade-A Retail & Executive Offices',
-    location: 'Viman Nagar - Kharadi, Pune',
-    price: '4.10 Cr - 8.90 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate15.webp',
-    category: 'commercial',
-  },
-
-  // BALEWADI
-  {
-    id: 'sp-8',
-    title: 'Kasturi The Balmoral Riverside',
-    builder: 'Kasturi Housing',
-    configuration: '3 & 4 BHK Riverfront',
-    location: 'Balewadi, Pune',
-    price: '2.65 Cr - 4.10 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate14.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-comm-bale',
-    title: 'Tower 108 Business & Sky Suites',
-    builder: 'Ceratec Group',
-    configuration: 'Executive Grade-A Office Spaces',
-    location: 'Balewadi High Street, Pune',
-    price: '2.50 Cr - 4.80 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate22.webp',
-    category: 'commercial',
-  },
-
-  // BANER
-  {
-    id: 'sp-9',
-    title: 'Solitaire Business Hub',
-    builder: 'Solitaire',
-    configuration: 'Office Suites',
-    location: 'Baner, Pune',
-    price: '1.65 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate15.webp',
-    category: 'commercial',
-  },
-  {
-    id: 'sp-comm-baner',
-    title: 'Amar Genesis Commercial Boulevard',
-    builder: 'Amar Builders',
-    configuration: 'Boutique Offices & Co-working Hubs',
-    location: 'Baner, Pune',
-    price: '1.85 Cr - 3.40 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate12.webp',
-    category: 'commercial',
-  },
-
-  // VIMAN NAGAR
-  {
-    id: 'sp-10',
-    title: 'Rohan Mithila',
-    builder: 'Rohan Builders',
-    configuration: '3 BHK Apartments',
-    location: 'Viman Nagar, Pune',
-    price: '2.10 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate10.webp',
-    category: 'residential',
-  },
-
-  // WAKAD
-  {
-    id: 'sp-11',
-    title: 'Vilas Javdekar Yashwin',
-    builder: 'Vilas Javdekar',
-    configuration: '2 & 3 BHK Urban',
-    location: 'Wakad, Pune',
-    price: '92 Lakhs - 1.45 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate13.webp',
-    category: 'residential',
-  },
-  {
-    id: 'sp-comm-wakad',
-    title: 'Godrej Ascend Business Plaza',
-    builder: 'Godrej Properties',
-    configuration: 'Commercial Showrooms & Offices',
-    location: 'Wakad - Hinjewadi Link Road, Pune',
-    price: '2.10 Cr - 5.15 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate14.webp',
-    category: 'commercial',
-  },
-
-  // KALYANI NAGAR
-  {
-    id: 'sp-12',
-    title: 'Pivora Elevate Sky Residences',
-    builder: 'Pivora Group',
-    configuration: '3 & 4 BHK Sky Residences',
-    location: 'Kalyani Nagar, Pune',
-    price: '2.15 Cr - 3.45 Cr',
-    possession: 'Ready Possession',
-    image: '/assets/realestate21.webp',
-    category: 'residential',
-  },
-];
+// Exactly and only the properties specified in ProjectsShowcase (SHOWCASE_PROJECTS)
+export const SEARCH_PROPERTIES: SearchProperty[] = SHOWCASE_PROJECTS.map((p) => ({
+  id: p.id,
+  title: p.name,
+  builder: p.builder,
+  configuration: p.configuration,
+  location: p.location,
+  price: p.price,
+  possession: p.possession,
+  image: p.image,
+  category: p.category.toLowerCase() as 'residential' | 'commercial',
+}));
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -265,7 +76,7 @@ export default function SearchModal({
   const normalizedQuery = trimmedQuery.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
 
   // Filter properties based on category (residential/commercial) and search query
-  const filteredProperties = SEARCH_PROPERTIES.filter((prop) => {
+  let filteredProperties = SEARCH_PROPERTIES.filter((prop) => {
     // 1. Strict Category matching (residential only for residential, commercial only for commercial):
     if (category && prop.category !== category) {
       return false;
@@ -285,6 +96,23 @@ export default function SearchModal({
       propConfig.includes(normalizedQuery)
     );
   });
+
+  // If no results in active category for this query, search all showcase projects for this location/keyword
+  if (filteredProperties.length === 0 && normalizedQuery) {
+    filteredProperties = SEARCH_PROPERTIES.filter((prop) => {
+      const propTitle = prop.title.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+      const propBuilder = prop.builder.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+      const propLocation = prop.location.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+      const propConfig = prop.configuration.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+
+      return (
+        propTitle.includes(normalizedQuery) ||
+        propBuilder.includes(normalizedQuery) ||
+        propLocation.includes(normalizedQuery) ||
+        propConfig.includes(normalizedQuery)
+      );
+    });
+  }
 
   const ITEMS_PER_PAGE = 6;
   const totalPages = Math.ceil(filteredProperties.length / ITEMS_PER_PAGE);
@@ -310,6 +138,24 @@ export default function SearchModal({
       projectsEl.scrollIntoView({ behavior: 'smooth' });
     } else {
       window.location.href = '/#projects';
+    }
+  };
+
+  const handleSelectSpecificProject = (prop: SearchProperty) => {
+    onClose();
+    if (onSelectProperty) onSelectProperty(prop);
+
+    const isHomePage = typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '');
+
+    if (isHomePage) {
+      // Notify ProjectsShowcase to activate that category and scroll directly to this specific card
+      window.dispatchEvent(
+        new CustomEvent('select-project', {
+          detail: { id: prop.id, category: prop.category },
+        })
+      );
+    } else {
+      window.location.href = `/#project-card-${prop.id}`;
     }
   };
 
@@ -409,10 +255,7 @@ export default function SearchModal({
                   return (
                     <div
                       key={prop.id}
-                      onClick={() => {
-                        if (onSelectProperty) onSelectProperty(prop);
-                        handleShowAll();
-                      }}
+                      onClick={() => handleSelectSpecificProject(prop)}
                       className="group flex rounded-xl border border-slate-150 hover:border-slate-300 hover:shadow-md transition-all overflow-hidden p-2 gap-3 bg-white cursor-pointer relative"
                     >
                       {/* Left Thumbnail with Badge */}
