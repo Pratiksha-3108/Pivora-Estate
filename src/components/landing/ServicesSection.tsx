@@ -171,18 +171,18 @@ export default function ServicesSection() {
   return (
     <section
       id="services"
-      className="py-[50px] bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
+      className="py-8 sm:py-[50px] bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
     >
       {/* Soft Background Accent Glows */}
       <div className="absolute top-1/3 left-0 w-[450px] h-[450px] bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-10 right-0 w-[450px] h-[450px] bg-[#e2be9b]/15 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-6 sm:space-y-12">
 
         {/* SECTION HEADER */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-stone-300/60 pb-8">
-          <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 border-b border-stone-300/60 pb-5 sm:pb-8">
+          <div className="space-y-1.5 sm:space-y-2">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
               COMPREHENSIVE REAL ESTATE SOLUTIONS
             </span>
             <WordFadeIn
@@ -198,13 +198,13 @@ export default function ServicesSection() {
         </div>
 
         {/* TWO COLUMN CONTENT: LEFT ACCORDION LIST, RIGHT ANIMATED SPREAD PHOTO STACK */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start pt-2">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-14 items-start pt-0 sm:pt-2">
 
           {/* LEFT COLUMN: 6 NUMBERED SERVICES ACCORDION LIST */}
           <div
             onMouseEnter={() => setIsListHovered(true)}
             onMouseLeave={() => setIsListHovered(false)}
-            className="lg:col-span-7 space-y-1 order-2 lg:order-1"
+            className="lg:col-span-7 space-y-1 order-2 lg:order-1 -mt-2 lg:mt-0"
           >
             {SERVICES_DATA.map((service, index) => {
               const isActive = index === activeIndex;
@@ -280,7 +280,7 @@ export default function ServicesSection() {
             <div
               onMouseEnter={() => setIsStackHovered(true)}
               onMouseLeave={() => setIsStackHovered(false)}
-              className="relative w-full max-w-lg h-[560px] sm:h-[620px] flex items-center justify-center cursor-pointer group"
+              className="relative w-full max-w-lg h-[360px] sm:h-[440px] lg:h-[620px] flex items-center justify-center cursor-pointer group -mt-3 sm:mt-0"
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -335,7 +335,7 @@ export default function ServicesSection() {
                           setSelectedPreviewImage(imgObj.url);
                         }}
                         style={{ zIndex: zIdx }}
-                        className="absolute w-[220px] sm:w-[260px] md:w-[275px] bg-white p-1.5 sm:p-2 rounded-2xl border border-stone-200/90 shadow-none"
+                        className="absolute w-[205px] sm:w-[260px] md:w-[275px] bg-white p-1.5 sm:p-2 rounded-2xl border border-stone-200/90 shadow-none"
                       >
                         {/* Image Container with Tall Vertical Aspect Ratio (3/4 ratio) */}
                         <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-100">
