@@ -45,6 +45,7 @@ export default function ProjectsShowcase() {
   const { openEnquire } = useEnquire();
   const [activeCategory, setActiveCategory] = useState<'Residential' | 'Commercial' | 'All'>('Residential');
   const [isPaused, setIsPaused] = useState(false);
+  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Filter projects by category
@@ -83,12 +84,28 @@ export default function ProjectsShowcase() {
     return () => clearInterval(interval);
   }, [isPaused, filteredProjects]);
 
-  // Smooth scroll carousel with arrow buttons (scrolls by 1 full view of cards)
+  // Smooth scroll carousel with arrow buttons (scrolls by 1 card on mobile, full view on desktop)
   const scroll = (direction: 'left' | 'right') => {
     if (!carouselRef.current) return;
-    const containerWidth = carouselRef.current.clientWidth;
-    const scrollAmount = direction === 'left' ? -containerWidth : containerWidth;
-    carouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    const el = carouselRef.current;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+    const firstCard = (el.querySelector('[data-project-card]') || el.firstElementChild) as HTMLElement | null;
+    const cardStep = isMobile && firstCard ? firstCard.offsetWidth + 16 : el.clientWidth;
+
+    if (direction === 'right') {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (el.scrollLeft >= maxScroll - 20) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: cardStep, behavior: 'smooth' });
+      }
+    } else {
+      if (el.scrollLeft <= 20) {
+        el.scrollTo({ left: el.scrollWidth - el.clientWidth, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: -cardStep, behavior: 'smooth' });
+      }
+    }
   };
 
   const handleCategorySelect = (catId: 'Residential' | 'Commercial' | 'All') => {
@@ -142,13 +159,13 @@ export default function ProjectsShowcase() {
             </motion.p>
           </div>
 
-          {/* Carousel Arrow Controls */}
+          {/* Carousel Arrow Controls (Desktop / Tablet only) */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center gap-3 shrink-0 self-start sm:self-auto"
+            className="hidden sm:flex items-center gap-3 shrink-0 self-start sm:self-auto"
           >
             <button
               type="button"
@@ -237,8 +254,34 @@ export default function ProjectsShowcase() {
             })}
           </div>
 
-          {/* ----- RIGHT COLUMN: HORIZONTAL CAROUSEL (3 FULL CARDS CLEAR & UNCUT) ----- */}
+          {/* ----- RIGHT COLUMN: HORIZONTAL CAROUSEL (3 FULL CARDS CLEAR & UNCUT ON DESKTOP, 1 CARD ON MOBILE) ----- */}
           <div className="w-full lg:flex-1 min-w-0 relative">
+            {/* Mobile Left Arrow (Left of Card) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                scroll('left');
+              }}
+              className="sm:hidden absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-[0_4px_14px_rgba(0,0,0,0.28)] border border-stone-200/80 flex items-center justify-center transition-all duration-200 active:scale-90 cursor-pointer backdrop-blur-sm"
+              aria-label="Previous Project"
+            >
+              <ChevronLeft className="w-5 h-5 stroke-[2.4]" />
+            </button>
+
+            {/* Mobile Right Arrow (Right of Card) */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                scroll('right');
+              }}
+              className="sm:hidden absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-[0_4px_14px_rgba(0,0,0,0.28)] border border-stone-200/80 flex items-center justify-center transition-all duration-200 active:scale-90 cursor-pointer backdrop-blur-sm"
+              aria-label="Next Project"
+            >
+              <ChevronRight className="w-5 h-5 stroke-[2.4]" />
+            </button>
+
             <div
               ref={carouselRef}
               onMouseEnter={() => setIsPaused(true)}
@@ -249,104 +292,134 @@ export default function ProjectsShowcase() {
               style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
             >
               <AnimatePresence mode="popLayout">
-                {filteredProjects.map((project: ShowcaseProject, index: number) => (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, scale: 0.96 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.96 }}
-                    transition={{ duration: 0.35, delay: index * 0.04 }}
-                    className="w-[270px] sm:w-[290px] lg:w-[calc((100%-2rem)/3)] shrink-0 h-[335px] sm:h-[355px] lg:h-[370px] snap-start snap-always relative rounded-2xl overflow-hidden group border border-stone-200/90 hover:border-[#BD7E6C] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.15)] hover:shadow-[0_18px_40px_-8px_rgba(189,126,108,0.3)] transition-all duration-500 cursor-pointer bg-stone-900 flex flex-col justify-end"
-                    onClick={() => openEnquire(`View Details - ${project.name}`, project.name)}
-                  >
-                    {/* Background Project Image - Crystal clear with high quality */}
-                    <Image
-                      src={project.image}
-                      alt={project.name}
-                      fill
-                      sizes="(max-width: 768px) 300px, (max-width: 1200px) 33vw, 450px"
-                      quality={95}
-                      priority={index < 3}
-                      className="object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
-                    />
+                {filteredProjects.map((project: ShowcaseProject, index: number) => {
+                  const isHovered = hoveredCardId === project.id;
 
-                    {/* Gradient Overlay - Focused strictly at the bottom so the building is bright & clear */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 via-25% to-transparent group-hover:from-black/95 group-hover:via-black/70 group-hover:via-45% group-hover:to-transparent transition-all duration-500 pointer-events-none" />
+                  return (
+                    <motion.div
+                      key={project.id}
+                      data-project-card
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.96 }}
+                      transition={{ duration: 0.35, delay: index * 0.04 }}
+                      onMouseEnter={() => setHoveredCardId(project.id)}
+                      onMouseLeave={() => setHoveredCardId(null)}
+                      className="w-full min-w-full sm:min-w-0 sm:w-[290px] lg:w-[calc((100%-2rem)/3)] shrink-0 h-[370px] sm:h-[355px] lg:h-[370px] snap-start snap-always relative rounded-2xl overflow-hidden group border border-stone-200/90 hover:border-[#BD7E6C] shadow-[0_10px_25px_-8px_rgba(0,0,0,0.15)] hover:shadow-[0_18px_40px_-8px_rgba(189,126,108,0.3)] transition-all duration-500 cursor-pointer bg-stone-900 flex flex-col justify-end"
+                      onClick={() => {
+                        if (typeof window !== 'undefined' && window.innerWidth < 640) {
+                          // On mobile, tapping anywhere on the card only toggles the info reveal, does NOT open the form
+                          setHoveredCardId((prev) => (prev === project.id ? null : project.id));
+                          return;
+                        }
+                        openEnquire(`View Details - ${project.name}`, project.name);
+                      }}
+                    >
+                      {/* Background Project Image - Crystal clear with high quality */}
+                      <Image
+                        src={project.image}
+                        alt={project.name}
+                        fill
+                        sizes="(max-width: 768px) 300px, (max-width: 1200px) 33vw, 450px"
+                        quality={95}
+                        priority={index < 3}
+                        className={`object-cover object-center transition-transform duration-700 ease-out ${
+                          isHovered ? 'scale-105' : ''
+                        } group-hover:scale-105`}
+                      />
 
-                    {/* Bottom Card Content */}
-                    <div className="relative p-4 sm:p-4.5 flex flex-col justify-end text-left z-10">
-                      {/* INITIALLY VISIBLE INFO (Tag, Title, Subtitle) */}
-                      <span className="text-[11px] sm:text-xs font-semibold text-white/90 tracking-wide mb-1 block">
-                        {project.badge || project.configuration.split(' ')[0]}
-                      </span>
+                      {/* Gradient Overlay - Smooth reveal on hover */}
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-t transition-all duration-500 pointer-events-none ${
+                          isHovered
+                            ? 'from-black/95 via-black/70 via-45% to-transparent'
+                            : 'from-black/95 via-black/40 via-25% to-transparent'
+                        } group-hover:from-black/95 group-hover:via-black/70 group-hover:via-45% group-hover:to-transparent`}
+                      />
 
-                      <h3 className="font-sans text-lg sm:text-xl font-bold text-white leading-snug tracking-tight">
-                        {project.name}
-                      </h3>
+                      {/* Bottom Card Content */}
+                      <div className="relative p-4 sm:p-4.5 flex flex-col justify-end text-left z-10">
+                        {/* INITIALLY VISIBLE INFO (Tag, Title, Subtitle) */}
+                        <span className="text-[11px] sm:text-xs font-semibold text-white/90 tracking-wide mb-1 block">
+                          {project.badge || project.configuration.split(' ')[0]}
+                        </span>
 
-                      <p className="text-xs sm:text-[13px] text-stone-200/90 font-normal line-clamp-1 mt-0.5">
-                        {project.configuration}
-                      </p>
+                        <h3 className="font-sans text-lg sm:text-xl font-bold text-white leading-snug tracking-tight">
+                          {project.name}
+                        </h3>
 
-                      {/* HOVER REVEALED INFO (Location, Description, Carpet Area, Starts At, View Details Button) */}
-                      <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
-                        <div className="overflow-hidden">
-                          <div className="pt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                            {/* Location with MapPin Icon */}
-                            <div className="flex items-center gap-1.5 text-xs text-stone-300 mt-1">
-                              <MapPin className="w-3.5 h-3.5 text-[#BD7E6C] shrink-0" />
-                              <span className="truncate">{project.location}</span>
-                            </div>
+                        <p className="text-xs sm:text-[13px] text-stone-200/90 font-normal line-clamp-1 mt-0.5">
+                          {project.configuration}
+                        </p>
 
-                            {/* Description Paragraph */}
-                            <p className="text-[11px] sm:text-xs text-stone-300 leading-relaxed font-normal mt-1.5 line-clamp-2">
-                              {project.description}
-                            </p>
-
-                            {/* Divider Line */}
-                            <div className="border-t border-white/20 my-2.5" />
-
-                            {/* Specs Row: CARPET AREA & STARTS AT */}
-                            <div className="flex items-center justify-between text-xs gap-3">
-                              <div className="min-w-0">
-                                <span className="text-stone-400 uppercase text-[8.5px] tracking-wider block font-bold">
-                                  CARPET AREA
-                                </span>
-                                <span className="text-white font-semibold text-[11px] sm:text-xs truncate block mt-0.5">
-                                  {project.sizeSqft}
-                                </span>
-                              </div>
-
-                              <div className="h-5 w-px bg-white/25 shrink-0" />
-
-                              <div className="min-w-0">
-                                <span className="text-stone-400 uppercase text-[8.5px] tracking-wider block font-bold">
-                                  STARTS AT
-                                </span>
-                                <span className="text-[#BD7E6C] font-bold text-[11px] sm:text-xs truncate block mt-0.5">
-                                  {project.price}
-                                </span>
-                              </div>
-                            </div>
-
-                            {/* VIEW DETAILS Action Button */}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                openEnquire(`View Details - ${project.name}`, project.name);
-                              }}
-                              className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white py-2 px-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-xl group/btn cursor-pointer"
+                        {/* HOVER REVEALED INFO (Only visible after hover) */}
+                        <div
+                          className={`grid transition-[grid-template-rows] duration-500 ease-out ${
+                            isHovered ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                          } group-hover:grid-rows-[1fr]`}
+                        >
+                          <div className="overflow-hidden">
+                            <div
+                              className={`pt-2 transition-opacity duration-300 delay-100 ${
+                                isHovered ? 'opacity-100' : 'opacity-0'
+                              } group-hover:opacity-100`}
                             >
-                              <span>VIEW DETAILS</span>
-                              <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 group-hover/btn:rotate-45" />
-                            </button>
+                              {/* Location with MapPin Icon */}
+                              <div className="flex items-center gap-1.5 text-xs text-stone-300 mt-1">
+                                <MapPin className="w-3.5 h-3.5 text-[#BD7E6C] shrink-0" />
+                                <span className="truncate">{project.location}</span>
+                              </div>
+
+                              {/* Description Paragraph */}
+                              <p className="text-[11px] sm:text-xs text-stone-300 leading-relaxed font-normal mt-1.5 line-clamp-2">
+                                {project.description}
+                              </p>
+
+                              {/* Divider Line */}
+                              <div className="border-t border-white/20 my-2.5" />
+
+                              {/* Specs Row: CARPET AREA & STARTS AT */}
+                              <div className="flex items-center justify-between text-xs gap-3">
+                                <div className="min-w-0">
+                                  <span className="text-stone-400 uppercase text-[8.5px] tracking-wider block font-bold">
+                                    CARPET AREA
+                                  </span>
+                                  <span className="text-white font-semibold text-[11px] sm:text-xs truncate block mt-0.5">
+                                    {project.sizeSqft}
+                                  </span>
+                                </div>
+
+                                <div className="h-5 w-px bg-white/25 shrink-0" />
+
+                                <div className="min-w-0">
+                                  <span className="text-stone-400 uppercase text-[8.5px] tracking-wider block font-bold">
+                                    STARTS AT
+                                  </span>
+                                  <span className="text-[#BD7E6C] font-bold text-[11px] sm:text-xs truncate block mt-0.5">
+                                    {project.price}
+                                  </span>
+                                </div>
+                              </div>
+
+                              {/* VIEW DETAILS Action Button */}
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openEnquire(`View Details - ${project.name}`, project.name);
+                                }}
+                                className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white py-2 px-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-xl group/btn cursor-pointer"
+                              >
+                                <span>VIEW DETAILS</span>
+                                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 group-hover/btn:rotate-45" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </motion.div>
-                ))}
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             </div>
           </div>
