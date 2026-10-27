@@ -17,7 +17,7 @@ export default function ContactForm() {
     message: '',
   });
 
-  const [agreedPrivacy, setAgreedPrivacy] = useState(true);
+  const [agreedPrivacy, setAgreedPrivacy] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -202,6 +202,7 @@ export default function ContactForm() {
             <input
               type="checkbox"
               id="privacyConsent"
+              required
               checked={agreedPrivacy}
               onChange={(e) => setAgreedPrivacy(e.target.checked)}
               className="w-4 h-4 accent-slate-900 rounded cursor-pointer"
@@ -224,8 +225,8 @@ export default function ContactForm() {
           <div className="pt-2 text-center">
             <button
               type="submit"
-              disabled={!agreedPrivacy || loading}
-              className="group inline-flex items-center justify-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#BD7E6C] text-white px-8 py-3.5 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-xl active:scale-95 cursor-pointer"
+              disabled={loading}
+              className="group inline-flex items-center justify-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-6 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
             >
               <span>{loading ? 'SUBMITTING...' : 'SUBMIT INQUIRY'}</span>
               <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />

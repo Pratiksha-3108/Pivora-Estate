@@ -57,10 +57,10 @@ export default function PartnerSlider() {
   const rowTwoItems = [...ROW_TWO_LOGOS, ...ROW_TWO_LOGOS, ...ROW_TWO_LOGOS];
 
   return (
-    <section id="partners" className="py-[50px] bg-[#f5f4ef] relative overflow-hidden select-none">
-      {/* Section Header - Matching About Us Section Exactly */}
+    <section id="partners" className="pt-[100px] pb-[50px] bg-[#f5f4ef] rounded-t-[36px] sm:rounded-t-[48px] relative overflow-hidden select-none">
+      {/* Section Header - Matching Projects Showcase Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-left mb-8 sm:mb-10">
-        <div className="space-y-3 -mt-2">
+        <div className="max-w-3xl space-y-2.5">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}

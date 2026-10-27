@@ -10,7 +10,7 @@ const ABOUT_IMAGES = [
     id: 'living-pavilion',
     label: 'Living Pavilion',
     src: '/assets/real_estate1.jpg',
-    alt: 'Pivora Estates Luxury Living Pavilion & Architecture',
+    alt: 'Pivora Estates - Premier Real Estate Channel Partner in Pune',
   },
 ];
 
@@ -67,13 +67,14 @@ const wordRevealVariant: Variants = {
   },
 };
 
-const PARAGRAPH_ONE_WORDS = [
-  'At', 'Pivora', 'Estates,', 'light', 'takes', 'center', 'stage,', 'shaping', 'spaces,', 'moods,', 'and', 'moments', 'with', 'effortless', 'grace.', 'Designed', 'around', 'the', 'idea', 'of', 'harmony', 'and', 'radiance,', 'every', 'home', 'reflects', 'a', 'balance', 'of', 'nature', 'and', 'modern', 'design.'
-];
+const PARAGRAPH_ONE_TEXT =
+  "At Pivora Estates, we serve as Pune's premier authorized real estate channel partner and strategic property advisory, bridging discerning homebuyers and commercial investors with the region's most reputable Grade-A developers. From luxury residential penthouses to high-yielding corporate office spaces, we curate verified developments across Pune's top growth corridors.";
 
-const PARAGRAPH_TWO_WORDS = [
-  'Set', 'in', 'Hinjawadi', 'Phase', '1,', 'Pivora', 'Estates', 'marks', 'the', 'next', 'chapter', 'of', "Pune's", 'growth', 'story,', 'with', 'a', '1-acre', 'forest', 'zone,', '40+', 'lifestyle', 'amenities,', 'and', 'a', '30,000', 'sq.', 'ft.', 'clubhouse.', 'Pivora', 'Estates', 'redefines', 'refined', 'living,', 'where', 'natural', 'light,', 'open', 'spaces,', 'and', 'timeless', 'elegance', 'come', 'together', 'in', 'a', 'true', 'Symphony', 'of', 'Lights.'
-];
+const PARAGRAPH_TWO_TEXT =
+  "Headquartered in Pune and representing iconic projects across Hinjawadi, Kharadi, Baner, Balewadi, and Kalyani Nagar, our expert property consultants provide transparent advisory, zero brokerage on primary acquisitions, curated site visits, and end-to-end documentation assistance — ensuring your real estate journey is seamless, informed, and rewarding.";
+
+const PARAGRAPH_ONE_WORDS = PARAGRAPH_ONE_TEXT.split(' ');
+const PARAGRAPH_TWO_WORDS = PARAGRAPH_TWO_TEXT.split(' ');
 
 export default function AboutOverview() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -84,7 +85,7 @@ export default function AboutOverview() {
   return (
     <section
       id="about"
-      className="relative z-20 w-full py-[60px] lg:py-[80px] text-white overflow-hidden scroll-mt-20 select-none bg-transparent"
+      className="relative z-20 w-full py-[50px] text-white overflow-hidden scroll-mt-20 select-none bg-transparent"
     >
       {/* Target anchor for overview link */}
       <div id="overview" className="scroll-mt-24" />
@@ -104,7 +105,7 @@ export default function AboutOverview() {
               custom={0}
             >
               <span className="text-xs sm:text-[13px] font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
-                OVERVIEW
+                OVERVIEW • ABOUT US
               </span>
             </motion.div>
 
@@ -118,11 +119,11 @@ export default function AboutOverview() {
               className="space-y-3"
             >
               <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-serif text-white font-normal leading-[1.15] tracking-tight drop-shadow-md">
-                A Vision of <span className="font-serif italic font-normal text-white">Inspired Living</span>
+                Your Trusted Partner for <span className="font-serif italic font-normal text-white">Pune&apos;s Finest Real Estate</span>
               </h2>
 
               <p className="text-[11px] sm:text-xs font-sans uppercase tracking-[0.18em] text-[#BD7E6C] font-semibold">
-                PIVORA ESTATES <span className="text-white/40 font-normal">•</span> <span className="text-white/80 font-medium">HINJAWADI PHASE 1, PUNE</span>
+                PIVORA ESTATES <span className="text-white/40 font-normal">•</span> <span className="text-white/80 font-medium">AUTHORISED REAL ESTATE CHANNEL PARTNER</span>
               </p>
             </motion.div>
 

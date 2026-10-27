@@ -15,69 +15,90 @@ export interface SearchProperty {
   price: string;
   possession: string;
   image: string;
+  category: 'residential' | 'commercial';
 }
 
 export const SEARCH_PROPERTIES: SearchProperty[] = [
+  // HINJAWADI
   {
     id: 'sp-1',
     title: 'Lodha Panache',
     builder: 'Lodha',
     configuration: '3 BHK',
-    location: 'Hinjewadi Phase 1, Pune',
+    location: 'Hinjawadi Phase 1, Pune',
     price: '1.7 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate21.webp',
+    category: 'residential',
   },
   {
     id: 'sp-2',
     title: 'Gera Joy on the Tree Tops',
     builder: 'Gera',
     configuration: '2 BHK - Duplex',
-    location: 'Hinjewadi Phase 3, Pune',
+    location: 'Hinjawadi Phase 3, Pune',
     price: '1.05 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate23.webp',
+    category: 'residential',
   },
   {
     id: 'sp-3',
     title: 'Godrej Aqua Retreat',
     builder: 'Godrej',
     configuration: '2 BHK',
-    location: 'Hinjewadi Phase 1, Pune',
+    location: 'Hinjawadi Phase 1, Pune',
     price: '1.13 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate24.webp',
+    category: 'residential',
   },
   {
     id: 'sp-4',
     title: 'Shapoorji Pallonji Sensorium',
     builder: 'Shapoorji Pallonji',
     configuration: '3 BHK',
-    location: 'Hinjewadi Phase 1, Pune',
+    location: 'Hinjawadi Phase 1, Pune',
     price: '1.50 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate22.webp',
+    category: 'residential',
   },
   {
     id: 'sp-5',
     title: 'Kolte Patil Life Republic',
     builder: 'Kolte Patil',
     configuration: '4 BHK',
-    location: 'Hinjewadi (Life Republic Township), Pune',
+    location: 'Hinjawadi (Life Republic Township), Pune',
     price: '2.59 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate20.webp',
+    category: 'residential',
   },
   {
     id: 'sp-6',
     title: 'VTP Monarque',
     builder: 'VTP',
     configuration: 'Mansion',
-    location: 'Hinjewadi Phase 1, Pune',
+    location: 'Hinjawadi Phase 1, Pune',
     price: '2.33 Cr - 3.07 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate25.webp',
+    category: 'residential',
   },
+  {
+    id: 'sp-comm-hinj',
+    title: 'Pivora One Corporate Towers',
+    builder: 'Pivora Commercial',
+    configuration: 'Grade-A IT & Office Suites',
+    location: 'Hinjawadi Phase 1, Pune',
+    price: '3.20 Cr - 9.40 Cr',
+    possession: 'Ready Possession',
+    image: '/assets/realestate16.webp',
+    category: 'commercial',
+  },
+
+  // KHARADI
   {
     id: 'sp-7',
     title: 'Panchshil Sky Pent-Villas',
@@ -87,7 +108,21 @@ export const SEARCH_PROPERTIES: SearchProperty[] = [
     price: '4.90 Cr - 7.50 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate12.webp',
+    category: 'residential',
   },
+  {
+    id: 'sp-7b',
+    title: 'Panchshil Business Park',
+    builder: 'Panchshil Realty',
+    configuration: 'Grade-A Retail & Executive Offices',
+    location: 'Viman Nagar - Kharadi, Pune',
+    price: '4.10 Cr - 8.90 Cr',
+    possession: 'Ready Possession',
+    image: '/assets/realestate15.webp',
+    category: 'commercial',
+  },
+
+  // BALEWADI
   {
     id: 'sp-8',
     title: 'Kasturi The Balmoral Riverside',
@@ -97,7 +132,21 @@ export const SEARCH_PROPERTIES: SearchProperty[] = [
     price: '2.65 Cr - 4.10 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate14.webp',
+    category: 'residential',
   },
+  {
+    id: 'sp-comm-bale',
+    title: 'Tower 108 Business & Sky Suites',
+    builder: 'Ceratec Group',
+    configuration: 'Executive Grade-A Office Spaces',
+    location: 'Balewadi High Street, Pune',
+    price: '2.50 Cr - 4.80 Cr',
+    possession: 'Ready Possession',
+    image: '/assets/realestate22.webp',
+    category: 'commercial',
+  },
+
+  // BANER
   {
     id: 'sp-9',
     title: 'Solitaire Business Hub',
@@ -107,7 +156,21 @@ export const SEARCH_PROPERTIES: SearchProperty[] = [
     price: '1.65 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate15.webp',
+    category: 'commercial',
   },
+  {
+    id: 'sp-comm-baner',
+    title: 'Amar Genesis Commercial Boulevard',
+    builder: 'Amar Builders',
+    configuration: 'Boutique Offices & Co-working Hubs',
+    location: 'Baner, Pune',
+    price: '1.85 Cr - 3.40 Cr',
+    possession: 'Ready Possession',
+    image: '/assets/realestate12.webp',
+    category: 'commercial',
+  },
+
+  // VIMAN NAGAR
   {
     id: 'sp-10',
     title: 'Rohan Mithila',
@@ -117,7 +180,10 @@ export const SEARCH_PROPERTIES: SearchProperty[] = [
     price: '2.10 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate10.webp',
+    category: 'residential',
   },
+
+  // WAKAD
   {
     id: 'sp-11',
     title: 'Vilas Javdekar Yashwin',
@@ -127,7 +193,21 @@ export const SEARCH_PROPERTIES: SearchProperty[] = [
     price: '92 Lakhs - 1.45 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate13.webp',
+    category: 'residential',
   },
+  {
+    id: 'sp-comm-wakad',
+    title: 'Godrej Ascend Business Plaza',
+    builder: 'Godrej Properties',
+    configuration: 'Commercial Showrooms & Offices',
+    location: 'Wakad - Hinjewadi Link Road, Pune',
+    price: '2.10 Cr - 5.15 Cr',
+    possession: 'Ready Possession',
+    image: '/assets/realestate14.webp',
+    category: 'commercial',
+  },
+
+  // KALYANI NAGAR
   {
     id: 'sp-12',
     title: 'Pivora Elevate Sky Residences',
@@ -137,6 +217,7 @@ export const SEARCH_PROPERTIES: SearchProperty[] = [
     price: '2.15 Cr - 3.45 Cr',
     possession: 'Ready Possession',
     image: '/assets/realestate21.webp',
+    category: 'residential',
   },
 ];
 
@@ -144,6 +225,7 @@ interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
   query: string;
+  category?: 'residential' | 'commercial';
   onSelectProperty?: (property: SearchProperty) => void;
 }
 
@@ -151,6 +233,7 @@ export default function SearchModal({
   isOpen,
   onClose,
   query,
+  category = 'residential',
   onSelectProperty,
 }: SearchModalProps) {
   const [currentPage, setCurrentPage] = useState(0);
@@ -168,19 +251,38 @@ export default function SearchModal({
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      setCurrentPage(0);
+      setLeadSubmitted(false);
+    }
+  }, [isOpen, query, category]);
+
   if (!isOpen || !mounted) return null;
 
   const trimmedQuery = (query || '').trim();
-  const normalizedQuery = trimmedQuery.toLowerCase();
+  // Normalize Hinjewadi and Hinjawadi spellings so both match interchangeably
+  const normalizedQuery = trimmedQuery.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
 
-  // Filter properties based on query matching title, builder, location, or BHK
+  // Filter properties based on category (residential/commercial) and search query
   const filteredProperties = SEARCH_PROPERTIES.filter((prop) => {
+    // 1. Strict Category matching (residential only for residential, commercial only for commercial):
+    if (category && prop.category !== category) {
+      return false;
+    }
+
+    // 2. Query matching:
     if (!normalizedQuery) return true;
+    const propTitle = prop.title.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+    const propBuilder = prop.builder.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+    const propLocation = prop.location.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+    const propConfig = prop.configuration.toLowerCase().replace(/hinjewadi/g, 'hinjawadi');
+
     return (
-      prop.title.toLowerCase().includes(normalizedQuery) ||
-      prop.builder.toLowerCase().includes(normalizedQuery) ||
-      prop.location.toLowerCase().includes(normalizedQuery) ||
-      prop.configuration.toLowerCase().includes(normalizedQuery)
+      propTitle.includes(normalizedQuery) ||
+      propBuilder.includes(normalizedQuery) ||
+      propLocation.includes(normalizedQuery) ||
+      propConfig.includes(normalizedQuery)
     );
   });
 
@@ -248,7 +350,7 @@ export default function SearchModal({
           </button>
 
           {/* =========================================================================
-              STATE 1: PROPERTIES FOUND (Matches User Screenshot 1)
+              STATE 1: PROPERTIES FOUND (Exact Layout Structure As Desired)
              ========================================================================= */}
           {filteredProperties.length > 0 ? (
             <div>
@@ -385,7 +487,7 @@ export default function SearchModal({
             </div>
           ) : (
             /* =========================================================================
-               STATE 2: NO PROPERTIES FOUND (Matches User Screenshot 2)
+               STATE 2: NO PROPERTIES FOUND (Exact Layout Structure As Desired)
                ========================================================================= */
             <div className="py-2 sm:py-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-center">

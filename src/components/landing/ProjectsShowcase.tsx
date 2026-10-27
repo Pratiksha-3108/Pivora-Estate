@@ -206,6 +206,7 @@ export default function ProjectsShowcase() {
                       ? 'border-2 border-[#BD7E6C] bg-white shadow-[0_12px_32px_-8px_rgba(189,126,108,0.22)]'
                       : 'border border-stone-200 bg-white/80 hover:bg-white hover:border-[#BD7E6C]/60 shadow-xs cursor-pointer'
                   }`}
+                  onMouseEnter={() => handleCategorySelect(cat.id)}
                   onClick={() => handleCategorySelect(cat.id)}
                 >
                   {/* Category Header Row */}

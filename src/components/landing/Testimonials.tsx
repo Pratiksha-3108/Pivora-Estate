@@ -97,7 +97,7 @@ export default function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="pt-[50px] pb-10 sm:pb-14 bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
+      className="py-[50px] bg-[#f5f4ef] relative font-poppins text-slate-800 scroll-mt-20 select-none overflow-hidden"
     >
       {/* Soft Ambient Glows matching website palette */}
       <div className="absolute top-1/4 left-10 w-96 h-96 bg-[#BD7E6C]/5 rounded-full blur-[100px] pointer-events-none" />

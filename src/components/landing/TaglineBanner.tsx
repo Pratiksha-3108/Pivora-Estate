@@ -10,7 +10,7 @@ const smoothEase = [0.22, 1, 0.36, 1] as const;
 
 export default function TaglineBanner() {
   return (
-    <section className="relative bg-[#f5f4ef] pb-10 sm:pb-12 lg:pb-14 pt-0 select-none overflow-hidden">
+    <section className="relative bg-[#f5f4ef] py-[50px] select-none overflow-hidden">
       {/* Container with exact same max-w-7xl and left/right margins & padding as above section */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden min-h-[140px] sm:min-h-[155px] lg:min-h-[165px] flex flex-col sm:flex-row sm:items-center justify-between gap-5 sm:gap-8 px-6 sm:px-10 lg:px-12 py-6 sm:py-7 shadow-[0_12px_35px_-8px_rgba(0,0,0,0.18)] border border-stone-300/60 bg-stone-950">

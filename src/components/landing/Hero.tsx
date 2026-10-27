@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { Search, ChevronDown, MapPin } from 'lucide-react';
+import { Search, ChevronDown, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import SearchModal from './SearchModal';
 
 const PUNE_LOCATIONS = [
@@ -51,6 +51,7 @@ export default function Hero() {
   const [selectedLocation, setSelectedLocation] = useState('Pune, Maharashtra');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
+  const [mobileLocIndex, setMobileLocIndex] = useState(0);
 
   const typeOptions = activeTab === 'residential'
     ? ['All Residential', 'Luxury Apartments', 'Penthouses', 'Villas & Mansions', 'Plots']
@@ -120,160 +121,211 @@ export default function Hero() {
           <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
         </div>
 
-      {/* Initial Hero Content (Tagline, Dots, Project Card) that fades out on scroll */}
-      <motion.div
-        style={{ opacity: heroContentOpacity, y: heroContentY }}
-        className="absolute inset-0 z-10"
-      >
-        {/* Persistent 2-line tagline & Search Bar */}
-        <div className="relative max-w-7xl mx-auto h-full px-6 sm:px-10 lg:px-16 flex flex-col justify-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 18 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1.05, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-3xl pt-10 sm:pt-14"
-          >
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-white leading-[1.12] tracking-tight drop-shadow-2xl">
-              <span className="block">Where Vision Becomes</span>
-              <span className="block">Your Address</span>
-            </h1>
-          </motion.div>
-
-          {/* Search Bar Widget (matching user reference) */}
-          <motion.div
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.95, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-8 sm:mt-10 max-w-3xl lg:max-w-7xl w-full"
-          >
-            {/* Top Bar: Tabs on left + Top Locations on the red line */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-2.5 mb-0">
-              {/* Top Tabs (Residential / Commercial) */}
-              <div className="inline-flex rounded-t-xl overflow-hidden bg-black/45 backdrop-blur-md border-t border-x border-white/20 shrink-0">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab('residential');
-                    setPropertyType('All Residential');
-                  }}
-                  className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                    activeTab === 'residential'
-                      ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  Residential
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveTab('commercial');
-                    setPropertyType('All Commercial');
-                  }}
-                  className={`relative px-6 sm:px-7 py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${
-                    activeTab === 'commercial'
-                      ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
-                      : 'text-white/70 hover:text-white'
-                  }`}
-                >
-                  Commercial
-                </button>
-              </div>
-
-              {/* Top Locations (placed at the red line, as shown in user image) */}
-              <div className="flex items-center gap-2 sm:gap-3.5 pb-2 px-1 text-xs sm:text-sm overflow-x-auto scrollbar-none">
-                <span className="font-bold text-white whitespace-nowrap drop-shadow-md">
-                  Top Locations:
-                </span>
-                <div className="flex items-center gap-2.5 sm:gap-3.5">
-                  {TOP_LOCATIONS.map((loc) => {
-                    const isSelected =
-                      searchQuery.toLowerCase() === loc.toLowerCase() ||
-                      selectedLocation.toLowerCase().startsWith(loc.toLowerCase());
-                    return (
-                      <button
-                        key={loc}
-                        type="button"
-                        onClick={() => {
-                          setSearchQuery(loc);
-                          setSelectedLocation(`${loc}, Pune`);
-                          setIsSearchModalOpen(true);
-                        }}
-                        className={`font-semibold cursor-pointer transition-all whitespace-nowrap drop-shadow-sm ${
-                          isSelected
-                            ? 'text-white underline decoration-[#0090d8] decoration-2 underline-offset-4'
-                            : 'text-white/90 hover:text-white hover:underline underline-offset-4'
-                        }`}
-                      >
-                        {loc}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Main Search Bar Card */}
-            <form
-              onSubmit={handleBrowse}
-              className="bg-white rounded-2xl rounded-tl-none shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-2 sm:p-2.5 flex items-center gap-2 border border-white/30"
+        {/* Initial Hero Content (Tagline, Dots, Project Card) that fades out on scroll */}
+        <motion.div
+          style={{ opacity: heroContentOpacity, y: heroContentY }}
+          className="absolute inset-0 z-10"
+        >
+          {/* Persistent 2-line tagline & Search Bar */}
+          <div className="relative max-w-7xl mx-auto h-full px-6 sm:px-10 lg:px-16 flex flex-col justify-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 18 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 1.05, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="max-w-3xl pt-10 sm:pt-14"
             >
-              {/* Where Input Field */}
-              <div className="px-4 py-1.5 sm:py-2 flex-1">
-                <span className="text-[11px] font-medium text-slate-400 block mb-0.5">Where</span>
-                <div className="flex items-center gap-2">
-                  <Search className="w-4 h-4 text-slate-400 shrink-0" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search locality/landmark"
-                    className="w-full text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 font-medium bg-transparent focus:outline-none"
-                  />
-                  {searchQuery && (
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-white leading-[1.12] tracking-tight drop-shadow-2xl">
+                <span className="block">Where Vision Becomes</span>
+                <span className="block">Your Address</span>
+              </h1>
+            </motion.div>
+
+            {/* Search Bar Widget (matching user reference) */}
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.95, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-8 sm:mt-10 max-w-3xl lg:max-w-4xl xl:max-w-[880px] w-full"
+            >
+              {/* Top Bar: Tabs on left + Top Locations on the red line */}
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-2.5 mb-0">
+                {/* Top Tabs (Residential / Commercial) */}
+                <div className="inline-flex rounded-t-xl overflow-hidden bg-black/45 backdrop-blur-md border-t border-x border-white/20 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveTab('residential');
+                      setPropertyType('All Residential');
+                    }}
+                    className={`relative px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${activeTab === 'residential'
+                        ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
+                        : 'text-white/70 hover:text-white'
+                      }`}
+                  >
+                    Residential
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveTab('commercial');
+                      setPropertyType('All Commercial');
+                    }}
+                    className={`relative px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold transition-all cursor-pointer ${activeTab === 'commercial'
+                        ? 'bg-white/20 text-white after:absolute after:bottom-0 after:inset-x-0 after:h-0.5 after:bg-[#e11d48]'
+                        : 'text-white/70 hover:text-white'
+                      }`}
+                  >
+                    Commercial
+                  </button>
+                </div>
+
+                {/* Desktop Top Locations: all visible with no cutoff */}
+                <div className="hidden md:flex items-center gap-2 sm:gap-3 pb-2 px-1 text-xs sm:text-sm shrink-0">
+                  <span className="font-bold text-white whitespace-nowrap drop-shadow-md">
+                    Top Locations:
+                  </span>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    {TOP_LOCATIONS.map((loc) => {
+                      const isSelected =
+                        searchQuery.toLowerCase() === loc.toLowerCase() ||
+                        selectedLocation.toLowerCase().startsWith(loc.toLowerCase());
+                      return (
+                        <button
+                          key={loc}
+                          type="button"
+                          onClick={() => {
+                            setSearchQuery(loc);
+                            setSelectedLocation(`${loc}, Pune`);
+                            setIsSearchModalOpen(true);
+                          }}
+                          className={`font-semibold cursor-pointer transition-all whitespace-nowrap drop-shadow-sm ${isSelected
+                              ? 'text-white underline decoration-[#0090d8] decoration-2 underline-offset-4'
+                              : 'text-white/90 hover:text-white hover:underline underline-offset-4'
+                            }`}
+                        >
+                          {loc}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Mobile Top Locations: exactly 3 visible in one go with Left & Right arrows */}
+                <div className="flex md:hidden items-center justify-between gap-1.5 pb-2 px-1 text-xs w-full">
+                  <span className="font-bold text-white whitespace-nowrap drop-shadow-md shrink-0">
+                    Top Locations:
+                  </span>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {/* Left Arrow Button */}
                     <button
                       type="button"
-                      onClick={() => setSearchQuery('')}
-                      className="text-slate-400 hover:text-slate-600 text-xs px-1 cursor-pointer"
+                      onClick={() => setMobileLocIndex((prev) => (prev > 0 ? prev - 1 : TOP_LOCATIONS.length - 3))}
+                      aria-label="Previous locations"
+                      className="w-6 h-6 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center border border-white/20 active:scale-90 transition-all cursor-pointer"
                     >
-                      ✕
+                      <ChevronLeft className="w-3.5 h-3.5" />
                     </button>
-                  )}
+
+                    {/* 3 Visible Locations in One Go */}
+                    <div className="flex items-center gap-2">
+                      {TOP_LOCATIONS.slice(mobileLocIndex, mobileLocIndex + 3).map((loc) => {
+                        const isSelected =
+                          searchQuery.toLowerCase() === loc.toLowerCase() ||
+                          selectedLocation.toLowerCase().startsWith(loc.toLowerCase());
+                        return (
+                          <button
+                            key={loc}
+                            type="button"
+                            onClick={() => {
+                              setSearchQuery(loc);
+                              setSelectedLocation(`${loc}, Pune`);
+                              setIsSearchModalOpen(true);
+                            }}
+                            className={`font-semibold cursor-pointer transition-all whitespace-nowrap drop-shadow-sm text-xs ${isSelected
+                                ? 'text-white underline decoration-[#0090d8] decoration-2 underline-offset-4'
+                                : 'text-white/90 hover:text-white hover:underline underline-offset-4'
+                              }`}
+                          >
+                            {loc}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {/* Right Arrow Button */}
+                    <button
+                      type="button"
+                      onClick={() => setMobileLocIndex((prev) => (prev < TOP_LOCATIONS.length - 3 ? prev + 1 : 0))}
+                      aria-label="Next locations"
+                      className="w-6 h-6 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center border border-white/20 active:scale-90 transition-all cursor-pointer"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              {/* Browse Properties Button */}
-              <div className="p-1 shrink-0">
-                <button
-                  type="submit"
-                  className="bg-[#0090d8] hover:bg-[#007ec2] text-white font-medium text-xs sm:text-sm px-6 sm:px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap cursor-pointer"
-                >
-                  Search
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        </div>
+              {/* Main Search Bar Card */}
+              <form
+                onSubmit={handleBrowse}
+                className="bg-white rounded-2xl rounded-tl-none shadow-[0_20px_50px_rgba(0,0,0,0.4)] p-2 sm:p-2.5 flex items-center gap-2 border border-white/30"
+              >
+                {/* Where Input Field */}
+                <div className="px-4 py-1.5 sm:py-2 flex-1">
+                  <span className="text-[11px] font-medium text-slate-400 block mb-0.5">Where</span>
+                  <div className="flex items-center gap-2">
+                    <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search locality/landmark"
+                      className="w-full text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 font-medium bg-transparent focus:outline-none"
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        className="text-slate-400 hover:text-slate-600 text-xs px-1 cursor-pointer"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                </div>
 
-        {/* Slide navigation dots */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
-          {HERO_SLIDES.map((s, idx) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setCurrent(idx)}
-              aria-label={`Go to slide ${idx + 1}`}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
-                idx === current
-                  ? 'w-7 bg-[#BD7E6C]'
-                  : 'w-2 bg-white/40 hover:bg-white/80'
-              }`}
-            />
-          ))}
-        </div>
+                {/* Browse Properties Button */}
+                <div className="p-1 shrink-0">
+                  <button
+                    type="submit"
+                    className="bg-[#0090d8] hover:bg-[#007ec2] text-white font-medium text-xs sm:text-sm px-6 sm:px-8 py-3 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 whitespace-nowrap cursor-pointer"
+                  >
+                    Search
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
 
-      
-      </motion.div>
+          {/* Slide navigation dots */}
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10">
+            {HERO_SLIDES.map((s, idx) => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => setCurrent(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${idx === current
+                    ? 'w-7 bg-[#BD7E6C]'
+                    : 'w-2 bg-white/40 hover:bg-white/80'
+                  }`}
+              />
+            ))}
+          </div>
+
+
+        </motion.div>
       </motion.div>
 
       {/* Recommended Properties & Lead Capture Search Modal */}
@@ -281,6 +333,7 @@ export default function Hero() {
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
         query={searchQuery}
+        category={activeTab}
       />
     </section>
   );

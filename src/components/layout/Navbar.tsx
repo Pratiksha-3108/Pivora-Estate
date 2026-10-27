@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -10,34 +10,12 @@ import { useEnquire } from '@/context/EnquireContext';
 export default function Navbar() {
   const [pastAbout, setPastAbout] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeNav, setActiveNav] = useState('/');
+  const isClickingRef = useRef(false);
+  const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const pathname = usePathname();
   const { openEnquire } = useEnquire();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (pathname === '/') {
-        // Find the beginning of the light content section directly below the About section (#light-content / PartnerSlider)
-        const lightContentEl = document.getElementById('light-content') || document.getElementById('partners');
-        if (lightContentEl) {
-          const rect = lightContentEl.getBoundingClientRect();
-          // Navbar stays 100% transparent on Hero AND on About section.
-          // It switches to solid background color ONLY when the section below About reaches the navbar (top <= 80px)
-          setPastAbout(rect.top <= 80);
-        } else {
-          setPastAbout(window.scrollY > (window.innerHeight * 1.8));
-        }
-      } else {
-        // On sub-pages without the home hero, show background after initial scroll
-        setPastAbout(window.scrollY > 40);
-      }
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [pathname]);
 
   const navLinks = [
     { name: 'HOME', href: '/' },
@@ -47,7 +25,97 @@ export default function Navbar() {
     { name: 'CONTACT', href: '/contact' },
   ];
 
-  const isActive = (href: string) => href === '/' && pathname === '/';
+  useEffect(() => {
+    if (pathname === '/contact') {
+      setActiveNav('/contact');
+      setPastAbout(true);
+      return;
+    }
+
+    if (pathname !== '/') {
+      setActiveNav(pathname);
+      return;
+    }
+
+    // Check initial hash on home page load
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const hash = window.location.hash;
+      const found = navLinks.find((l) => l.href === `/${hash}`);
+      if (found) {
+        setActiveNav(found.href);
+      }
+    }
+
+    const handleScroll = () => {
+      // 1. Transparency background toggle
+      const lightContentEl = document.getElementById('light-content') || document.getElementById('partners');
+      if (lightContentEl) {
+        const rect = lightContentEl.getBoundingClientRect();
+        setPastAbout(rect.top <= 80);
+      } else {
+        setPastAbout(window.scrollY > (window.innerHeight * 1.8));
+      }
+
+      // If user recently clicked a nav item, keep the active indicator on that item during smooth scroll
+      if (isClickingRef.current) return;
+
+      // 2. Active Section Spy
+      if (window.scrollY < 200) {
+        setActiveNav('/');
+        return;
+      }
+
+      const sections = [
+        { id: 'services', href: '/#services' },
+        { id: 'projects', href: '/#projects' },
+        { id: 'about', href: '/#about' },
+      ];
+
+      for (const sec of sections) {
+        const el = document.getElementById(sec.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= 240 && rect.bottom >= 120) {
+            setActiveNav(sec.href);
+            return;
+          }
+        }
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('hashchange', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('hashchange', handleScroll);
+      if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    };
+  }, [pathname]);
+
+  const handleLinkClick = (href: string, e: React.MouseEvent) => {
+    setActiveNav(href);
+    setMobileMenuOpen(false);
+
+    isClickingRef.current = true;
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    clickTimeoutRef.current = setTimeout(() => {
+      isClickingRef.current = false;
+    }, 900);
+
+    if (href === '/' && pathname === '/') {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (typeof window !== 'undefined') {
+        history.replaceState(null, '', '/');
+      }
+    }
+  };
+
+  const isActive = (href: string) => {
+    if (pathname === '/contact') return href === '/contact';
+    return activeNav === href;
+  };
 
   // Transparent navbar when at top of home page (before reaching the About section)
   const isTransparent = !pastAbout;
@@ -85,6 +153,7 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
+                  onClick={(e) => handleLinkClick(link.href, e)}
                   className={`group relative py-1 text-xs font-semibold uppercase tracking-widest transition-colors ${isTransparent
                       ? active
                         ? 'text-white font-bold'
@@ -154,7 +223,7 @@ export default function Navbar() {
               <Link
                 key={link.name}
                 href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => handleLinkClick(link.href, e)}
                 className={`text-xs font-bold uppercase tracking-widest py-2 border-b border-stone-200/80 hover:text-[#BD7E6C] ${isActive(link.href) ? 'text-[#BD7E6C]' : 'text-slate-800'
                   }`}
               >

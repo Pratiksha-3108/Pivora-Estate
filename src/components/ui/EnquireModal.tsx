@@ -18,7 +18,7 @@ export default function EnquireModal({
   defaultProjectName = '',
 }: EnquireModalProps) {
   const [submitted, setSubmitted] = useState(false);
-  const [agreedPrivacy, setAgreedPrivacy] = useState(true);
+  const [agreedPrivacy, setAgreedPrivacy] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -42,10 +42,12 @@ export default function EnquireModal({
         requirement: '',
         message: '',
       });
+      setAgreedPrivacy(false);
       setSearchTerm('');
       setIsDropdownOpen(false);
       setSubmitted(false);
     } else {
+      setAgreedPrivacy(false);
       setSubmitted(false);
       setIsDropdownOpen(false);
     }
@@ -394,6 +396,7 @@ export default function EnquireModal({
                 <input
                   type="checkbox"
                   id="privacyPolicy"
+                  required
                   checked={agreedPrivacy}
                   onChange={(e) => setAgreedPrivacy(e.target.checked)}
                   className="w-4 h-4 accent-slate-900 rounded cursor-pointer"
@@ -407,8 +410,7 @@ export default function EnquireModal({
               <div className="pt-2 text-center">
                 <button
                   type="submit"
-                  disabled={!agreedPrivacy}
-                  className="group inline-flex items-center justify-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#BD7E6C] text-white px-8 py-3.5 text-xs font-bold tracking-widest uppercase transition-all duration-300 shadow-md hover:shadow-xl active:scale-95 cursor-pointer"
+                  className="group inline-flex items-center justify-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-6 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
                 >
                   <span>SUBMIT INQUIRY</span>
                   <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />

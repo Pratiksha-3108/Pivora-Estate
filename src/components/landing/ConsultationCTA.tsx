@@ -51,7 +51,7 @@ export default function ConsultationCTA() {
 
   return (
     <>
-      <section className="relative w-full overflow-hidden select-none pt-4 sm:pt-6 pb-[50px]">
+      <section className="relative w-full overflow-hidden select-none py-[50px]">
         {/* SPLIT BACKGROUND */}
         <div className="absolute inset-0 z-0 flex flex-col">
           <div className="flex-1 bg-[#f5f4ef]"></div>
