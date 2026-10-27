@@ -154,6 +154,16 @@ export default function ServicesSection() {
   const [isStackHovered, setIsStackHovered] = useState<boolean>(false);
   const [isListHovered, setIsListHovered] = useState<boolean>(false);
   const [selectedPreviewImage, setSelectedPreviewImage] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Auto rotate services active item every 4.5 seconds
   useEffect(() => {
@@ -276,11 +286,11 @@ export default function ServicesSection() {
           </div>
 
           {/* RIGHT COLUMN: ANIMATED SPREAD 3-PHOTO CARDS (PUNE REAL ESTATE IMAGES) */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-center lg:sticky lg:top-28 order-1 lg:order-2">
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-center lg:sticky lg:top-28 order-1 lg:order-2 w-full px-4 sm:px-0">
             <div
               onMouseEnter={() => setIsStackHovered(true)}
               onMouseLeave={() => setIsStackHovered(false)}
-              className="relative w-full max-w-lg h-[360px] sm:h-[440px] lg:h-[620px] flex items-center justify-center cursor-pointer group -mt-3 sm:mt-0"
+              className="relative w-full max-w-lg h-[310px] sm:h-[440px] lg:h-[620px] flex items-center justify-center cursor-pointer group -mt-3 sm:mt-0"
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -292,18 +302,16 @@ export default function ServicesSection() {
                   className="relative w-full h-full flex items-center justify-center"
                 >
                   {activeService.images.map((imgObj, idx) => {
-                    // Clearly fanned out positions so ALL 3 images are distinctly visible on the right side
-                    // Card 0: Front bottom-left
-                    // Card 1: Middle center-right
-                    // Card 2: Top far-right / upper stack
-                    const defaultRotations = [-8, 3, 13];
-                    const hoveredRotations = [-16, 2, 20];
+                    // Clearly fanned out positions so ALL 3 images are distinctly visible
+                    // Responsive offsets: tighter on mobile so cards stay fully within screen bounds with left/right padding
+                    const defaultRotations = isMobile ? [-6, 2, 10] : [-8, 3, 13];
+                    const hoveredRotations = isMobile ? [-10, 2, 14] : [-16, 2, 20];
 
-                    const defaultX = [-55, 18, 92];
-                    const hoveredX = [-90, 22, 135];
+                    const defaultX = isMobile ? [-36, 6, 52] : [-55, 18, 92];
+                    const hoveredX = isMobile ? [-48, 10, 68] : [-90, 22, 135];
 
-                    const defaultY = [35, -12, -65];
-                    const hoveredY = [50, -18, -85];
+                    const defaultY = isMobile ? [24, -8, -45] : [35, -12, -65];
+                    const hoveredY = isMobile ? [32, -12, -58] : [50, -18, -85];
 
                     const zIndices = [30, 20, 10];
 
@@ -335,7 +343,7 @@ export default function ServicesSection() {
                           setSelectedPreviewImage(imgObj.url);
                         }}
                         style={{ zIndex: zIdx }}
-                        className="absolute w-[205px] sm:w-[260px] md:w-[275px] bg-white p-1.5 sm:p-2 rounded-2xl border border-stone-200/90 shadow-none"
+                        className="absolute w-[165px] sm:w-[260px] md:w-[275px] bg-white p-1.5 sm:p-2 rounded-2xl border border-stone-200/90 shadow-sm"
                       >
                         {/* Image Container with Tall Vertical Aspect Ratio (3/4 ratio) */}
                         <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-100">
