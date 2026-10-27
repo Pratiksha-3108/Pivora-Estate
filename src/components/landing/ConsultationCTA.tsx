@@ -171,7 +171,7 @@ export default function ConsultationCTA() {
               <div className="flex items-center gap-3">
                 <span className="w-3 h-3 rounded-full bg-[#c8816e] animate-pulse" />
                 <h3 className="text-white text-sm font-semibold uppercase tracking-wider font-serif">
-                  Pivora Estates — Architectural Showcase
+                  Pivora Estates | Architectural Showcase
                 </h3>
               </div>
 

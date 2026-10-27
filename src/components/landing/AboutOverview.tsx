@@ -68,11 +68,11 @@ const wordRevealVariant: Variants = {
 };
 
 const PARAGRAPH_ONE_WORDS = [
-  'At', 'Pivora', 'Estates,', 'light', 'takes', 'center', 'stage', '—', 'shaping', 'spaces,', 'moods,', 'and', 'moments', 'with', 'effortless', 'grace.', 'Designed', 'around', 'the', 'idea', 'of', 'harmony', 'and', 'radiance,', 'every', 'home', 'reflects', 'a', 'balance', 'of', 'nature', 'and', 'modern', 'design.'
+  'At', 'Pivora', 'Estates,', 'light', 'takes', 'center', 'stage,', 'shaping', 'spaces,', 'moods,', 'and', 'moments', 'with', 'effortless', 'grace.', 'Designed', 'around', 'the', 'idea', 'of', 'harmony', 'and', 'radiance,', 'every', 'home', 'reflects', 'a', 'balance', 'of', 'nature', 'and', 'modern', 'design.'
 ];
 
 const PARAGRAPH_TWO_WORDS = [
-  'Set', 'in', 'Hinjawadi', 'Phase', '1,', 'Pivora', 'Estates', 'marks', 'the', 'next', 'chapter', 'of', "Pune's", 'growth', 'story', '—', 'with', 'a', '1-acre', 'forest', 'zone,', '40+', 'lifestyle', 'amenities,', 'and', 'a', '30,000', 'sq.', 'ft.', 'clubhouse.', 'Pivora', 'Estates', 'redefines', 'refined', 'living', '—', 'where', 'natural', 'light,', 'open', 'spaces,', 'and', 'timeless', 'elegance', 'come', 'together', 'in', 'a', 'true', 'Symphony', 'of', 'Lights.'
+  'Set', 'in', 'Hinjawadi', 'Phase', '1,', 'Pivora', 'Estates', 'marks', 'the', 'next', 'chapter', 'of', "Pune's", 'growth', 'story,', 'with', 'a', '1-acre', 'forest', 'zone,', '40+', 'lifestyle', 'amenities,', 'and', 'a', '30,000', 'sq.', 'ft.', 'clubhouse.', 'Pivora', 'Estates', 'redefines', 'refined', 'living,', 'where', 'natural', 'light,', 'open', 'spaces,', 'and', 'timeless', 'elegance', 'come', 'together', 'in', 'a', 'true', 'Symphony', 'of', 'Lights.'
 ];
 
 export default function AboutOverview() {
