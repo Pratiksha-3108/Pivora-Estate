@@ -47,6 +47,8 @@ export default function ProjectsShowcase() {
   const [isPaused, setIsPaused] = useState(false);
   const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+  const accordionContainerRef = useRef<HTMLDivElement>(null);
+  const userManualTapRef = useRef<boolean>(false);
 
   // Filter projects by category
   const filteredProjects = useMemo(() => {
@@ -137,6 +139,76 @@ export default function ProjectsShowcase() {
     return () => window.removeEventListener('mousemove', handleGlobalPointer);
   }, [activeCategory]);
 
+  // Enable automatic scroll-based card opening on screen scroll for mobile view
+  useEffect(() => {
+    let ticking = false;
+
+    const handleMobileScroll = () => {
+      if (typeof window === 'undefined') return;
+      // Active on mobile & tablet viewport (< 1024px) where cards are vertically stacked
+      if (window.innerWidth >= 1024) return;
+      if (userManualTapRef.current) return;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const container = accordionContainerRef.current;
+          if (!container) {
+            ticking = false;
+            return;
+          }
+
+          const containerRect = container.getBoundingClientRect();
+          // Focus line at ~45% of viewport height (ideal mobile eye-level below navbar)
+          const focusY = window.innerHeight * 0.45;
+
+          // Only evaluate when the category accordion container is in the active viewport range
+          if (containerRect.top <= focusY + 80 && containerRect.bottom >= focusY - 80) {
+            const cardElements = container.querySelectorAll<HTMLElement>('[data-category-card]');
+            let matchedCat: 'Residential' | 'Commercial' | 'All' | null = null;
+
+            // 1. Check which card directly spans across the focus line
+            cardElements.forEach((el) => {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= focusY && rect.bottom >= focusY) {
+                const cat = el.getAttribute('data-category-card') as 'Residential' | 'Commercial' | 'All';
+                if (cat) matchedCat = cat;
+              }
+            });
+
+            // 2. If focusY happens to be in a gap between cards, pick the closest card center
+            if (!matchedCat) {
+              let minDistance = Infinity;
+              cardElements.forEach((el) => {
+                const rect = el.getBoundingClientRect();
+                const cardCenterY = rect.top + rect.height / 2;
+                const distance = Math.abs(cardCenterY - focusY);
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  const cat = el.getAttribute('data-category-card') as 'Residential' | 'Commercial' | 'All';
+                  if (cat) matchedCat = cat;
+                }
+              });
+            }
+
+            if (matchedCat && matchedCat !== activeCategory) {
+              setActiveCategory(matchedCat);
+            }
+          }
+
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleMobileScroll, { passive: true });
+    window.addEventListener('touchmove', handleMobileScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleMobileScroll);
+      window.removeEventListener('touchmove', handleMobileScroll);
+    };
+  }, [activeCategory]);
+
   // Auto-scroll carousel smoothly every 3.5 seconds (pauses on hover or touch)
   useEffect(() => {
     if (isPaused) return;
@@ -184,8 +256,17 @@ export default function ProjectsShowcase() {
     }
   };
 
-  const handleCategorySelect = (catId: 'Residential' | 'Commercial' | 'All') => {
+  const handleCategorySelect = (
+    catId: 'Residential' | 'Commercial' | 'All',
+    isManualTap: boolean = false
+  ) => {
     setActiveCategory(catId);
+    if (isManualTap) {
+      userManualTapRef.current = true;
+      setTimeout(() => {
+        userManualTapRef.current = false;
+      }, 1000);
+    }
   };
 
   return (
@@ -270,7 +351,10 @@ export default function ProjectsShowcase() {
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-7 items-start">
           
           {/* ----- LEFT COLUMN: ACCORDION SELECTOR ----- */}
-          <div className="w-full lg:w-[280px] xl:w-[300px] shrink-0 flex flex-col gap-3.5">
+          <div
+            ref={accordionContainerRef}
+            className="w-full lg:w-[280px] xl:w-[300px] shrink-0 flex flex-col gap-3.5"
+          >
             {CATEGORY_DATA.map((cat) => {
               const isExpanded = activeCategory === cat.id;
 
@@ -296,10 +380,10 @@ export default function ProjectsShowcase() {
                     if (activeCategory !== cat.id) handleCategorySelect(cat.id);
                   }}
                   onTouchStart={() => {
-                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id, true);
                   }}
                   onClick={() => {
-                    if (activeCategory !== cat.id) handleCategorySelect(cat.id);
+                    if (activeCategory !== cat.id) handleCategorySelect(cat.id, true);
                   }}
                 >
                   {/* Category Header Row */}

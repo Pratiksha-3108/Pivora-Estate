@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ArrowUpRight, X, ZoomIn } from 'lucide-react';
 import { useEnquire } from '@/context/EnquireContext';
@@ -155,26 +155,108 @@ export default function ServicesSection() {
   const [isListHovered, setIsListHovered] = useState<boolean>(false);
   const [selectedPreviewImage, setSelectedPreviewImage] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  const servicesListRef = useRef<HTMLDivElement>(null);
+  const userManualTapRef = useRef<boolean>(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 640);
+      setIsMobile(window.innerWidth < 1024);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto rotate services active item every 4.5 seconds
+  const handleServiceSelect = (index: number, isManualTap: boolean = false) => {
+    setActiveIndex(index);
+    if (isManualTap) {
+      userManualTapRef.current = true;
+      setTimeout(() => {
+        userManualTapRef.current = false;
+      }, 1000);
+    }
+  };
+
+  // Auto rotate services active item every 4.5 seconds (desktop view only)
   useEffect(() => {
-    if (isStackHovered || isListHovered || selectedPreviewImage) return;
+    if (isMobile || isStackHovered || isListHovered || selectedPreviewImage) return;
 
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % SERVICES_DATA.length);
     }, 4500);
 
     return () => clearInterval(timer);
-  }, [isStackHovered, isListHovered, selectedPreviewImage]);
+  }, [isMobile, isStackHovered, isListHovered, selectedPreviewImage]);
+
+  // Enable automatic scroll-based card opening on screen scroll for mobile view
+  useEffect(() => {
+    let ticking = false;
+
+    const handleMobileScroll = () => {
+      if (typeof window === 'undefined') return;
+      // Active on mobile & tablet viewport (< 1024px) where service cards are stacked
+      if (window.innerWidth >= 1024) return;
+      if (userManualTapRef.current) return;
+
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const container = servicesListRef.current;
+          if (!container) {
+            ticking = false;
+            return;
+          }
+
+          const containerRect = container.getBoundingClientRect();
+          // Focus line at ~45% of viewport height (ideal mobile eye-level below navbar)
+          const focusY = window.innerHeight * 0.45;
+
+          // Only evaluate when the services list container is in the active viewport range
+          if (containerRect.top <= focusY + 80 && containerRect.bottom >= focusY - 80) {
+            const cardElements = container.querySelectorAll<HTMLElement>('[data-service-card]');
+            let matchedIndex: number | null = null;
+
+            // 1. Check which card directly spans across the focus line
+            cardElements.forEach((el) => {
+              const rect = el.getBoundingClientRect();
+              if (rect.top <= focusY && rect.bottom >= focusY) {
+                const idxStr = el.getAttribute('data-service-card');
+                if (idxStr !== null) matchedIndex = parseInt(idxStr, 10);
+              }
+            });
+
+            // 2. If focusY happens to be in a gap between cards, pick the closest card center
+            if (matchedIndex === null) {
+              let minDistance = Infinity;
+              cardElements.forEach((el) => {
+                const rect = el.getBoundingClientRect();
+                const cardCenterY = rect.top + rect.height / 2;
+                const distance = Math.abs(cardCenterY - focusY);
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  const idxStr = el.getAttribute('data-service-card');
+                  if (idxStr !== null) matchedIndex = parseInt(idxStr, 10);
+                }
+              });
+            }
+
+            if (matchedIndex !== null && matchedIndex !== activeIndex) {
+              setActiveIndex(matchedIndex);
+            }
+          }
+
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleMobileScroll, { passive: true });
+    window.addEventListener('touchmove', handleMobileScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleMobileScroll);
+      window.removeEventListener('touchmove', handleMobileScroll);
+    };
+  }, [activeIndex]);
 
   const activeService = SERVICES_DATA[activeIndex];
 
@@ -212,6 +294,7 @@ export default function ServicesSection() {
 
           {/* LEFT COLUMN: 6 NUMBERED SERVICES ACCORDION LIST */}
           <div
+            ref={servicesListRef}
             onMouseEnter={() => setIsListHovered(true)}
             onMouseLeave={() => setIsListHovered(false)}
             className="lg:col-span-7 space-y-1 order-2 lg:order-1 -mt-2 lg:mt-0"
@@ -222,13 +305,15 @@ export default function ServicesSection() {
               return (
                 <div
                   key={service.id}
+                  data-service-card={index}
                   onMouseEnter={() => setActiveIndex(index)}
                   className={`border-t border-stone-200/90 first:border-t-0 rounded-xl transition-all duration-300 ${isActive ? 'bg-white/80 shadow-xs' : 'hover:bg-white/40'
                     }`}
                 >
                   <button
                     type="button"
-                    onClick={() => setActiveIndex(index)}
+                    onClick={() => handleServiceSelect(index, true)}
+                    onTouchStart={() => handleServiceSelect(index, true)}
                     className="w-full text-left py-5 sm:py-6 px-3 sm:px-4 rounded-xl flex items-start gap-4 sm:gap-6 group cursor-pointer"
                   >
                     {/* Circle Number Badge matching reference image */}
