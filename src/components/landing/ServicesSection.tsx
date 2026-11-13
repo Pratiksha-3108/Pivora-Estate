@@ -148,7 +148,7 @@ const SERVICES_DATA: ServiceItem[] = [
 ];
 
 export default function ServicesSection() {
-  const { openEnquire } = useEnquire();
+  const { openEnquire, openServiceEnquire } = useEnquire();
   // Default first item active
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isStackHovered, setIsStackHovered] = useState<boolean>(false);
@@ -268,7 +268,7 @@ export default function ServicesSection() {
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                openEnquire(`SERVICE INQUIRY: ${service.title.toUpperCase()}`);
+                                openServiceEnquire(service.title);
                               }}
                               className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#BD7E6C] hover:text-[#a05f4e] transition-colors cursor-pointer group/btn"
                             >

@@ -9,6 +9,7 @@ interface EnquireModalProps {
   onClose: () => void;
   title?: string;
   defaultProjectName?: string;
+  serviceName?: string;
 }
 
 export default function EnquireModal({
@@ -16,6 +17,7 @@ export default function EnquireModal({
   onClose,
   title,
   defaultProjectName = '',
+  serviceName = '',
 }: EnquireModalProps) {
   const [submitted, setSubmitted] = useState(false);
   const [agreedPrivacy, setAgreedPrivacy] = useState(false);
@@ -28,9 +30,12 @@ export default function EnquireModal({
     email: '',
     mobile: '',
     projectName: '',
+    propertyLocation: '',
     requirement: '',
     message: '',
   });
+
+  const isServiceMode = Boolean(serviceName);
 
   useEffect(() => {
     if (isOpen) {
@@ -39,6 +44,7 @@ export default function EnquireModal({
         email: '',
         mobile: '',
         projectName: defaultProjectName || '',
+        propertyLocation: '',
         requirement: '',
         message: '',
       });
@@ -51,7 +57,7 @@ export default function EnquireModal({
       setSubmitted(false);
       setIsDropdownOpen(false);
     }
-  }, [isOpen, defaultProjectName]);
+  }, [isOpen, defaultProjectName, serviceName]);
 
   // Handle click outside to close project search dropdown
   useEffect(() => {
@@ -143,7 +149,6 @@ export default function EnquireModal({
         onClick={(e) => e.stopPropagation()}
         className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 p-7 sm:p-10 max-h-[92vh] overflow-y-auto no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden cursor-default"
       >
-        
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -156,35 +161,59 @@ export default function EnquireModal({
         {submitted ? (
           <div className="py-12 text-center space-y-4 animate-in zoom-in-95 duration-300">
             <CheckCircle className="w-16 h-16 text-emerald-600 mx-auto animate-bounce" />
-            <h3 className="text-2xl font-serif font-bold text-slate-900">Inquiry Submitted!</h3>
+            <h3 className="text-2xl font-serif font-bold text-slate-900">
+              {isServiceMode ? 'Consultation Request Received!' : 'Inquiry Submitted!'}
+            </h3>
             <p className="text-sm text-slate-600 max-w-sm mx-auto leading-relaxed">
-              Thank you for contacting <span className="font-bold text-slate-900">Pivora Estates</span>
-              {formData.projectName ? (
-                <> for <span className="font-semibold text-[#BD7E6C]">{formData.projectName}</span></>
-              ) : null}
-              . Our senior real estate advisor will get in touch with you shortly.
+              {isServiceMode ? (
+                <>
+                  Thank you for requesting consultation for{' '}
+                  <span className="font-bold text-[#BD7E6C]">{serviceName}</span>. Our specialist advisor will contact you shortly.
+                </>
+              ) : (
+                <>
+                  Thank you for contacting <span className="font-bold text-slate-900">Pivora Estates</span>
+                  {formData.projectName ? (
+                    <> for <span className="font-semibold text-[#BD7E6C]">{formData.projectName}</span></>
+                  ) : null}
+                  . Our senior real estate advisor will get in touch with you shortly.
+                </>
+              )}
             </p>
           </div>
         ) : (
           <div className="space-y-6">
-            
             {/* Modal Heading */}
             <div className="text-center pt-2">
-              <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-slate-800 tracking-tight">
-                Welcome to Pivora Estates
-              </h3>
-              {formData.projectName && (
-                <p className="text-xs text-[#BD7E6C] font-semibold mt-1">
-                  Inquiry for <span className="font-bold text-slate-900">{formData.projectName}</span>
-                </p>
+              {isServiceMode ? (
+                <>
+                  <div className="inline-block text-[10px] sm:text-[11px] font-bold tracking-widest uppercase text-[#BD7E6C] mb-1">
+                    Specialized Consultation
+                  </div>
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-serif font-semibold text-slate-800 tracking-tight">
+                    Consultation Request &ndash; <span className="text-[#BD7E6C]">{serviceName}</span>
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1.5 max-w-md mx-auto">
+                    Speak directly with our senior domain specialist for customized guidance.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-slate-800 tracking-tight">
+                    {title || 'Welcome to Pivora Estates'}
+                  </h3>
+                  {formData.projectName && (
+                    <p className="text-xs text-[#BD7E6C] font-semibold mt-1">
+                      Inquiry for <span className="font-bold text-slate-900">{formData.projectName}</span>
+                    </p>
+                  )}
+                </>
               )}
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
-              
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-5">
-                
                 {/* FULL NAME */}
                 <div className="space-y-1.5">
                   <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
@@ -243,148 +272,180 @@ export default function EnquireModal({
                   </div>
                 </div>
 
-                {/* PROJECT NAME (SEARCHABLE SELECT) */}
-                <div className="space-y-1.5 relative" ref={dropdownRef}>
-                  <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                    PROJECT NAME<span className="text-red-500">*</span>
-                  </label>
-                  <button
-                    type="button"
-                    onClick={() => setIsDropdownOpen((prev) => !prev)}
-                    className="w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal text-left flex items-center justify-between focus:outline-none focus:border-slate-900 transition-colors bg-transparent cursor-pointer"
-                  >
-                    <span className={formData.projectName ? 'text-slate-900 font-medium truncate pr-2' : 'text-slate-400'}>
-                      {formData.projectName || 'Select or search project'}
-                    </span>
-                    <ChevronDown
-                      className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
-                        isDropdownOpen ? 'rotate-180 text-slate-800' : ''
-                      }`}
-                    />
-                  </button>
-
-                  {/* Hidden input for HTML validation if required */}
-                  <input
-                    type="text"
-                    tabIndex={-1}
-                    aria-hidden="true"
-                    required
-                    value={formData.projectName}
-                    onChange={() => {}}
-                    className="opacity-0 absolute pointer-events-none h-0 w-0 -bottom-1"
-                  />
-
-                  {/* Searchable Dropdown Popup */}
-                  {isDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 p-2.5 space-y-2 animate-in fade-in slide-in-from-top-1 duration-150 max-w-full">
-                      {/* Search Bar - only shown when browsing all projects */}
-                      {!defaultProjectName && (
-                        <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-slate-900 focus-within:bg-white transition-all">
-                          <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <input
-                            type="text"
-                            autoFocus
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder="Search project name..."
-                            className="w-full text-xs bg-transparent focus:outline-none text-slate-900 placeholder:text-slate-400"
-                          />
-                          {searchTerm && (
-                            <button
-                              type="button"
-                              onClick={() => setSearchTerm('')}
-                              className="text-slate-400 hover:text-slate-700"
-                            >
-                              <X className="w-3 h-3" />
-                            </button>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Projects List - only shows the single project when opened from a card */}
-                      <div className="max-h-48 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                        {filteredProjects.length > 0 ? (
-                          filteredProjects.map((proj) => {
-                            const isSelected = formData.projectName === proj.name;
-                            return (
-                              <button
-                                key={proj.id}
-                                type="button"
-                                onClick={() => handleSelectProject(proj.name)}
-                                className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-colors flex items-center justify-between cursor-pointer ${
-                                  isSelected
-                                    ? 'bg-slate-900 text-white font-semibold'
-                                    : 'hover:bg-slate-100 text-slate-800'
-                                }`}
-                              >
-                                <div className="truncate pr-2">
-                                  <div className="font-medium truncate">{proj.name}</div>
-                                  <div className={`text-[10px] truncate ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
-                                    {proj.location} • {proj.configuration}
-                                  </div>
-                                </div>
-                                {isSelected && <Check className="w-3.5 h-3.5 shrink-0 text-white" />}
-                              </button>
-                            );
-                          })
-                        ) : (
-                          <div className="py-3 text-center text-xs text-slate-400">
-                            No projects match "{searchTerm}"
-                          </div>
-                        )}
-
-                        {!defaultProjectName && (
-                          <button
-                            type="button"
-                            onClick={() => handleSelectProject('General Inquiry / All Projects')}
-                            className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-colors border-t border-slate-100 mt-1 cursor-pointer ${
-                              formData.projectName === 'General Inquiry / All Projects'
-                                ? 'bg-slate-900 text-white font-semibold'
-                                : 'hover:bg-slate-100 text-slate-600'
-                            }`}
-                          >
-                            <span className="font-medium">General Inquiry / All Projects</span>
-                          </button>
-                        )}
+                {/* SERVICE MODE: LOCKED SERVICE NAME & PROPERTY LOCATION */}
+                {isServiceMode ? (
+                  <>
+                    {/* SERVICE NAME (PRE-FILLED) */}
+                    <div className="space-y-1.5">
+                      <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                        SERVICE NAME
+                      </label>
+                      <div className="pb-2 pt-1 border-b border-slate-300">
+                        <span className="text-xs sm:text-sm font-semibold text-[#BD7E6C] block truncate">
+                          {serviceName}
+                        </span>
                       </div>
                     </div>
-                  )}
-                </div>
 
-                {/* REQUIREMENT */}
-                <div className="space-y-1.5 sm:col-span-2">
-                  <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                    REQUIREMENT<span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={formData.requirement}
-                    onChange={(e) => setFormData({ ...formData, requirement: e.target.value })}
-                    className={`w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal focus:outline-none focus:border-slate-900 transition-colors bg-transparent cursor-pointer ${
-                      formData.requirement ? 'text-slate-900 font-medium' : 'text-slate-400'
-                    }`}
-                  >
-                    <option value="" disabled className="text-slate-400">
-                      Select requirement
-                    </option>
-                    <option value="2 BHK" className="text-slate-900">2 BHK Luxury Apartment</option>
-                    <option value="3 BHK" className="text-slate-900">3 BHK Luxury Apartment</option>
-                    <option value="4 BHK" className="text-slate-900">4 BHK Luxury Residence</option>
-                    <option value="Penthouse" className="text-slate-900">Penthouse / Sky Villa</option>
-                    <option value="Commercial" className="text-slate-900">Commercial Office / Suite</option>
-                  </select>
-                </div>
+                    {/* PROPERTY LOCATION */}
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                        WHERE IS YOUR PROPERTY LOCATED?
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Hinjewadi, Wakad, Punawale, Ravet, or other location..."
+                        value={formData.propertyLocation}
+                        onChange={(e) => setFormData({ ...formData, propertyLocation: e.target.value })}
+                        className="w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 transition-colors bg-transparent"
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    {/* PROJECT NAME (SEARCHABLE SELECT) */}
+                    <div className="space-y-1.5 relative" ref={dropdownRef}>
+                      <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                        PROJECT NAME<span className="text-red-500">*</span>
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setIsDropdownOpen((prev) => !prev)}
+                        className="w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal text-left flex items-center justify-between focus:outline-none focus:border-slate-900 transition-colors bg-transparent cursor-pointer"
+                      >
+                        <span className={formData.projectName ? 'text-slate-900 font-medium truncate pr-2' : 'text-slate-400'}>
+                          {formData.projectName || 'Select or search project'}
+                        </span>
+                        <ChevronDown
+                          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+                            isDropdownOpen ? 'rotate-180 text-slate-800' : ''
+                          }`}
+                        />
+                      </button>
 
+                      {/* Hidden input for HTML validation if required */}
+                      <input
+                        type="text"
+                        tabIndex={-1}
+                        aria-hidden="true"
+                        required
+                        value={formData.projectName}
+                        onChange={() => {}}
+                        className="opacity-0 absolute pointer-events-none h-0 w-0 -bottom-1"
+                      />
+
+                      {/* Searchable Dropdown Popup */}
+                      {isDropdownOpen && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 p-2.5 space-y-2 animate-in fade-in slide-in-from-top-1 duration-150 max-w-full">
+                          {/* Search Bar - only shown when browsing all projects */}
+                          {!defaultProjectName && (
+                            <div className="flex items-center gap-2 px-3 py-2 bg-slate-50 rounded-xl border border-slate-200 focus-within:border-slate-900 focus-within:bg-white transition-all">
+                              <Search className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              <input
+                                type="text"
+                                autoFocus
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                placeholder="Search project name..."
+                                className="w-full text-xs bg-transparent focus:outline-none text-slate-900 placeholder:text-slate-400"
+                              />
+                              {searchTerm && (
+                                <button
+                                  type="button"
+                                  onClick={() => setSearchTerm('')}
+                                  className="text-slate-400 hover:text-slate-700"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              )}
+                            </div>
+                          )}
+
+                          {/* Projects List - only shows the single project when opened from a card */}
+                          <div className="max-h-48 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
+                            {filteredProjects.length > 0 ? (
+                              filteredProjects.map((proj) => {
+                                const isSelected = formData.projectName === proj.name;
+                                return (
+                                  <button
+                                    key={proj.id}
+                                    type="button"
+                                    onClick={() => handleSelectProject(proj.name)}
+                                    className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-colors flex items-center justify-between cursor-pointer ${
+                                      isSelected
+                                        ? 'bg-slate-900 text-white font-semibold'
+                                        : 'hover:bg-slate-100 text-slate-800'
+                                    }`}
+                                  >
+                                    <div className="truncate pr-2">
+                                      <div className="font-medium truncate">{proj.name}</div>
+                                      <div className={`text-[10px] truncate ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
+                                        {proj.location} • {proj.configuration}
+                                      </div>
+                                    </div>
+                                    {isSelected && <Check className="w-3.5 h-3.5 shrink-0 text-white" />}
+                                  </button>
+                                );
+                              })
+                            ) : (
+                              <div className="py-3 text-center text-xs text-slate-400">
+                                No projects match "{searchTerm}"
+                              </div>
+                            )}
+
+                            {!defaultProjectName && (
+                              <button
+                                type="button"
+                                onClick={() => handleSelectProject('General Inquiry / All Projects')}
+                                className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-colors border-t border-slate-100 mt-1 cursor-pointer ${
+                                  formData.projectName === 'General Inquiry / All Projects'
+                                    ? 'bg-slate-900 text-white font-semibold'
+                                    : 'hover:bg-slate-100 text-slate-600'
+                                }`}
+                              >
+                                <span className="font-medium">General Inquiry / All Projects</span>
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* REQUIREMENT */}
+                    <div className="space-y-1.5 sm:col-span-2">
+                      <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                        REQUIREMENT<span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        required
+                        value={formData.requirement}
+                        onChange={(e) => setFormData({ ...formData, requirement: e.target.value })}
+                        className={`w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal focus:outline-none focus:border-slate-900 transition-colors bg-transparent cursor-pointer ${
+                          formData.requirement ? 'text-slate-900 font-medium' : 'text-slate-400'
+                        }`}
+                      >
+                        <option value="" disabled className="text-slate-400">
+                          Select requirement
+                        </option>
+                        <option value="2 BHK" className="text-slate-900">2 BHK Luxury Apartment</option>
+                        <option value="3 BHK" className="text-slate-900">3 BHK Luxury Apartment</option>
+                        <option value="4 BHK" className="text-slate-900">4 BHK Luxury Residence</option>
+                        <option value="Penthouse" className="text-slate-900">Penthouse / Sky Villa</option>
+                        <option value="Commercial" className="text-slate-900">Commercial Office / Suite</option>
+                      </select>
+                    </div>
+                  </>
+                )}
               </div>
 
-              {/* MESSAGE */}
+              {/* MESSAGE / NOTES */}
               <div className="space-y-1.5 pt-1">
                 <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
-                  MESSAGE
+                  {isServiceMode ? 'MESSAGE / NOTES (OPTIONAL)' : 'MESSAGE'}
                 </label>
                 <input
                   type="text"
-                  placeholder="Message (optional)"
+                  placeholder={isServiceMode ? "Any specific requirements or notes..." : "Message (optional)"}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 transition-colors bg-transparent"
@@ -412,16 +473,13 @@ export default function EnquireModal({
                   type="submit"
                   className="group inline-flex items-center justify-center gap-2.5 rounded-sm bg-[#BD7E6C] hover:bg-[#183D35] text-white px-6 py-3 text-xs font-bold tracking-widest uppercase transition-all duration-300 cursor-pointer shadow-md hover:shadow-xl active:scale-95"
                 >
-                  <span>SUBMIT INQUIRY</span>
+                  <span>{isServiceMode ? 'REQUEST CONSULTATION' : 'SUBMIT INQUIRY'}</span>
                   <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5] transition-transform duration-300 ease-out group-hover:rotate-45" />
                 </button>
               </div>
-
             </form>
-
           </div>
         )}
-
       </div>
     </div>
   );

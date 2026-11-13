@@ -5,6 +5,7 @@ import EnquireModal from '@/components/ui/EnquireModal';
 
 interface EnquireContextType {
   openEnquire: (title?: string, defaultProjectName?: string) => void;
+  openServiceEnquire: (serviceName: string) => void;
   closeEnquire: () => void;
 }
 
@@ -14,10 +15,19 @@ export function EnquireProvider({ children }: { children: React.ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState('Welcome to Pivora Estates');
   const [projectName, setProjectName] = useState('');
+  const [serviceName, setServiceName] = useState('');
 
   const openEnquire = (title = 'Welcome to Pivora Estates', defaultProjectName = '') => {
     setModalTitle(title);
     setProjectName(defaultProjectName);
+    setServiceName('');
+    setIsOpen(true);
+  };
+
+  const openServiceEnquire = (selectedServiceName: string) => {
+    setModalTitle(`Consultation Request - ${selectedServiceName}`);
+    setProjectName('');
+    setServiceName(selectedServiceName);
     setIsOpen(true);
   };
 
@@ -25,15 +35,15 @@ export function EnquireProvider({ children }: { children: React.ReactNode }) {
     setIsOpen(false);
   };
 
-
   return (
-    <EnquireContext.Provider value={{ openEnquire, closeEnquire }}>
+    <EnquireContext.Provider value={{ openEnquire, openServiceEnquire, closeEnquire }}>
       {children}
       <EnquireModal
         isOpen={isOpen}
         onClose={closeEnquire}
         title={modalTitle}
         defaultProjectName={projectName}
+        serviceName={serviceName}
       />
     </EnquireContext.Provider>
   );
