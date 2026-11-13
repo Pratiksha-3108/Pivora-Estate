@@ -15,26 +15,26 @@ const ABOUT_IMAGES = [
 ];
 
 const fadeInUpVariant: Variants = {
-  hidden: { opacity: 0, y: 30 },
+  hidden: { opacity: 0, y: 15 },
   visible: (custom: number = 0) => ({
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
-      delay: custom * 0.1,
+      duration: 0.35,
+      delay: custom * 0.04,
       ease: [0.22, 1, 0.36, 1],
     },
   }),
 };
 
-// Smooth word-by-word reveal variants with subtle blur & opacity lift
+// Fast and smooth reveal variants for crisp, immediate visibility
 const paragraphOneContainer: Variants = {
   hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.024,
-      delayChildren: 0.15,
+      staggerChildren: 0.008,
+      delayChildren: 0.05,
     },
   },
 };
@@ -44,24 +44,24 @@ const paragraphTwoContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.024,
-      delayChildren: 0.85,
+      staggerChildren: 0.008,
+      delayChildren: 0.15,
     },
   },
 };
 
 const wordRevealVariant: Variants = {
   hidden: {
-    opacity: 0.15,
-    y: 4,
-    filter: 'blur(3px)',
+    opacity: 0.6,
+    y: 2,
+    filter: 'blur(1px)',
   },
   visible: {
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
     transition: {
-      duration: 0.45,
+      duration: 0.2,
       ease: [0.22, 1, 0.36, 1],
     },
   },
@@ -132,12 +132,12 @@ export default function AboutOverview() {
 
   const activeImage = ABOUT_IMAGES[activeImageIndex];
 
-  // Desktop keeps original slow stagger word reveal; mobile uses fast, crisp reveal
+  // Both desktop and mobile now use fast, crisp reveal
   const currentFadeIn = isMobile ? mobileFadeInVariant : fadeInUpVariant;
   const currentP1Container = isMobile ? mobileParagraphContainer : paragraphOneContainer;
   const currentP2Container = isMobile ? mobileParagraphContainer : paragraphTwoContainer;
   const currentWordVariant = isMobile ? mobileWordRevealVariant : wordRevealVariant;
-  const currentMargin = isMobile ? '0px' : '-40px';
+  const currentMargin = '0px';
 
   return (
     <section
