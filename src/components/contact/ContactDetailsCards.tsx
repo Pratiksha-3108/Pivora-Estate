@@ -7,23 +7,23 @@ const CONTACT_ITEMS = [
   {
     icon: MapPin,
     title: 'Head Office:',
-    details: 'Office No. 1303/1309, Nandan Probiz, Balewadi High St., Baner, Pune, Maharashtra 411045',
+    details: 'Office No. 504, Sai Millennium, 5th Floor, Punawale, Pune – 411033, Maharashtra, India.',
     linkText: 'View on Google Maps',
-    linkHref: 'https://maps.google.com/?q=Balewadi+High+St+Baner+Pune'
+    linkHref: 'https://maps.google.com/?q=Sai+Millennium+Punawale+Pune'
   },
   {
     icon: Mail,
     title: 'Email',
-    details: 'enquiry@pivoraestates.com',
+    details: 'info@pivoraestates.com',
     linkText: null,
-    linkHref: 'mailto:enquiry@pivoraestates.com'
+    linkHref: 'mailto:info@pivoraestates.com'
   },
   {
     icon: Phone,
     title: 'Contact No',
-    details: '+91 7447447669 / +1 (800) 555-9090',
+    details: '+91 88395 24392',
     linkText: null,
-    linkHref: 'tel:+917447447669'
+    linkHref: 'tel:+918839524392'
   },
   {
     icon: Clock,

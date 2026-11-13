@@ -43,13 +43,13 @@ export default function FloatingContactButtons() {
               {/* Message Bubble */}
               <div className="py-3 text-xs leading-relaxed text-slate-600 space-y-1.5">
                 <p className="bg-stone-100 p-2.5 rounded-sm text-slate-700">
-                  👋 Hello! Welcome to Pivora Estates. Looking for floor plans, pricing, or an exclusive site visit in Hinjawadi, Pune?
+                  👋 Hello! Welcome to Pivora Estates. Looking for floor plans, pricing, or an exclusive site visit in Pune?
                 </p>
               </div>
 
               {/* Action Button */}
               <a
-                href="https://wa.me/919876543210?text=Hi%2C%20I%20am%20interested%20in%20Pivora%20Estates%20residences."
+                href="https://wa.me/918839524392?text=Hi%2C%20I%20am%20interested%20in%20Pivora%20Estates%20residences."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md active:scale-95"
@@ -84,13 +84,13 @@ export default function FloatingContactButtons() {
       {/* Call Button on Right Side */}
       <div className="fixed bottom-6 right-3 sm:right-5 z-50 select-none">
         <a
-          href="tel:+919876543210"
+          href="tel:+918839524392"
           aria-label="Call Us"
           className="group relative w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all border border-slate-200"
         >
           <Phone className="w-5 h-5 text-slate-800 transition-transform group-hover:rotate-12" />
           <span className="absolute right-full mr-3 px-2.5 py-1 bg-slate-950 text-white text-[11px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md">
-            +91-987 654 3210
+            +91 88395 24392
           </span>
         </a>
       </div>

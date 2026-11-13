@@ -18,46 +18,46 @@ const TESTIMONIALS: TestimonialItem[] = [
   {
     id: 'test-1',
     quote:
-      'Pivora Estates understood our family’s deep roots in Pune and helped us acquire a breathtaking penthouse in Kalyani Nagar. Their architectural spatial insight and transparent negotiation saved us both substantial capital and invaluable time.',
+      'Pivora Estates understood our family’s deep roots in Pune and helped us acquire a breathtaking luxury residence in Wakad. Their architectural spatial insight and transparent negotiation saved us both substantial capital and invaluable time.',
     author: 'Vikram Shinde',
-    role: 'Penthouse Owner',
-    location: 'Kalyani Nagar, Pune',
+    role: 'Luxury Home Owner',
+    location: 'Wakad, Pune',
     avatar: '/assets/client1.jpg',
   },
   {
     id: 'test-2',
     quote:
-      'From our first site visit to final registration in Baner, every milestone was executed with immaculate precision. Pivora Estates delivered complete peace of mind, finding a home that matches our cultural values and modern aspirations.',
+      'From our first site visit to final registration in Ravet, every milestone was executed with immaculate precision. Pivora Estates delivered complete peace of mind, finding a home that matches our cultural values and modern aspirations.',
     author: 'Snehal Kulkarni',
-    role: 'Luxury Home Buyer',
-    location: 'Baner - Balewadi, Pune',
+    role: 'Sky Villa Buyer',
+    location: 'Ravet, Pune',
     avatar: '/assets/client2.jpg',
   },
   {
     id: 'test-3',
     quote:
-      'Managing high-value commercial properties across Hinjawadi requires sharp local market intelligence. Pivora Estates provided clear feasibility studies, ensuring our commercial investments yielded optimal rental returns.',
+      'Managing high-value commercial properties across Hinjewadi requires sharp local market intelligence. Pivora Estates provided clear feasibility studies, ensuring our commercial investments yielded optimal rental returns.',
     author: 'Ajinkya Deshmukh',
     role: 'Commercial Asset Investor',
-    location: 'Hinjawadi IT Park, Pune',
+    location: 'Hinjewadi IT Park, Pune',
     avatar: '/assets/client3.jpg',
   },
   {
     id: 'test-4',
     quote:
-      'Their team guided us through custom luxury floorplans and premium finishes for our private villa. They transformed our lifestyle vision into a serene architectural sanctuary with unmatched elegance.',
+      'Their team guided us through custom luxury floorplans and premium finishes for our apartment in Punawale. They transformed our lifestyle vision into a serene architectural sanctuary with unmatched elegance.',
     author: 'Dr. Pradeep Joshi',
-    role: 'Private Villa Owner',
-    location: 'Balewadi High Street, Pune',
+    role: 'Township Home Owner',
+    location: 'Punawale, Pune',
     avatar: '/assets/client4.jpg',
   },
   {
     id: 'test-5',
     quote:
-      'Securing an expansive duplex residence near the EON IT corridor with private terraces seemed challenging until we partnered with Pivora. Their institutional credibility, RERA guidance, and dedication are truly exceptional.',
+      'Securing a high-return commercial suite along the Tathawade & Kiwale IT growth belt seemed challenging until we partnered with Pivora. Their institutional credibility, RERA guidance, and dedication are truly exceptional.',
     author: 'Tanvi Gaikwad',
-    role: 'Tech Entrepreneur & Duplex Owner',
-    location: 'Kharadi Annex, Pune',
+    role: 'Tech Entrepreneur & Investor',
+    location: 'Tathawade - Kiwale, Pune',
     avatar: '/assets/client5.jpg',
   },
 ];

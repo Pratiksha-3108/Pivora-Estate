@@ -8,22 +8,17 @@ import SearchModal from './SearchModal';
 
 const PUNE_LOCATIONS = [
   'Pune (All)',
-  'Koregaon Park',
-  'Kalyani Nagar',
-  'Boat Club Road',
+  'Hinjewadi',
+  'Ravet',
+  'Punawale',
+  'Kiwale',
+  'Wakad',
+  'Tathawade',
   'Baner',
   'Balewadi',
-  'Aundh',
-  'Model Colony',
-  'Kharadi',
-  'Viman Nagar',
-  'Magarpatta',
-  'Mundhwa',
-  'Hinjawadi',
-  'Wakad',
 ];
 
-const TOP_LOCATIONS = ['Hinjawadi', 'Kharadi', 'Wakad', 'Baner', 'Viman Nagar'];
+const TOP_LOCATIONS = ['Hinjewadi', 'Ravet', 'Punawale', 'Kiwale', 'Wakad', 'Tathawade'];
 
 const HERO_SLIDES = [
   {

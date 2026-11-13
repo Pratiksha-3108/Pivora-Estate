@@ -9,7 +9,7 @@ const ABOUT_IMAGES = [
   {
     id: 'living-pavilion',
     label: 'Living Pavilion',
-    src: '/assets/real_estate1.jpg',
+    src: '/assets/about_us_image.png',
     alt: 'Pivora Estates - Premier Real Estate Channel Partner in Pune',
   },
 ];
@@ -113,7 +113,7 @@ const PARAGRAPH_ONE_TEXT =
   "At Pivora Estates, we serve as Pune's premier authorized real estate channel partner and strategic property advisory, bridging discerning homebuyers and commercial investors with the region's most reputable Grade-A developers. From luxury residential penthouses to high-yielding corporate office spaces, we curate verified developments across Pune's top growth corridors.";
 
 const PARAGRAPH_TWO_TEXT =
-  "Headquartered in Pune and representing iconic projects across Hinjawadi, Kharadi, Baner, Balewadi, and Kalyani Nagar, our expert property consultants provide transparent advisory, zero brokerage on primary acquisitions, curated site visits, and end-to-end documentation assistance — ensuring your real estate journey is seamless, informed, and rewarding.";
+  "Headquartered in Pune and representing iconic projects across Hinjewadi, Ravet, Punawale, Kiwale, Wakad, and Tathawade, our expert property consultants provide transparent advisory, zero brokerage on primary acquisitions, curated site visits, and end-to-end documentation assistance — ensuring your real estate journey is seamless, informed, and rewarding.";
 
 const PARAGRAPH_ONE_WORDS = PARAGRAPH_ONE_TEXT.split(' ');
 const PARAGRAPH_TWO_WORDS = PARAGRAPH_TWO_TEXT.split(' ');
@@ -149,10 +149,10 @@ export default function AboutOverview() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          
+
           {/* ================= LEFT COLUMN: OVERVIEW & NARRATIVE ================= */}
           <div className="lg:col-span-6 flex flex-col justify-center space-y-6">
-            
+
             {/* Top Tag: OVERVIEW */}
             <motion.div
               variants={currentFadeIn}

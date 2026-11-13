@@ -195,10 +195,10 @@ export default function PrivacyPolicyPage() {
               <p>
                 If you have questions or comments about this policy, you may email us at{' '}
                 <a
-                  href="mailto:contact@pivoraestates.com"
+                  href="mailto:info@pivoraestates.com"
                   className="font-bold text-slate-900 hover:text-[#BD7E6C] underline transition-colors"
                 >
-                  contact@pivoraestates.com
+                  info@pivoraestates.com
                 </a>{' '}
                 or by post to:
               </p>
@@ -207,9 +207,12 @@ export default function PrivacyPolicyPage() {
                 <p className="font-bold text-slate-900 text-sm sm:text-base">
                   Pivora Estates
                 </p>
-                <p>Hinjawadi Phase 1, Pune,</p>
-                <p>Maharashtra 411057</p>
-                <p>India</p>
+                <p>Office No. 504, Sai Millennium, 5th Floor,</p>
+                <p>Punawale, Pune – 411033,</p>
+                <p>Maharashtra, India</p>
+                <p className="pt-2 font-medium text-slate-900">
+                  Tel: <a href="tel:+918839524392" className="hover:text-[#BD7E6C]">+91 88395 24392</a>
+                </p>
               </div>
             </div>
           </article>

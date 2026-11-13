@@ -104,7 +104,7 @@ export default function Footer() {
         {/* Disclaimer Text */}
         <div className="border-t border-white/20 pt-4 pb-3">
           <p className="text-[11px] sm:text-xs text-slate-400 leading-relaxed font-normal">
-            <span className="text-[#d49581] font-semibold">Disclaimer:</span> We are an authorised marketing partner for this project. Provided content is given by respective owners and this website and content is for information purpose only and it does not constitute an offer to avail for any services. Prices mentioned are subject to change without prior notice and properties mentioned are subject to availability. You can expect a call, SMS or emails on details registered with us.
+            <span className="text-[#d49581] font-semibold">Disclaimer:</span> Pivora Estates is an authorized real estate channel partner. The information and content provided on this website are for informational and guidance purposes only and do not constitute an offer, contract, or guarantee of any services. All project details, specifications, floor plans, images, and brochures are provided by the respective developers/owners. Prices and availability are subject to change without prior notice. By submitting your details on this website, you authorize our property advisors to contact you via phone call, SMS, WhatsApp, or email.
           </p>
         </div>
 
@@ -113,17 +113,13 @@ export default function Footer() {
 
         {/* All-in-One-Line: Address | Phones | Email | Copyright */}
         <div className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs sm:text-[13px] text-slate-300 text-center py-1">
-          <span>Hinjawadi Phase 1, Pune, Maharashtra, India</span>
+          <span>Office No. 504, Sai Millennium, 5th Floor, Punawale, Pune – 411033, Maharashtra, India</span>
           <span className="text-white/30 font-light">|</span>
-          <a href="tel:+919876543210" className="hover:text-white transition-colors">
-            +919876543210
+          <a href="tel:+918839524392" className="hover:text-white transition-colors">
+            +91 88395 24392
           </a>
           <span className="text-white/30 font-light">|</span>
-          <a href="tel:+919876543211" className="hover:text-white transition-colors">
-            +919876543211
-          </a>
-          <span className="text-white/30 font-light">|</span>
-          <a href="mailto:contact@pivoraestates.com" className="hover:text-white transition-colors">
+          <a href="mailto:info@pivoraestates.com" className="hover:text-white transition-colors">
             info@pivoraestates.com
           </a>
           <span className="hidden md:inline text-white/30 font-light">|</span>
