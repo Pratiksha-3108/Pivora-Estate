@@ -22,14 +22,6 @@ function LinkedinIcon({ className = "w-5 h-5" }: { className?: string }) {
   );
 }
 
-function FacebookIcon({ className = "w-5 h-5" }: { className?: string }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}
-
 const NAV_LINKS = [
   { name: 'Home', href: '/' },
   { name: 'About', href: '/#about' },
@@ -62,16 +54,25 @@ export default function Footer() {
               />
             </Link>
 
-            {/* Social Icons (Instagram, LinkedIn, Facebook) */}
+            {/* Social Icons (Instagram, LinkedIn) */}
             <div className="flex items-center gap-5 pt-0.5">
-              <a href="#" aria-label="Instagram" className="text-white hover:text-[#d49581] transition-colors">
+              <a
+                href="https://www.instagram.com/pivoraestates?dlrf=MTloMTA1dTlxazVsYw=="
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="text-white hover:text-[#d49581] transition-colors"
+              >
                 <InstagramIcon className="w-5 h-5" />
               </a>
-              <a href="#" aria-label="LinkedIn" className="text-white hover:text-[#d49581] transition-colors">
+              <a
+                href="https://www.linkedin.com/company/pivora-estates/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="text-white hover:text-[#d49581] transition-colors"
+              >
                 <LinkedinIcon className="w-5 h-5" />
-              </a>
-              <a href="#" aria-label="Facebook" className="text-white hover:text-[#d49581] transition-colors">
-                <FacebookIcon className="w-5 h-5" />
               </a>
             </div>
           </div>

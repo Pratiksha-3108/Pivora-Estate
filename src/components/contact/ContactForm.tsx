@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, ArrowUpRight } from 'lucide-react';
 
 export default function ContactForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const propertyParam = searchParams.get('property') || '';
 
@@ -37,8 +38,9 @@ export default function ContactForm() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setSubmitted(true);
-    }, 1000);
+      const nameParam = formData.fullName ? `?name=${encodeURIComponent(formData.fullName.trim())}` : '';
+      router.push(`/thank-you${nameParam}`);
+    }, 600);
   };
 
   return (

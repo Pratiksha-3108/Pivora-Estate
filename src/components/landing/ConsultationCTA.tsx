@@ -39,7 +39,7 @@ const TITLE_WORDS = [
   { text: 'Discover', highlight: false },
   { text: 'Premium', highlight: false },
   { text: 'Residences', highlight: false },
-  { text: 'in', highlight: false },
+  { text: 'with', highlight: false },
   { text: 'Pivora', highlight: true },
   { text: 'Estates', highlight: true },
 ];
@@ -90,7 +90,7 @@ export default function ConsultationCTA() {
                   transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 >
                   <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#BD7E6C] block">
-                    PREMIUM LIVING | PIVORA ESTATES
+                    CURATED DEVELOPMENTS | PIVORA ESTATES
                   </span>
                 </motion.div>
 
@@ -122,7 +122,7 @@ export default function ConsultationCTA() {
                     transition={{ duration: 0.65, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
                     className="text-sm sm:text-base text-slate-600 font-normal leading-relaxed max-w-lg pt-1"
                   >
-                    Modern architecture, prime location and a lifestyle designed for your tomorrow. Explore our exclusive residences and find the perfect place to call home.
+                    Modern architecture, prime locations, and curated living designed for your tomorrow. Explore verified Grade A developments across Pune and find the perfect place to call home.
                   </motion.p>
                 </div>
 

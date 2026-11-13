@@ -110,10 +110,10 @@ const mobileWordRevealVariant: Variants = {
 };
 
 const PARAGRAPH_ONE_TEXT =
-  "At Pivora Estates, we serve as Pune's premier authorized real estate channel partner and strategic property advisory, bridging discerning homebuyers and commercial investors with the region's most reputable Grade-A developers. From luxury residential penthouses to high-yielding corporate office spaces, we curate verified developments across Pune's top growth corridors.";
+  "At Pivora Estates, we serve as Pune's premier authorized real estate channel partner and strategic property advisory, bridging discerning homebuyers and commercial investors with the region's most reputable Grade A developers. From luxury residential penthouses to high-yielding corporate office spaces, we curate verified developments across Pune's top growth corridors.";
 
 const PARAGRAPH_TWO_TEXT =
-  "Headquartered in Pune and representing iconic projects across Hinjewadi, Ravet, Punawale, Kiwale, Wakad, and Tathawade, our expert property consultants provide transparent advisory, zero brokerage on primary acquisitions, curated site visits, and end-to-end documentation assistance — ensuring your real estate journey is seamless, informed, and rewarding.";
+  "Headquartered in Pune and representing iconic projects across Hinjewadi, Ravet, Punawale, Kiwale, Wakad, and Tathawade, our expert property consultants provide transparent advisory, zero brokerage on primary acquisitions, curated site visits, and end-to-end documentation assistance, ensuring your real estate journey is seamless, informed, and rewarding.";
 
 const PARAGRAPH_ONE_WORDS = PARAGRAPH_ONE_TEXT.split(' ');
 const PARAGRAPH_TWO_WORDS = PARAGRAPH_TWO_TEXT.split(' ');
