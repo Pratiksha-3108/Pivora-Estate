@@ -15,6 +15,7 @@ export default function ContactForm() {
     email: '',
     mobile: '',
     configuration: '',
+    location: '',
     message: '',
   });
 
@@ -73,6 +74,7 @@ export default function ContactForm() {
                 email: '',
                 mobile: '',
                 configuration: '',
+                location: '',
                 message: '',
               });
             }}
@@ -182,6 +184,28 @@ export default function ContactForm() {
                   Commercial Office / Suite
                 </option>
               </select>
+            </div>
+
+            {/* LOCATION (TEXT INPUT - LETTERS ONLY) */}
+            <div className="space-y-1.5 sm:col-span-2">
+              <label className="block text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-700">
+                LOCATION<span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                required
+                pattern="^[a-zA-Z\s]+$"
+                title="Please enter letters only"
+                placeholder="Enter location (e.g. Hinjewadi, Wakad, Punawale, Ravet...)"
+                value={formData.location}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    location: e.target.value.replace(/[^a-zA-Z\s]/g, ''),
+                  })
+                }
+                className="w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 transition-colors bg-transparent"
+              />
             </div>
           </div>
 

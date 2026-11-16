@@ -28,8 +28,7 @@ const CONTACT_ITEMS = [
   {
     icon: Clock,
     title: 'Working Hours',
-    details: 'Monday - Saturday: 10:00 AM - 7:00 PM',
-    subDetails: 'Sunday: Site Visits by Prior Appointment',
+    details: 'Monday - Sunday: 10:00 AM - 8:00 PM',
     linkText: null,
     linkHref: null
   }
@@ -64,12 +63,6 @@ export default function ContactDetailsCards() {
               ) : (
                 <p className="text-slate-600 font-normal leading-relaxed">
                   {item.details}
-                </p>
-              )}
-
-              {item.subDetails && (
-                <p className="text-[11px] text-slate-500 font-normal">
-                  {item.subDetails}
                 </p>
               )}
 

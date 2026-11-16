@@ -294,9 +294,16 @@ export default function EnquireModal({
                       </label>
                       <input
                         type="text"
+                        pattern="^[a-zA-Z\s]+$"
+                        title="Please enter letters only"
                         placeholder="e.g. Hinjewadi, Wakad, Punawale, Ravet, or other location..."
                         value={formData.propertyLocation}
-                        onChange={(e) => setFormData({ ...formData, propertyLocation: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            propertyLocation: e.target.value.replace(/[^a-zA-Z\s]/g, ''),
+                          })
+                        }
                         className="w-full pb-2 pt-1 border-b border-slate-300 text-xs sm:text-sm font-normal text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 transition-colors bg-transparent"
                       />
                     </div>

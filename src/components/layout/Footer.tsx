@@ -77,8 +77,8 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Right Side: Main Nav Links & Privacy Policy */}
-          <div className="flex flex-col items-start lg:items-end gap-4 w-full lg:w-auto">
+          {/* Right Side: Main Nav Links */}
+          <div className="flex items-center w-full lg:w-auto">
             {/* Main Nav Links Row */}
             <nav className="flex flex-wrap items-center gap-6 sm:gap-10 text-sm sm:text-base font-normal text-white">
               {NAV_LINKS.map((link) => (
@@ -91,13 +91,6 @@ export default function Footer() {
                 </Link>
               ))}
             </nav>
-
-            {/* Inline Policy Link: Only Privacy Policy (Terms & Conditions removed) */}
-            <div className="flex items-center text-xs sm:text-sm text-slate-300">
-              <Link href="/privacy-policy" className="hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-            </div>
           </div>
 
         </div>
@@ -112,7 +105,7 @@ export default function Footer() {
         {/* Bottom Horizontal Line */}
         <div className="w-full h-[1px] bg-white/20 my-3" />
 
-        {/* All-in-One-Line: Address | Phones | Email | Copyright */}
+        {/* Address | Phone | Email | Privacy Policy */}
         <div className="flex flex-wrap items-center justify-center gap-x-3 sm:gap-x-4 gap-y-1.5 text-xs sm:text-[13px] text-slate-300 text-center py-1">
           <span>Office No. 504, Sai Millennium, 5th Floor, Punawale, Pune – 411033, Maharashtra, India</span>
           <span className="text-white/30 font-light">|</span>
@@ -123,9 +116,30 @@ export default function Footer() {
           <a href="mailto:info@pivoraestates.com" className="hover:text-white transition-colors">
             info@pivoraestates.com
           </a>
-          <span className="hidden md:inline text-white/30 font-light">|</span>
-          <span className="text-slate-300">
+          <span className="text-white/30 font-light">|</span>
+          <Link href="/privacy-policy" className="hover:text-white transition-colors">
+            Privacy Policy
+          </Link>
+        </div>
+
+        {/* Bottom Horizontal Line */}
+        <div className="w-full h-[1px] bg-white/10 my-3" />
+
+        {/* Bottom Bar: Copyright on Left, Digitalize The Globe on Right */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs sm:text-[13px] text-slate-400 py-1">
+          <span className="sm:pl-12 lg:pl-16">
             Powered by Pivora Estates Private Limited © {new Date().getFullYear()}. All rights reserved.
+          </span>
+          <span className="sm:pr-12 lg:pr-16">
+            Carefully crafted by{' '}
+            <a
+              href="https://digitalizetheglobe.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-300 hover:text-white underline transition-colors"
+            >
+              Digitalize The Globe
+            </a>
           </span>
         </div>
 

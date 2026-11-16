@@ -9,23 +9,37 @@ export default function FloatingContactButtons() {
 
   return (
     <>
-      {/* WhatsApp on Left Side with Pop-Up Effect */}
-      <div className="fixed bottom-6 left-1 sm:left-2 z-50 select-none">
+      {/* Call Button on Left Side */}
+      <div className="fixed bottom-6 left-3 sm:left-5 z-50 select-none">
+        <a
+          href="tel:+918839524392"
+          aria-label="Call Us"
+          className="group relative w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all border border-slate-200"
+        >
+          <Phone className="w-5 h-5 text-slate-800 transition-transform group-hover:rotate-12" />
+          <span className="absolute left-full ml-3 px-2.5 py-1 bg-slate-950 text-white text-[11px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md">
+            +91 88395 24392
+          </span>
+        </a>
+      </div>
+
+      {/* WhatsApp on Right Side with Pop-Up Effect */}
+      <div className="fixed bottom-6 right-3 sm:right-5 z-50 select-none">
         <div className="relative">
           {/* Interactive Pop-Up Chat Window */}
           {showWhatsAppPopup && (
-            <div className="absolute bottom-20 left-0 w-80 max-w-[calc(100vw-32px)] bg-white rounded-md shadow-2xl border border-stone-200/90 p-4 text-slate-800 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300">
+            <div className="absolute bottom-22 right-0 w-[340px] sm:w-[380px] max-w-[calc(100vw-24px)] bg-white rounded-xl shadow-2xl border border-stone-200/90 p-5 text-slate-800 z-50 animate-in fade-in slide-in-from-bottom-3 duration-300">
               {/* Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-stone-100">
-                <div className="flex items-center gap-2.5">
-                  <div className="relative w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold text-xs">
+              <div className="flex items-center justify-between pb-3.5 border-b border-stone-100">
+                <div className="flex items-center gap-3">
+                  <div className="relative w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold text-sm shrink-0">
                     PE
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white" />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-white" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-slate-900">Pivora Estates VIP</h4>
-                    <p className="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <h4 className="text-sm font-bold text-slate-900 leading-tight">Pivora Estates</h4>
+                    <p className="text-[11px] text-emerald-600 font-medium flex items-center gap-1.5 mt-0.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                       Online | Replies instantly
                     </p>
                   </div>
@@ -33,7 +47,7 @@ export default function FloatingContactButtons() {
                 <button
                   type="button"
                   onClick={() => setShowWhatsAppPopup(false)}
-                  className="p-1 rounded-sm text-slate-400 hover:text-slate-700 hover:bg-stone-100 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-md text-slate-400 hover:text-slate-700 hover:bg-stone-100 transition-colors cursor-pointer"
                   aria-label="Close popup"
                 >
                   <X className="w-4 h-4" />
@@ -41,8 +55,8 @@ export default function FloatingContactButtons() {
               </div>
 
               {/* Message Bubble */}
-              <div className="py-3 text-xs leading-relaxed text-slate-600 space-y-1.5">
-                <p className="bg-stone-100 p-2.5 rounded-sm text-slate-700">
+              <div className="py-4 text-xs sm:text-[13px] leading-relaxed text-slate-600">
+                <p className="bg-stone-100/90 p-3.5 rounded-lg text-slate-700 leading-relaxed font-normal">
                   👋 Hello! Welcome to Pivora Estates. Looking for floor plans, pricing, or an exclusive site visit in Pune?
                 </p>
               </div>
@@ -52,10 +66,10 @@ export default function FloatingContactButtons() {
                 href="https://wa.me/918839524392?text=Hi%2C%20I%20am%20interested%20in%20Pivora%20Estates%20residences."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-sm bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all shadow-md active:scale-95"
+                className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-[13px] font-bold tracking-wide transition-all shadow-md active:scale-95"
               >
                 <span>Start WhatsApp Chat</span>
-                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
               </a>
             </div>
           )}
@@ -79,20 +93,6 @@ export default function FloatingContactButtons() {
             />
           </button>
         </div>
-      </div>
-
-      {/* Call Button on Right Side */}
-      <div className="fixed bottom-6 right-3 sm:right-5 z-50 select-none">
-        <a
-          href="tel:+918839524392"
-          aria-label="Call Us"
-          className="group relative w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-white text-slate-900 flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all border border-slate-200"
-        >
-          <Phone className="w-5 h-5 text-slate-800 transition-transform group-hover:rotate-12" />
-          <span className="absolute right-full mr-3 px-2.5 py-1 bg-slate-950 text-white text-[11px] font-medium rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md">
-            +91 88395 24392
-          </span>
-        </a>
       </div>
     </>
   );
